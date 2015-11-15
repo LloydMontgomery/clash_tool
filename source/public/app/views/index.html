@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>My Routing App!</title>
+
+	<!-- set the base path for angular routing -->
+	<base href="/">
+
+	<!-- CSS -->
+	<!-- load bootstrap and fontawesome via CDN -->
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css">
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css">
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="/assets/css/style.css">
+
+	<!-- JS -->
+	<!-- load angular and angular-route via CDN -->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-route.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-animate.js"></script>
+
+	<!-- load our custom angular app files -->
+	<script src="/app/app.js"></script>
+	<script src="/app/app.routes.js"></script> 
+</head>
+
+<body class="container" class="container" ng-app="routerApp" ng-controller="mainController as main">
+	<!-- HEADER AND NAVBAR -->
+	<header>
+	<nav class="navbar navbar-default">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/">Angular Routing Example</a>
+		</div>
+		<ul class="nav navbar-nav navbar-right">
+			<li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="/about"><i class="fa fa-shield"></i> About</a></li> 
+			<li><a href="/contact"><i class="fa fa-comment"></i> Contact</a></li>
+		</ul> 
+	</nav>
+	</header>
+	<!-- MAIN CONTENT AND INJECTED VIEWS -->
+	<main>
+		<!-- <div class="jumbotron">
+			<h1>{{ main.bigMessage }}</h1>
+		</div> -->
+
+		<div id="content-views"> 
+			<div ng-view></div>
+		</div>
+		<!-- angular templating will go here -->
+		<!-- this is where content will be injected -->
+	</main>
+</body>
+</html>

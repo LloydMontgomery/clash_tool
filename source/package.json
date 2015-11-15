@@ -1,0 +1,28 @@
+{
+  "name": "clash-tool",
+  "version": "1.0.0",
+  "description": "This is a tool to help Clashers learn more about Clash of Clans",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LloydMontgomery/clash_tool.git"
+  },
+  "author": "Lloyd Montgomery",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LloydMontgomery/clash_tool/issues"
+  },
+  "homepage": "https://github.com/LloydMontgomery/clash_tool#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.14.1",
+    "bower": "^1.6.5",
+    "express": "^4.13.3",
+    "jsonwebtoken": "^5.4.1",
+    "mongoose": "^4.2.5",
+    "morgan": "^1.6.1"
+  }
+}
