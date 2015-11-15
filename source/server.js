@@ -8,13 +8,14 @@ var express		= require('express'),			// Express simplifies Node
 	bcrypt 		= require('bcrypt-nodejs'),		// Encryption for user passwords
 	path 		= require('path'),
 	apiRouter 	= require('./app/routes/api'),		// This is the router code we wrote
+	config		= require('./config');
 	options 	= { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 10000 } },
 					replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 10000 } } };
 
 // --------------------------- APP CONFIGURATION ---------------------------- //
 
 // Set the Mongolab URL for database interactions
-mongoose.connect('mongodb://admin:admin@ds053954.mongolab.com:53954/clash_tool', options);
+mongoose.connect(config.database, options);
 
 // Use body parser so we can grab information from POST requests
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,8 +56,8 @@ app.get('*', function(req, res) {
 
 // --------------------------- START THE SERVER ---------------------------- //
 
-app.listen(8080);
-console.log('Node server listening on 8080!');
+app.listen(config.port);
+console.log('Node server listening on ' + config.port);
 
 
 

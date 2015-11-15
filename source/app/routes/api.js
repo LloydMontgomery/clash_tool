@@ -1,8 +1,9 @@
 var express	= require('express'),			// Express simplifies Node
 	User 	= require('../models/user'),	// User Schema
-	jwt 	= require('jsonwebtoken');		// This is the package we will use for tokens
+	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
+	config	= require('../../config');
 
-var superSecret = 'thissupersecrethastochangetoprivateatsomepoint';  // This is for the token
+var superSecret = config.secret;  // This is for the token
 
 // Get an instance of the express router
 var apiRouter = express.Router();
