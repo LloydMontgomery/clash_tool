@@ -22,14 +22,16 @@ angular.module('mainCtrl', [])
 		vm.error = '';
 
 		Auth.login(vm.loginData.username, vm.loginData.password)
-			.success(function(data) {
+			.then(function(data) {
 				vm.processing = false;
 				// if a user successfully logs in, redirect to users page
-				if (data.success) 
+				if (data.data.success) 
 					$location.path('/users');
-				else
-					vm.error = data.message;
-		});
+				else {
+					vm.loginData.password = '';  // Clear password
+					vm.error = 'Username or password incorrect.';
+				}
+			});
 	};
 
 	// function to handle logging out
