@@ -7,22 +7,16 @@ var express		= require('express'),			// Express simplifies Node
 	morgan		= require('morgan'),			// Outputs all api calls to the terminal
 	bcrypt 		= require('bcrypt-nodejs'),		// Encryption for user passwords
 	path 		= require('path'),
-	apiRouter 	= require('./app/routes/api'),		// This is the router code we wrote
 	config		= require('./config');
 	options 	= { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 10000 } },
 					replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 10000 } } };
 
-// --------------------------- APP CONFIGURATION ---------------------------- //
 
-// Set the Mongolab URL for database interactions
-mongoose.connect(config.database, options);
+// --------------------------- APP CONFIGURATION ---------------------------- //
 
 // Use body parser so we can grab information from POST requests
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-// only requests to /api/* will be sent to our "router"
-app.use('/api', apiRouter);
 
 // Configure our app to handle CORS requests
 app.use(function(req, res, next) {
@@ -35,23 +29,27 @@ app.use(function(req, res, next) {
 // Log all requests to the console
 app.use(morgan('dev'));
 
+// Set the Mongolab URL for database interactions
+mongoose.connect(config.database, options);
 
-// -------------------------- ROUTE CONFIGURATION --------------------------- //
-
-
+// set static files location
 // set the public folder to serve public assets such as HTML, CSS, and JS files
 app.use(express.static(__dirname + '/public'));
 
+
+// -------------------------- ROUTE CONFIGURATION --------------------------- //
+
+// API ROUTES ------------------------
+var apiRoutes = require('./app/routes/api')(app, express); 
+app.use('/api', apiRoutes);
+
+// MAIN CATCHALL ROUTE ---------------
+// SEND USERS TO FRONTEND ------------
 // Basic route for the home page
 // set up our one route to the index.html file
 app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });
-
-// app.get('/', function(req, res) {
-// 	res.send('Welcome to the home page!');
-// 	// res.sendFile(path.join(__dirname + '/client/index.html'));
-// });
 
 
 // --------------------------- START THE SERVER ---------------------------- //
