@@ -6,7 +6,14 @@ angular.module('ClashTool', [
 	'mainCtrl',
 	'userCtrl',
 	'userService'
-]);
+])
+
+// application configuration to integrate token into requests
+.config(function($httpProvider) {
+	// attach our auth interceptor to the http requests
+	$httpProvider.interceptors.push('AuthInterceptor');
+});
+
 
 // create the controllers
 // this will be the controller for the ENTIRE site 

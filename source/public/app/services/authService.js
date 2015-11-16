@@ -17,7 +17,6 @@ angular.module('authService', [])
 			password: password
 		})
 		.success(function(data) {
-
 			AuthToken.setToken(data.token);
 			return data; 
 		});
@@ -60,7 +59,7 @@ angular.module('authService', [])
 	// if a token is passed, set the token
 	// if there is no token, clear it from local storage 
 	authTokenFactory.setToken = function(token) {
-		if (token) 
+		if (token)
 			$window.localStorage.setItem('token', token);
 		else
 			$window.localStorage.removeItem('token');

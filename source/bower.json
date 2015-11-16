@@ -1,0 +1,26 @@
+{
+  "name": "clash-tool",
+  "description": "This is a tool to help Clashers learn more about Clash of Clans",
+  "main": "server.js",
+  "authors": [
+    "Lloyd Montgomery"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/LloydMontgomery/clash_tool",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/assets/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "angular": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "angular-animate": "~1.4.7"
+  }
+}
