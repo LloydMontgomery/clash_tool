@@ -1,11 +1,8 @@
 <div class="row col-sm-6 col-sm-offset-3"> 
 	<div class="jumbotron">
-		<div slide-toggle="#derp2">
-			<span ng-if="auth.isRegistering">Login</span>
-			<span ng-if="!auth.isRegistering">Register</span>
-		</div>
-		<div id="derp2" class="slideable">
-			Ethics
+		<div>
+			<span ng-if="!auth.isRegistering">Login</span>
+			<span ng-if="auth.isRegistering">Register</span>
 		</div>
 		<form ng-submit="auth.processAuth()">
 			<!-- IN-GAME ID INPUT -->
@@ -21,12 +18,12 @@
 			<!-- PASSWORD INPUT -->
 			<div class="form-group"> 
 				<label>Password</label>
-				<input type="password" class="form-control" ng-model="auth.loginData.pwd" required>
+				<input type="password" class="form-control" ng-model="auth.loginData.password" required>
 			</div>
 			<!-- PASSWORD INPUT CONFIRM-->
 			<div class="form-group slideable" id="pconfirm"> 
 				<label>Re-Enter Password</label>
-				<input type="password" class="form-control" ng-model="auth.loginData.pwdConfirm">
+				<input type="password" class="form-control" ng-model="auth.loginData.passwordConfirm">
 			</div>
 			<!-- ERROR MESSAGE -->
 			<div class="alert alert-danger" ng-show="auth.error">

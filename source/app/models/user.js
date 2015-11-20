@@ -22,8 +22,6 @@ UserSchema.pre('save', function(next) {
 		if (err) return next(err);
 		// change the password to the hashed version
 		user.password = hash;
-		console.log('user.js');
-		console.log(user);
 		next();
 	});
 });

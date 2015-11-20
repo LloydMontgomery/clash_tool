@@ -1,6 +1,6 @@
 angular.module('authCtrl', [])
 
-.controller('authController', function($rootScope, $location, Auth) {
+.controller('authController', function($rootScope, $location, Auth, User) {
 	var vm = this;
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
@@ -11,10 +11,9 @@ angular.module('authCtrl', [])
 
 		// clear the error
 		vm.error = '';
-
+		console.log(vm.loginData.name);
 		if (!vm.isRegistering) {  // Then user is trying to log in
-			console.log("Logging In");
-			Auth.login(vm.loginData.id, vm.loginData.pwd)
+			Auth.login(vm.loginData.name, vm.loginData.password)
 				.then(function(data) {
 					vm.processing = false;
 					// if a user successfully logs in, redirect to users page
@@ -22,16 +21,44 @@ angular.module('authCtrl', [])
 						$location.path('/users');
 					else {
 						vm.loginData.password = '';  // Clear password
-						vm.error = 'ID or password incorrect';
+						// vm.error = 'ID or password incorrect';
+						vm.error = data.data.message;
 					}
 				});
-		} else if (vm.isRegistering && vm.loginData.id && vm.loginData.pwdConfirm) {
-			console.log("Registering");
-			if (vm.loginData.pwd != vm.loginData.pwdConfirm){
+		} else if (vm.loginData.id && vm.loginData.passwordConfirm) {
+			if (vm.loginData.password != vm.loginData.passwordConfirm){
 				vm.error = 'Passwords do not match';
 				vm.processing = false;
 			} else {  // Passwords match
-				console.log("Successfully Registered");
+				// use the create function in the userService
+				User.create(vm.loginData) 
+					.then(function(data) {
+						vm.processing = false;
+						console.log(data.data);
+						if (data.data.success) {
+							console.log(vm.loginData);
+							Auth.login(vm.loginData.name, vm.loginData.password)
+								.then(function(data) {
+									console.log(data);
+									vm.processing = false;
+									// if a user successfully logs in, redirect to users page
+									if (data.data.success) 
+										$location.path('/users');
+									else {
+										console.log("HERE");
+										vm.loginData.password = '';  // Clear password
+										vm.loginData.passwordConfirm = '';  // Clear password
+										vm.error = data.data.message;
+									}
+							});
+						} else {
+							console.log("HERE AGAIN");
+							vm.processing = false;
+							vm.loginData.password = '';  // Clear password
+							vm.loginData.passwordConfirm = '';  // Clear password
+							vm.error = data.data.message;
+						}	
+				});
 			}
 		} else {  // The user has left out some piece of information
 			vm.error = 'Please fill in all fields';

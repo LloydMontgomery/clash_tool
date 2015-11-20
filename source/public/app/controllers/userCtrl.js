@@ -4,6 +4,7 @@ angular.module('userCtrl', ['userService'])
 // inject the User factory 
 .controller('userController', function(User) {
 	var vm = this;
+
 	// set a processing variable to show loading things
 	vm.processing = true;
 	// grab all the users at page load
@@ -42,8 +43,6 @@ angular.module('userCtrl', ['userService'])
 		// clear the message
 		vm.message = '';
 		// use the create function in the userService
-		console.log("userCtrl.js");
-		console.log(vm.userData);
 		User.create(vm.userData) 
 			.success(function(data) {
 				vm.processing = false;

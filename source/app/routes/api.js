@@ -22,10 +22,11 @@ module.exports = function(app, express) {
 		// find the user
 		// select the name username and password explicitly 
 		User.findOne({
-			username: req.body.username
+			name: req.body.name
 		}).select('name username password').exec(function(err, user) {
 			if (err) throw err;
 			    // no user with that username was found
+
 			if (!user) {
 				res.json({
 					success: false,
@@ -33,7 +34,9 @@ module.exports = function(app, express) {
 				});
 			} else if (user) {
 				// check if password matches
+				console.log("PASSWORD: " + req.body.password);
 				var validPassword = user.comparePassword(req.body.password); 
+				console.log(validPassword);
 				if (!validPassword) {
 			  		res.json({
 			    		success: false,
@@ -42,9 +45,10 @@ module.exports = function(app, express) {
 				} else {
 					// if user is found and password is right
 					// create a token
+					console.log(user);
 					var token = jwt.sign({
-			        	name: user.name,
-			        	username: user.username
+						name: user.name,
+			        	id: user._id
 			        }, superSecret, 
 			        { expiresIn: 7200 // expires in 2 hours 
 					});
@@ -56,6 +60,32 @@ module.exports = function(app, express) {
 				}
 			}
 		});
+	});
+
+	// USERS //
+	apiRouter.route('/users')
+	// create a user (accessed at POST http://localhost:8080/api/users)
+	.post(function(req, res) {
+		// create a new instance of the User model
+		var user = new User();
+		// set the users information (comes from the request)
+		user.name = req.body.name;
+		user.id = req.body.id;
+		user.password = req.body.password;
+
+		// save the user and check for errors
+		user.save(function(err) { 
+			if (err) {
+				// duplicate entry
+				if (err.code == 11000)
+					return res.json({ success: false, message: 'A user with that name already exists.' }); 
+				else
+					return res.send(err);
+			}
+			res.json({ 
+				success: true,
+				message: 'User created!' });
+		})
 	});
 
 	// route middleware to verify a token
@@ -88,32 +118,7 @@ module.exports = function(app, express) {
 		// next() used to be here
 	});
 
-	// USERS //
 	apiRouter.route('/users')
-	// create a user (accessed at POST http://localhost:8080/api/users)
-	.post(function(req, res) {
-		// create a new instance of the User model
-		var user = new User();
-		// set the users information (comes from the request)
-		user.name = req.body.name;
-		user.id = req.body.id;
-		user.password = req.body.password;
-		console.log("api.js")
-		console.log(user);
-		// save the user and check for errors
-		user.save(function(err) { 
-			if (err) {
-				console.log("Error");
-				console.log(err);
-				// duplicate entry
-				if (err.code == 11000)
-					return res.json({ success: false, message: 'A user with that name already exists.' }); 
-				else
-					return res.send(err);
-			}
-			res.json({ message: 'User created!' });
-		})
-	})
 	// get all the users (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
 		User.find(function(err, users) {
@@ -123,7 +128,47 @@ module.exports = function(app, express) {
 		});
 	});
 
-	// SPECIFIC USERS //
+	// API endpoint to get user information
+	// apiRouter.get('/me', function(req, res) {
+	// 	res.send(req.decoded);
+	// });
+
+	// route middleware to verify a token
+	// apiRouter.use(function(req, res, next) {
+	// 	// check header or url parameters or post parameters for token
+	// 	var token = req.body.token || req.query.token || req.headers['x-access-token']; 
+
+	// 	// decode token
+	// 	if (token) {
+	// 		// verifies secret and checks exp
+	// 		jwt.verify(token, superSecret, function(err, decoded) { 
+	// 			if (err) {
+	// 				return res.status(403).send({ 
+	// 					success: false,
+	// 					message: 'Failed to authenticate token.'
+	// 				});
+	// 			} else {
+	// 				req.decoded = decoded;
+
+	// 				if (decoded.id == '564ea5a6bbc59d5041afea57') {
+	// 					next();
+	// 				} else {
+	// 					res.send("NOOOOOOPEE");
+	// 				}
+	// 			}
+	// 		});
+	// 	} else {
+	// 		// If there is no token
+	// 		// Return an HTTP response of 403 (access forbidden) and an error message 
+	// 		return res.status(403).send({
+	// 			success: false,
+	// 			message: 'No token provided.'
+	// 		});
+	// 	}
+	// 	// next() used to be here
+	// });
+
+		// SPECIFIC USERS //
 	apiRouter.route('/users/:user_id')
 	// (accessed at GET http://localhost:8080/api/users/:user_id) 
 	.get(function(req, res) {
@@ -165,11 +210,6 @@ module.exports = function(app, express) {
 			if (err) return res.send(err);
 			res.json({ message: 'Successfully deleted' });
 		});
-	});
-
-	// API endpoint to get user information
-	apiRouter.get('/me', function(req, res) {
-		res.send(req.decoded);
 	});
 
 	return apiRouter;
