@@ -12,9 +12,6 @@ module.exports = function(app, express) {
 	// middleware to use for all requests
 	apiRouter.use(function(req, res, next) {
 		// do logging
-		console.log('***** Route Used *****');
-		console.log(req.originalUrl);
-		console.log('');
 		// we'll add more to the middleware in Chapter 10
 		// this is where we will authenticate users
 		next(); // make sure we go to the next routes and don't stop here
@@ -29,7 +26,7 @@ module.exports = function(app, express) {
 		}).select('name username password').exec(function(err, user) {
 			if (err) throw err;
 			    // no user with that username was found
-			if (!user) { 
+			if (!user) {
 				res.json({
 					success: false,
 					message: 'Authentication failed. User not found.'
@@ -55,10 +52,10 @@ module.exports = function(app, express) {
 					res.json({
 						success: true,
 						message: 'Enjoy your token!', token: token
-					}); 
+					});
 				}
 			}
-		}); 
+		});
 	});
 
 	// route middleware to verify a token
@@ -99,14 +96,18 @@ module.exports = function(app, express) {
 		var user = new User();
 		// set the users information (comes from the request)
 		user.name = req.body.name;
-		user.username = req.body.username;
+		user.id = req.body.id;
 		user.password = req.body.password;
+		console.log("api.js")
+		console.log(user);
 		// save the user and check for errors
 		user.save(function(err) { 
 			if (err) {
+				console.log("Error");
+				console.log(err);
 				// duplicate entry
 				if (err.code == 11000)
-					return res.json({ success: false, message: 'A user with that username already exists.' }); 
+					return res.json({ success: false, message: 'A user with that name already exists.' }); 
 				else
 					return res.send(err);
 			}

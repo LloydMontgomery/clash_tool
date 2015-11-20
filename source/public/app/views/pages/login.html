@@ -1,29 +1,51 @@
 <div class="row col-sm-6 col-sm-offset-3"> 
 	<div class="jumbotron">
-		<h1>Login</h1>
-		<form ng-submit="auth.doLogin()">
-			<!-- USERNAME INPUT -->
+		<div slide-toggle="#derp2">
+			<span ng-if="auth.isRegistering">Login</span>
+			<span ng-if="!auth.isRegistering">Register</span>
+		</div>
+		<div id="derp2" class="slideable">
+			Ethics
+		</div>
+		<form ng-submit="auth.processAuth()">
+			<!-- IN-GAME ID INPUT -->
+			<div class="form-group slideable" id="id">
+				<label>In-Game ID</label>
+				<input type="text" class="form-control" ng-model="auth.loginData.id"> 
+			</div>
+			<!-- IN-GAME NAME INPUT -->
 			<div class="form-group">
-				<label>Username</label>
-				<input type="text" class="form-control" ng-model="auth.loginData.username" required> 
+				<label>In-Game Name</label>
+				<input type="text" class="form-control" ng-model="auth.loginData.name" required> 
 			</div>
 			<!-- PASSWORD INPUT -->
 			<div class="form-group"> 
 				<label>Password</label>
-				<input type="password" class="form-control" ng-model="auth.loginData.password" required>
+				<input type="password" class="form-control" ng-model="auth.loginData.pwd" required>
 			</div>
-
+			<!-- PASSWORD INPUT CONFIRM-->
+			<div class="form-group slideable" id="pconfirm"> 
+				<label>Re-Enter Password</label>
+				<input type="password" class="form-control" ng-model="auth.loginData.pwdConfirm">
+			</div>
 			<!-- ERROR MESSAGE -->
-			<div class="alert alert-danger" ng-if="auth.error"> 
+			<div class="alert alert-danger" ng-show="auth.error">
 				{{ auth.error }}
 			</div>
 			<!-- LOGIN BUTTON -->
 			<button type="submit" class="btn btn-block btn-primary">
-				<span ng-if="!auth.processing">Login</span>
+				<span ng-if="!auth.processing && !auth.isRegistering">Login</span>
+				<span ng-if="!auth.processing && auth.isRegistering">Register</span>
 				<span ng-if="auth.processing"> 
 					<span class="glyphicon glyphicon-repeat spinner"></span> 
 				</span>
 			</button>
+			<div slide-toggle="#id">
+				<div id="register" slide-toggle="#pconfirm" ng-click="auth.isRegistering = !auth.isRegistering"> 
+					<a ng-if="!auth.isRegistering"> Create an Account </a>
+					<a ng-if="auth.isRegistering"> Back to Login </a>
+				</div>
+			</div>
 		</form>
 	</div>
 </div>

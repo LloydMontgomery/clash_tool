@@ -6,23 +6,37 @@ angular.module('authCtrl', [])
 	vm.loggedIn = Auth.isLoggedIn();
 
 	// function to handle login form
-	vm.doLogin = function() {
+	vm.processAuth = function() {
 		vm.processing = true;
 
 		// clear the error
 		vm.error = '';
 
-		Auth.login(vm.loginData.username, vm.loginData.password)
-			.then(function(data) {
+		if (!vm.isRegistering) {  // Then user is trying to log in
+			console.log("Logging In");
+			Auth.login(vm.loginData.id, vm.loginData.pwd)
+				.then(function(data) {
+					vm.processing = false;
+					// if a user successfully logs in, redirect to users page
+					if (data.data.success) 
+						$location.path('/users');
+					else {
+						vm.loginData.password = '';  // Clear password
+						vm.error = 'ID or password incorrect';
+					}
+				});
+		} else if (vm.isRegistering && vm.loginData.id && vm.loginData.pwdConfirm) {
+			console.log("Registering");
+			if (vm.loginData.pwd != vm.loginData.pwdConfirm){
+				vm.error = 'Passwords do not match';
 				vm.processing = false;
-				// if a user successfully logs in, redirect to users page
-				if (data.data.success) 
-					$location.path('/users');
-				else {
-					vm.loginData.password = '';  // Clear password
-					vm.error = 'Username or password incorrect.';
-				}
-			});
+			} else {  // Passwords match
+				console.log("Successfully Registered");
+			}
+		} else {  // The user has left out some piece of information
+			vm.error = 'Please fill in all fields';
+			vm.processing = false;
+		}
 	};
 
 	// function to handle logging out

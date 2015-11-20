@@ -10,10 +10,10 @@ angular.module('authService', [])
 	// create auth factory object
 	var authFactory = {};
 	// log a user in
-	authFactory.login = function(username, password) {
+	authFactory.login = function(id, password) {
 		// return the promise object and its data
 		return $http.post('/api/authenticate', { 
-			username: username,
+			id: id,
 			password: password
 		})
 		.then(function(data) {
