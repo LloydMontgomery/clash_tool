@@ -1,5 +1,6 @@
 var express	= require('express'),			// Express simplifies Node
 	User 	= require('../models/user'),	// User Schema
+	War 	= require('../models/war'),	// War Schema
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
 	config	= require('../../config');
 
@@ -158,7 +159,7 @@ module.exports = function(app, express) {
 		});
 	});
 
-		// SPECIFIC USERS //
+	// SPECIFIC USERS //
 	apiRouter.route('/users/:user_id')
 	// (accessed at GET http://localhost:8080/api/users/:user_id) 
 	.get(function(req, res) {
@@ -207,6 +208,82 @@ module.exports = function(app, express) {
 			res.json({ message: 'Successfully deleted' });
 		});
 	});
+
+	apiRouter.route('/wars')
+	// create a war (accessed at POST http://localhost:8080/api/wars)
+	.post(function(req, res) {
+		// create a new instance of the User model
+		var war = new War();
+		// set the users information (comes from the request)
+		war.number = req.body.number;
+		war.exp = req.body.exp;
+		war.ourScore = req.body.ourScore;
+		war.theirScore = req.body.theirScore;
+		war.date = req.body.date;
+
+		// save the war and check for errors
+		war.save(function(err) { 
+			if (err) {
+				// duplicate entry
+				if (err.code == 11000)
+					return res.json({ success: false, message: 'A war with that number already exists.' }); 
+				else
+					return res.send(err);
+			}
+			res.json({ 
+				success: true,
+				message: 'War created!' });
+		})
+	})
+	// get all the wars (accessed at GET http://localhost:8080/api/wars)
+	.get(function(req, res) {
+		War.find(function(err, wars) {
+			if (err) res.send(err);
+			// return the wars
+			res.json(wars);
+		});
+	})
+
+	// SPECIFIC WARS //
+	apiRouter.route('/wars/:war_id')
+	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
+	.get(function(req, res) {
+		War.findById(req.params.war_id, function(err, war) { 
+			if (err) res.send(err);
+			// return that user
+			res.json(war);
+		});
+	})
+
+	// update the user with this id
+	// (accessed at PUT http://localhost:8080/api/users/:user_id) 
+	.put(function(req, res) {
+		// use our war model to find the war we want
+		War.findById(req.params.war_id, function(err, war) { 
+			if (err) res.send(err);
+			// update the wars info only if its new
+			if (req.body.number) 
+				war.number = req.body.number;
+			if (req.body.exp) 
+				war.exp = req.body.exp;
+			if (req.body.ourScore)
+				war.ourScore = req.body.ourScore;
+			if (req.body.theirScore)
+				war.theirScore = req.body.theirScore;
+			if (req.body.date)
+				war.date = req.body.date;
+			// save the war
+			war.save(function(err) {
+				if (err) res.send(err);
+				// return a message
+				res.json({ message: 'War updated!' });
+			});
+		});
+	});
+
+
+
+
 
 	return apiRouter;
 
