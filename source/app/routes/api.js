@@ -98,7 +98,8 @@ module.exports = function(app, express) {
 			// verifies secret and checks exp
 			jwt.verify(token, superSecret, function(err, decoded) { 
 				if (err) {
-					return res.status(403).send({ success: false,
+					return res.status(403).send({ 
+						success: false,
 						message: 'Failed to authenticate token.'
 					});
 				} else {
@@ -129,44 +130,24 @@ module.exports = function(app, express) {
 	});
 
 	// API endpoint to get user information
-	// apiRouter.get('/me', function(req, res) {
-	// 	res.send(req.decoded);
-	// });
+	apiRouter.get('/me', function(req, res) {
+		res.send(req.decoded);
+	});
 
-	// route middleware to verify a token
-	// apiRouter.use(function(req, res, next) {
-	// 	// check header or url parameters or post parameters for token
-	// 	var token = req.body.token || req.query.token || req.headers['x-access-token']; 
-
-	// 	// decode token
-	// 	if (token) {
-	// 		// verifies secret and checks exp
-	// 		jwt.verify(token, superSecret, function(err, decoded) { 
-	// 			if (err) {
-	// 				return res.status(403).send({ 
-	// 					success: false,
-	// 					message: 'Failed to authenticate token.'
-	// 				});
-	// 			} else {
-	// 				req.decoded = decoded;
-
-	// 				if (decoded.id == '564ea5a6bbc59d5041afea57') {
-	// 					next();
-	// 				} else {
-	// 					res.send("NOOOOOOPEE");
-	// 				}
-	// 			}
-	// 		});
-	// 	} else {
-	// 		// If there is no token
-	// 		// Return an HTTP response of 403 (access forbidden) and an error message 
-	// 		return res.status(403).send({
-	// 			success: false,
-	// 			message: 'No token provided.'
-	// 		});
-	// 	}
-	// 	// next() used to be here
-	// });
+	// route middleware to verify the token is owned by an admin
+	apiRouter.use(function(req, res, next) {
+		if (req.decoded.id == '564ea5a6bbc59d5041afea57') {
+			console.log("Authenticated");
+			next();
+		} else {
+			console.log("Not Authenticated");
+			
+			return res.status(403).send({
+				// success: false,
+				// message: 'Failed to authenticate token.'
+			});
+		}
+	});
 
 		// SPECIFIC USERS //
 	apiRouter.route('/users/:user_id')

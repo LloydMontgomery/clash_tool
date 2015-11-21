@@ -12,7 +12,6 @@ angular.module('authService', [])
 	// log a user in
 	authFactory.login = function(name, password) {
 		// return the promise object and its data
-		console.log(name);
 		return $http.post('/api/authenticate', { 
 			name: name,
 			password: password
@@ -29,7 +28,8 @@ angular.module('authService', [])
 	// check if a user is logged in
 	// checks if there is a local token 
 	authFactory.isLoggedIn = function() {
-		if (AuthToken.getToken()) 
+		console.log(AuthToken.getToken());
+		if (AuthToken.getToken())
 			return true;
 		else
 			return false;
@@ -86,8 +86,8 @@ angular.module('authService', [])
 	interceptorFactory.responseError = function(response) {
 		// if our server returns a 403 forbidden response
 		if (response.status == 403) { 
-			AuthToken.setToken(); 
-			$location.path('/login');
+			// AuthToken.setToken();
+			$location.path('/');
 		}
 		// return the errors from the server as a promise
 		return $q.reject(response); 

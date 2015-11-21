@@ -11,7 +11,6 @@ angular.module('authCtrl', [])
 
 		// clear the error
 		vm.error = '';
-		console.log(vm.loginData.name);
 		if (!vm.isRegistering) {  // Then user is trying to log in
 			Auth.login(vm.loginData.name, vm.loginData.password)
 				.then(function(data) {
@@ -67,7 +66,7 @@ angular.module('authCtrl', [])
 	};
 
 	// function to handle logging out
-	vm.doLogout = function() { 
+	vm.doLogout = function() {
 		Auth.logout();
 		// reset all user info 
 		vm.user = {}; 
