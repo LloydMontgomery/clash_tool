@@ -1,6 +1,6 @@
 var express	= require('express'),			// Express simplifies Node
 	User 	= require('../models/user'),	// User Schema
-	War 	= require('../models/war'),	// War Schema
+	War 	= require('../models/war'),		// War Schema
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
 	config	= require('../../config');
 
@@ -251,6 +251,7 @@ module.exports = function(app, express) {
 		War.findById(req.params.war_id, function(err, war) { 
 			if (err) res.send(err);
 			// return that user
+
 			res.json(war);
 		});
 	})
@@ -280,9 +281,6 @@ module.exports = function(app, express) {
 			});
 		});
 	});
-
-
-
 
 
 	return apiRouter;

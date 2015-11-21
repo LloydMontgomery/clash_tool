@@ -19,7 +19,7 @@ angular.module('warCtrl', ['warService'])
 	});
 })
 
-// controller applied to user creation page
+// controller applied to War creation page
 .controller('warCreateController', function(War) { 
 	var vm = this;
 	// variable to hide/show elements of the view 
@@ -33,6 +33,7 @@ angular.module('warCtrl', ['warService'])
 
 	// function to create a user
 	vm.saveWar = function() { 
+
 		vm.processing = true;
 		// clear the message
 		vm.message = '';
@@ -43,6 +44,7 @@ angular.module('warCtrl', ['warService'])
 				// clear the form
 				vm.warData = {};
 				vm.message = data.message;
+
 		});
 	};
 })
