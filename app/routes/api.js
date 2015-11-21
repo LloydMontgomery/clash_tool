@@ -2,7 +2,16 @@ var express	= require('express'),			// Express simplifies Node
 	User 	= require('../models/user'),	// User Schema
 	War 	= require('../models/war'),		// War Schema
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
-	config	= require('../../config');
+	config	= require('../../config'),
+	aws 	= require('aws-sdk');			// This is for uploading to S3
+
+// var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+// var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+// var S3_BUCKET = process.env.S3_BUCKET
+
+var AWS_ACCESS_KEY = 'AKIAIVZN47TI5WEQDX5Q';
+var AWS_SECRET_KEY = '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';
+var S3_BUCKET = 'clashtool';
 
 module.exports = function(app, express) {
 	var superSecret = config.secret;  // This is for the token
@@ -95,6 +104,32 @@ module.exports = function(app, express) {
 				success: true,
 				message: 'User created!' });
 		})
+	});
+
+		apiRouter.route('/sign_s3')
+	// (accessed at GET http://localhost:8080/api/sign_s3) 
+	.get(function(req, res){
+		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+		var s3 = new aws.S3();
+		var s3_params = {
+			Bucket: S3_BUCKET,
+			Key: req.query.file_name,
+			Expires: 60,
+			ContentType: req.query.file_type,
+			ACL: 'public-read'
+		};
+		s3.getSignedUrl('putObject', s3_params, function(err, data){
+			if(err){
+				console.log(err);
+			} else{
+				var return_data = {
+					signed_request: data,
+					url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
+				};
+				res.write(JSON.stringify(return_data));
+				res.end();
+			}
+		});
 	});
 
 	// route middleware to verify a token
@@ -256,8 +291,8 @@ module.exports = function(app, express) {
 		});
 	})
 
-	// update the user with this id
-	// (accessed at PUT http://localhost:8080/api/users/:user_id) 
+	// update the war with this id
+	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
 		// use our war model to find the war we want
 		War.findById(req.params.war_id, function(err, war) { 
@@ -273,6 +308,8 @@ module.exports = function(app, express) {
 				war.theirScore = req.body.theirScore;
 			if (req.body.date)
 				war.date = req.body.date;
+			if (req.body.img)
+				war.img = req.body.img;
 			// save the war
 			war.save(function(err) {
 				if (err) res.send(err);

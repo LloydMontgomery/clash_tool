@@ -20,6 +20,7 @@
 			<th>Us</th>
 			<th>Them</th>
 			<th>Date</th>
+			<th>Date</th>
 			<th class="col-sm-2"></th>
 		</tr>
 	</thead>
@@ -31,6 +32,7 @@
 			<td>{{ battle.ourScore }}</td>
 			<td>{{ battle.theirScore }}</td>
 			<td>{{ battle.date.toString().substr(0,10) }}</td>
+			<td><img ng-src="{{ battle.img }}"></td>
 			<td class="col-sm-2">
 				<a ng-href="/wars/{{ battle._id }}" class="btn btn-danger">Edit</a>
 			</td>
