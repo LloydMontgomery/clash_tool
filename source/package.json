@@ -7,6 +7,18 @@
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.14.1",
+    "bower": "^1.6.5",
+    "express": "^4.13.3",
+    "jsonwebtoken": "^5.4.1",
+    "mongoose": "^4.2.5",
+    "morgan": "^1.6.1"
+  },
+  "engines": {
+    "node": "0.12.5"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LloydMontgomery/clash_tool.git"
@@ -16,14 +28,5 @@
   "bugs": {
     "url": "https://github.com/LloydMontgomery/clash_tool/issues"
   },
-  "homepage": "https://github.com/LloydMontgomery/clash_tool#readme",
-  "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
-    "body-parser": "^1.14.1",
-    "bower": "^1.6.5",
-    "express": "^4.13.3",
-    "jsonwebtoken": "^5.4.1",
-    "mongoose": "^4.2.5",
-    "morgan": "^1.6.1"
-  }
+  "homepage": "https://github.com/LloydMontgomery/clash_tool#readme"
 }
