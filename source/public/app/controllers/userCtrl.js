@@ -13,6 +13,9 @@ angular.module('userCtrl', ['userService'])
 		vm.processing = false;
 		// bind the users that come back to vm.users
 		vm.users = data;
+		vm.users.sort(function(a, b) {
+			return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
+		});
 	});
 
 	// function to delete a user
