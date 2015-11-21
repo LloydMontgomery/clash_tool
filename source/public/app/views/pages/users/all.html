@@ -15,19 +15,23 @@
 <table class="table table-bordered table-striped" ng-show="user.users"> 
 	<thead>
 		<tr>
-			<th>_id</th> 
 			<th>Name</th> 
 			<th>ID</th>
+			<th>Approved</th>
+			<th>In Clan</th>
+			<th>Admin</th>
 			<th class="col-sm-2"></th>
 		</tr>
 	</thead>
 	<tbody>
 		<!-- LOOP OVER THE USERS -->
 		<tr ng-repeat="person in user.users"> 
-			<td>{{ person._id }}</td>
 			<td>{{ person.name }}</td>
 			<td>{{ person.id }}</td>
-			<td class="col-sm-2">
+			<td>{{ person.approved }}</td>
+			<td>{{ person.inClan }}</td>
+			<td>{{ person.admin }}</td>
+			<td class="col-sm-3">
 				<a ng-href="/users/{{ person._id }}" class="btn btn-danger">Edit</a>
 				<a href="#" ng-click="user.deleteUser(person._id)" class="btn btn-primary">Delete</a>
 			</td>

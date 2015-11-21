@@ -5,8 +5,7 @@ angular.module('ClashTool', [
 	'authService',
 	'userService',
 	'mainCtrl',
-	'userCtrl',
-	'authCtrl'
+	'userCtrl'
 ])
 
 // application configuration to integrate token into requests

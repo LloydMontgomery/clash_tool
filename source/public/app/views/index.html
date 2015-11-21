@@ -21,7 +21,6 @@
 	<!-- APP -->
 	<script src="app/controllers/mainCtrl.js"></script>
 	<script src="app/controllers/userCtrl.js"></script>
-	<script src="app/controllers/authCtrl.js"></script>
 	<script src="app/services/authService.js"></script> 
 	<script src="app/services/userService.js"></script>
 	<script src="app/app.routes.js"></script>
@@ -55,7 +54,7 @@
 						</a>
 					</li>
 					<li ng-if="main.loggedIn" class="navbar-text">
-						Hello {{ main.user.data.name }}!
+						Hello {{ main.user }}!
 					</li>
 					<li ng-if="main.loggedIn">
 						<a href="#" ng-click="main.doLogout()">Logout</a>

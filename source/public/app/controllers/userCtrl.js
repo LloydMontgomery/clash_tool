@@ -37,6 +37,12 @@ angular.module('userCtrl', ['userService'])
 	var vm = this;
 	// variable to hide/show elements of the view // differentiates between create or edit pages 
 	vm.type = 'create';
+
+	vm.userData = {};
+	vm.userData.approved = true;
+	vm.userData.inClan = true;
+	vm.userData.admin = false;
+
 	// function to create a user
 	vm.saveUser = function() { 
 		vm.processing = true;
@@ -71,7 +77,6 @@ angular.module('userCtrl', ['userService'])
 		User.update($routeParams.user_id, vm.userData) 
 			.success(function(data) {
 				vm.processing = false; // clear the form
-				// vm.userData = {};
 				// bind the message from our API to vm.message
 				vm.message = data.message;
 		});

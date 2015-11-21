@@ -34,9 +34,7 @@ module.exports = function(app, express) {
 				});
 			} else if (user) {
 				// check if password matches
-				console.log("PASSWORD: " + req.body.password);
-				var validPassword = user.comparePassword(req.body.password); 
-				console.log(validPassword);
+				var validPassword = user.comparePassword(req.body.password);
 				if (!validPassword) {
 			  		res.json({
 			    		success: false,
@@ -45,13 +43,14 @@ module.exports = function(app, express) {
 				} else {
 					// if user is found and password is right
 					// create a token
-					console.log(user);
 					var token = jwt.sign({
 						name: user.name,
 			        	id: user._id
 			        }, superSecret, 
 			        { expiresIn: 7200 // expires in 2 hours 
 					});
+					// Save this for later
+					req.decoded = jwt.decode(token);
 			        // return the information including token as JSON
 					res.json({
 						success: true,
@@ -72,6 +71,15 @@ module.exports = function(app, express) {
 		user.name = req.body.name;
 		user.id = req.body.id;
 		user.password = req.body.password;
+		user.admin = false;
+
+		if (req.headers.referer.indexOf("/users") > -1) {
+			user.approved = true;
+			user.inClan = true;
+		} else {
+			user.approved = false;
+			user.inClan = false;
+		}
 
 		// save the user and check for errors
 		user.save(function(err) { 
@@ -136,17 +144,18 @@ module.exports = function(app, express) {
 
 	// route middleware to verify the token is owned by an admin
 	apiRouter.use(function(req, res, next) {
-		if (req.decoded.id == '564ea5a6bbc59d5041afea57') {
-			console.log("Authenticated");
-			next();
-		} else {
-			console.log("Not Authenticated");
-			
-			return res.status(403).send({
-				// success: false,
-				// message: 'Failed to authenticate token.'
-			});
-		}
+		// use our user model to find the user we want
+		User.findById(req.decoded.id, function(err, user) { 
+
+			if (user.admin == true) {
+				next();
+			} else {
+				return res.status(403).send({
+					success: false,
+					message: 'Failed to authenticate token.'
+				});
+			}
+		});
 	});
 
 		// SPECIFIC USERS //
@@ -170,9 +179,15 @@ module.exports = function(app, express) {
 			if (req.body.name) 
 				user.name = req.body.name;
 			if (req.body.username) 
-				user.username = req.body.username;
+				user.id = req.body.id;
 			if (req.body.password)
 				user.password = req.body.password;
+			if (req.body.approved != null)
+				user.approved = req.body.approved;
+			if (req.body.inClan != null)
+				user.inClan = req.body.inClan;
+			if (req.body.admin != null)
+				user.admin = req.body.admin;
 			// save the user
 			user.save(function(err) {
 				if (err) res.send(err);
