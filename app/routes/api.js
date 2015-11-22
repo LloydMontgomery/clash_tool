@@ -15,6 +15,8 @@ module.exports = function(app, express) {
 	// Get an instance of the express router
 	var apiRouter = express.Router();
 
+	// ============================ PUBLIC APIS ============================ //
+
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	apiRouter.post('/authenticate', function(req, res) {
 		// find the user
@@ -111,32 +113,18 @@ module.exports = function(app, express) {
 		});
 	});
 
-	apiRouter.route('/sign_s3')
-	// (accessed at GET http://localhost:8080/api/sign_s3) 
-	.get(function(req, res){
-		console.log(process.env);
-		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
-		var s3 = new aws.S3();
-		var s3_params = {
-			Bucket: S3_BUCKET,
-			Key: req.query.file_name,
-			Expires: 60,
-			ContentType: req.query.file_type,
-			ACL: 'public-read'
-		};
-		s3.getSignedUrl('putObject', s3_params, function(err, data){
-			if(err){
-				console.log(err);
-			} else{
-				var return_data = {
-					signed_request: data,
-					url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
-				};
-				res.write(JSON.stringify(return_data));
-				res.end();
-			}
+	apiRouter.route('/wars')
+	// get all the wars (accessed at GET http://localhost:8080/api/wars)
+	.get(function(req, res) {
+		War.find(function(err, wars) {
+			if (err) res.send(err);
+			// return the wars
+			res.json(wars);
 		});
 	});
+
+
+	// ======================== BASIC AUTHENTICATION ======================== //
 
 	// route middleware to verify a token
 	apiRouter.use(function(req, res, next) {
@@ -169,10 +157,14 @@ module.exports = function(app, express) {
 		// next() used to be here
 	});
 
+	// ============================ PRIVATE APIS ============================ //
+
 	// API endpoint to get user information
 	apiRouter.get('/me', function(req, res) {
 		res.send(req.decoded);
 	});
+
+	// ======================== ADMIN AUTHENTICATION ======================== //
 
 	// route middleware to verify the token is owned by an admin
 	apiRouter.use(function(req, res, next) {
@@ -186,6 +178,34 @@ module.exports = function(app, express) {
 					success: false,
 					message: 'Failed to authenticate token.'
 				});
+			}
+		});
+	});
+
+	// ============================= ADMIN APIS ============================= //
+
+	apiRouter.route('/sign_s3')
+	// (accessed at GET http://localhost:8080/api/sign_s3) 
+	.get(function(req, res){
+		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
+		var s3 = new aws.S3();
+		var s3_params = {
+			Bucket: S3_BUCKET,
+			Key: req.query.file_name,
+			Expires: 60,
+			ContentType: req.query.file_type,
+			ACL: 'public-read'
+		};
+		s3.getSignedUrl('putObject', s3_params, function(err, data){
+			if(err){
+				console.log(err);
+			} else{
+				var return_data = {
+					signed_request: data,
+					url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
+				};
+				res.write(JSON.stringify(return_data));
+				res.end();
 			}
 		});
 	});
@@ -272,14 +292,7 @@ module.exports = function(app, express) {
 				message: 'War created!' });
 		})
 	})
-	// get all the wars (accessed at GET http://localhost:8080/api/wars)
-	.get(function(req, res) {
-		War.find(function(err, wars) {
-			if (err) res.send(err);
-			// return the wars
-			res.json(wars);
-		});
-	})
+
 
 	// SPECIFIC WARS //
 	apiRouter.route('/wars/:war_id')

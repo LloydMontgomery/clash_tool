@@ -10,10 +10,14 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	$rootScope.$on('$routeChangeStart', function() {
 
 		vm.loggedIn = Auth.isLoggedIn();
+		console.log(vm.loggedIn);
+
 		// get user information on route change
-		Auth.getUser().then(function(data) {
-			vm.user = data.data.name;
-		});
+		if (vm.loggedIn) {
+			Auth.getUser().then(function(data) {
+				vm.user = data.data.name;
+			});
+		}
 
 		// Grab all users & wars if routing to main page
 		if ($location.path() == '/') {
