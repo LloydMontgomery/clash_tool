@@ -1,11 +1,11 @@
 <div class="col-xs-12"> 
-	<div class="page-header"> 
+	<div class="page-header hidden-sm"> 
 		<h1>
 			Users
 			<a href="/users/create" class="btn btn-default"> 
-				<span class="glyphicon glyphicon-plus"></span> 
+				<span class="glyphicon glyphicon-plus"></span>
 				New User
-			</a> 
+			</a>
 		</h1>
 	</div>
 	<!-- LOADING MESSAGE -->
@@ -18,6 +18,7 @@
 			<tr>
 				<th>Name</th> 
 				<th>ID</th>
+				<th>Title</th>
 				<th>Approved</th>
 				<th>In Clan</th>
 				<th>Admin</th>
@@ -29,12 +30,13 @@
 			<tr ng-repeat="person in user.users"> 
 				<td>{{ person.name }}</td>
 				<td>{{ person.id }}</td>
+				<td>{{ person.title }}</td>
 				<td>{{ person.approved }}</td>
 				<td>{{ person.inClan }}</td>
 				<td>{{ person.admin }}</td>
 				<td class="col-sm-3">
 					<a ng-href="/users/{{ person._id }}" class="btn btn-primary">Edit</a>
-					<a href="#" ng-click="user.deleteUser(person._id)" class="btn btn-primary">Delete</a>
+					<a href="#" ng-click="user.deleteUser(person._id)" class="btn btn-danger">Delete</a>
 				</td>
 			</tr>
 		</tbody>

@@ -8,6 +8,8 @@ var UserSchema = new Schema({
 	name: { type: String, required: true, index: { unique: true }},
 	id: { type: String, required: true},
 	password: { type: String, required: true, select: false },
+	title: { type: String, required: true, select: true },
+	dateJoined: { type: Date, required: true, select: true },
 	admin: { type: Boolean, required: true, select: true },
 	approved: { type: Boolean, required: true, select: true },
 	inClan: { type: Boolean, required: true, select: true }

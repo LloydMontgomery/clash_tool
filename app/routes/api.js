@@ -73,7 +73,15 @@ module.exports = function(app, express) {
 		user.name = req.body.name;
 		user.id = req.body.id;
 		user.password = req.body.password;
-		user.admin = false;
+		user.dateJoined = new Date();
+
+		user.admin = false;  // Default to false
+		if (req.body.admin)
+			user.admin = req.body.admin;
+
+		user.title = "Member";  // Default to "Member"
+		if (req.body.title)
+			user.title = req.body.title;
 
 		if (req.headers.referer.indexOf("/users") > -1) {
 			user.approved = true;
@@ -96,9 +104,18 @@ module.exports = function(app, express) {
 				success: true,
 				message: 'User created!' });
 		})
+	})
+
+	// get all the users (accessed at GET http://localhost:8080/api/users)
+	.get(function(req, res) {
+		User.find(function(err, users) {
+			if (err) res.send(err);
+			// return the users
+			res.json(users);
+		});
 	});
 
-		apiRouter.route('/sign_s3')
+	apiRouter.route('/sign_s3')
 	// (accessed at GET http://localhost:8080/api/sign_s3) 
 	.get(function(req, res){
 		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
@@ -176,16 +193,6 @@ module.exports = function(app, express) {
 		});
 	});
 
-	apiRouter.route('/users')
-	// get all the users (accessed at GET http://localhost:8080/api/users)
-	.get(function(req, res) {
-		User.find(function(err, users) {
-			if (err) res.send(err);
-			// return the users
-			res.json(users);
-		});
-	});
-
 	// SPECIFIC USERS //
 	apiRouter.route('/users/:user_id')
 	// (accessed at GET http://localhost:8080/api/users/:user_id) 
@@ -210,17 +217,23 @@ module.exports = function(app, express) {
 				user.id = req.body.id;
 			if (req.body.password)
 				user.password = req.body.password;
+			if (req.body.title)
+				user.title = req.body.title;
 			if (req.body.approved != null)
 				user.approved = req.body.approved;
 			if (req.body.inClan != null)
 				user.inClan = req.body.inClan;
 			if (req.body.admin != null)
 				user.admin = req.body.admin;
+
 			// save the user
 			user.save(function(err) {
 				if (err) res.send(err);
 				// return a message
-				res.json({ message: 'User updated!' });
+				res.json({
+					success: true,
+					message: 'User updated!'
+				});
 			});
 		});
 	})

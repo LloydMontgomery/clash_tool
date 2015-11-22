@@ -78,70 +78,13 @@
 					<h1 class="title">Members</h1>
 					<div id="member-panel-main-container">
 						<!-- Member Panel -->
-						<div id="Imperial-info" class="member-panel-container col-lg-3 col-xs-4">
+						<div ng-repeat="person in main.users" ng-if="person.inClan == true" class="member-panel-container col-lg-3 col-xs-4">
 							<div class="member-panel">
-								<h4 class="member-name"> Imperial </h4>
-								Leader <br>
-								Started Clan
+								<h4 class="member-name"> {{ person.name }} </h4>
+								{{ person.title }} <br>
+								{{ person.dateJoined.toString().substr(0,10) }}
 							</div>
 						</div>
-						<!-- Member Panel -->
-						<div class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h4 class="member-name"> Blitzkrieg </h4>
-								Co-Leader <br>
-								Started Clan
-							</div>
-						</div>
-						<!-- Member Panel -->
-						<div class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h4 class="member-name"> RayRay </h4>
-								Elder <br>
-								Nov 2015
-							</div>
-						</div>
-						<!-- Member Panel -->
-						<div class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h5 class="member-name"> The Kingslayer </h5>
-								Elder <br>
-								Nov 2015
-							</div>
-						</div>
-						<!-- Member Panel -->
-						<div class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h4 class="member-name"> PK </h4>
-								Elder <br>
-								Nov 2015
-							</div>
-						</div>
-						<!-- Member Panel -->
-						<div class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h4 class="member-name"> Phantom </h4>
-								Elder <br>
-								Nov 2015
-							</div>
-						</div>
-						<!-- Member Panel -->
-						<div class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h4 class="member-name"> Zephyro </h4>
-								Elder <br>
-								Nov 2015
-							</div>
-						</div>
-						<!-- Member Panel -->
-						<!-- <div class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h4 class="member-name"> Placeholder </h4>
-								Title <br>
-								DateJoined
-							</div>
-						</div> -->
-						<!-- <div class="member-panel-container hidden-lg col-xs-4"> Space Div </div> -->
 					</div>
 				</div>
 			</div>
@@ -155,78 +98,33 @@
 				<div class="col-lg-12">
 					<h1 class="title">War History</h1>
 					<div id="history-main-container">
-						<div class="col-xs-0"> <!-- Space Div --> </div>
 						<div class="history-container col-xs-12">
-							<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-								<!-- War Entry -->
-								<div class="panel panel-default" onclick="$('#collapse3').collapse('toggle')">
-									<div class="panel-heading" role="tab" id="heading3">
-										<h4 class="panel-title">
-											<a class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapse3">
-												<span class="pull-left"> 11.12.15 </span>
-												<span class="pull-right"> +130 Exp </span>
-												<div class="war-win"> 27-23 </div>
-											</a>
-										</h4>
-									</div>
-									<div id="collapse3" class="panel-collapse collapse" role="tabpanel" onclick="$('#collapse3').collapse('toggle')" aria-labelledby="heading3">
-										<div class="panel-body">
-											<img src="./img/war-history/w3.png">
-										</div>
+							<!-- War Entry -->
+							 <uib-accordion close-others="true">
+								<uib-accordion-group ng-repeat="war in main.wars" heading="Static Header, initially expanded">
+									This content is straight in the template.
+								</uib-accordion-group>
+								<uib-accordion-group heading="Static Header, initially expanded">
+									This content is straight in the template.
+								</uib-accordion-group>
+							</uib-accordion>
+							<!-- War Entry -->
+							<!-- <div class="panel panel-default" ng-click="$('#collapse3').collapse('toggle')">
+								<div class="panel-heading" role="tab" id="heading3">
+									<h4 class="panel-title">
+										<a class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapse3">
+											<span class="pull-left"> 11.12.15 </span>
+											<span class="pull-right"> +130 Exp </span>
+											<div class="war-win"> 27-23 </div>
+										</a>
+									</h4>
+								</div>
+								<div id="collapse3" class="panel-collapse collapse" role="tabpanel" ng-click="$('#collapse3').collapse('toggle')" aria-labelledby="heading3">
+									<div class="panel-body">
+										<img src="./img/war-history/w3.png">
 									</div>
 								</div>
-								<!-- War Entry -->
-								<div class="panel panel-default" onclick="$('#collapse2').collapse('toggle')">
-									<div class="panel-heading" role="tab" id="heading2">
-										<h4 class="panel-title">
-											<a class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapse2">
-												<span class="pull-left"> 11.10.15 </span>
-												<span class="pull-right"> + &nbsp80 Exp </span>
-												<div class="war-loss"> 25-27 </div>
-											</a>
-										</h4>
-									</div>
-									<div id="collapse2" class="panel-collapse collapse" role="tabpanel" onclick="$('#collapse2').collapse('toggle')" aria-labelledby="heading2">
-										<div class="panel-body">
-											<img src="./img/war-history/w2.png">
-										</div>
-									</div>
-								</div>
-								<!-- War Entry -->
-								<div class="panel panel-default" onclick="$('#collapse1').collapse('toggle')">
-									<div class="panel-heading" role="tab" id="heading1">
-										<h4 class="panel-title">
-											<a class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapse1">
-												<span class="pull-left"> 11.07.15 </span>
-												<span class="pull-right"> +130 Exp </span>
-												<div class="war-win"> 27-21 </div>
-											</a>
-										</h4>
-									</div>
-									<div id="collapse1" class="panel-collapse collapse" role="tabpanel" onclick="$('#collapse1').collapse('toggle')" aria-labelledby="heading1">
-										<div class="panel-body">
-											<img src="./img/war-history/w1.png">
-										</div>
-									</div>
-								</div>
-								<!-- War Entry -->
-								<!-- <div class="panel panel-default" onclick="$('#collapseNUMBER').collapse('toggle')">
-									<div class="panel-heading" role="tab" id="headingNUMBER">
-										<h4 class="panel-title">
-											<a class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapseNUMBER">
-												<span class="pull-left"> mm.dd.yy </span>
-												<span class="pull-right"> +XXX Exp </span>
-												<div class="war-XXX"> XX-XX </div>
-											</a>
-										</h4>
-									</div>
-									<div id="collapseNUMBER" class="panel-collapse collapse" role="tabpanel" onclick="$('#collapseNUMBER').collapse('toggle')" aria-labelledby="headingNUMBER">
-										<div class="panel-body">
-											<img src="./img/war-history/w1.png">
-										</div>
-									</div>
-								</div> -->
-							</div>
+							</div> -->
 							<span class="help-tip"> (Did ya try clicking one?) </span>
 						</div>
 						<div class="col-xs-1"> <!-- Space Div --> </div>

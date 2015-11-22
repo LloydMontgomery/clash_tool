@@ -1,6 +1,6 @@
-angular.module('mainCtrl', ['br.fullpage'])
+angular.module('mainCtrl', ['ui.bootstrap'])
 
-.controller('mainController', function($rootScope, $location, Auth, User) {
+.controller('mainController', function($rootScope, $location, Auth, User, War) {
 	var vm = this;
 
 	// get info if a person is logged in
@@ -14,7 +14,26 @@ angular.module('mainCtrl', ['br.fullpage'])
 		Auth.getUser().then(function(data) {
 			vm.user = data.data.name;
 		});
+
+		// Grab all users & wars if routing to main page
+		if ($location.path() == '/') {
+			User.all().success(function(data) {
+				// bind the users that come back to vm.users
+				vm.users = data;
+				vm.users.sort(function(a, b) {
+					return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
+				});
+			});
+			War.all().success(function(data) {
+				// bind the users that come back to vm.users
+				vm.wars = data;
+				vm.wars.sort(function(a, b) {
+					return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
+				});
+			});
+		}
 	});
+
 
 	// function to handle login form
 	vm.processAuth = function() {

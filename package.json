@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "angular": "^1.4.8",
     "aws-sdk": "*",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",

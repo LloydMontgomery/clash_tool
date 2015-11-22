@@ -36,7 +36,7 @@ angular.module('userCtrl', ['userService'])
 })
 
 // controller applied to user creation page
-.controller('userCreateController', function(User) { 
+.controller('userCreateController', function($location, User) { 
 	var vm = this;
 	// variable to hide/show elements of the view // differentiates between create or edit pages 
 	vm.type = 'create';
@@ -45,6 +45,12 @@ angular.module('userCtrl', ['userService'])
 	vm.userData.approved = true;
 	vm.userData.inClan = true;
 	vm.userData.admin = false;
+	vm.userData.title = "Member";
+
+	if (!vm.userData.password){
+		vm.message = data.data.message;
+		return;
+	}
 
 	// function to create a user
 	vm.saveUser = function() { 
@@ -53,23 +59,26 @@ angular.module('userCtrl', ['userService'])
 		vm.message = '';
 		// use the create function in the userService
 		User.create(vm.userData) 
-			.success(function(data) {
+			.then(function(data) {
 				vm.processing = false;
-				// clear the form
-				vm.userData = {};
-				vm.message = data.message;
+				if (data.data.success)
+					$location.path('/users');  // Switch back to Users
+				else {
+					vm.userData.password = '';
+					vm.message = data.data.message;
+				}
 		});
 	}; 
 })
 
 // controller applied to user edit page
-.controller('userEditController', function($routeParams, User) { 
+.controller('userEditController', function($routeParams, $location, User) { 
 	var vm = this;
 	// variable to hide/show elements of the view // differentiates between create or edit pages 
 	vm.type = 'edit';
 	// get the user data for the user you want to edit // $routeParams is the way we grab data from the URL 
 	User.get($routeParams.user_id)
-		.success(function(data) { 
+		.success(function(data) {
 			vm.userData = data;
 	});
 	// function to save the user
@@ -78,10 +87,14 @@ angular.module('userCtrl', ['userService'])
 		vm.message = '';
 		// call the userService function to update
 		User.update($routeParams.user_id, vm.userData) 
-			.success(function(data) {
-				vm.processing = false; // clear the form
-				// bind the message from our API to vm.message
-				vm.message = data.message;
+			.then(function(data) {
+				vm.processing = false;
+				if (data.data.success)
+					$location.path('/users');  // Switch back to Users
+				else {
+					vm.userData.password = '';
+					vm.message = data.data.message;
+				}
 		});
 	};
 });
