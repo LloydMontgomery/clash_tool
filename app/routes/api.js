@@ -5,13 +5,9 @@ var express	= require('express'),			// Express simplifies Node
 	config	= require('../../config'),
 	aws 	= require('aws-sdk');			// This is for uploading to S3
 
-// var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-// var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-// var S3_BUCKET = process.env.S3_BUCKET
-
-var AWS_ACCESS_KEY = 'AKIAIVZN47TI5WEQDX5Q';
-var AWS_SECRET_KEY = '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';
-var S3_BUCKET = 'clashtool';
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var S3_BUCKET = process.env.S3_BUCKET
 
 module.exports = function(app, express) {
 	var superSecret = config.secret;  // This is for the token
@@ -118,6 +114,7 @@ module.exports = function(app, express) {
 	apiRouter.route('/sign_s3')
 	// (accessed at GET http://localhost:8080/api/sign_s3) 
 	.get(function(req, res){
+		console.log(process.env);
 		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 		var s3 = new aws.S3();
 		var s3_params = {
