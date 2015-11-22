@@ -1,3 +1,9 @@
+#login-container {
+	margin-top: 50px;
+	padding: 20px;
+	background-color: #eee;
+}
+
 #register
 {
 	text-align: center;
@@ -5,45 +11,8 @@
 	padding-top: 10px;
 }
 
-.jumbotron > div
+#login-container > div
 {
 	text-align: center;
 	font-size: 4em;
 }
-
-
-/* when hiding the thing */
-/*.form-item > .ng-hide-add{ 
-	-webkit-animation: 0.5s zoomOut ease;
-	animation: 0.5s zoomOut ease;
-}*/
-
-/* when showing the thing */
-/*.form-item > .ng-hide-remove{ 
-	-webkit-animation: 0.5s zoomIn ease; 
-	animation: 0.5s zoomIn ease;*/
-
-  /*-webkit-animation: mymove 5s; /* Chrome, Safari, Opera */
-  /*animation: mymove 2s infinite;*/
-
-
-/*@-webkit-keyframes mymove {
-    from {line-height: 0px;}
-    to {line-height: 50px;}
-} */
-
-
-/*
-.jumbotron {
-    line-height: 16px;
-    -webkit-animation: mymove 5s; /* Chrome, Safari, Opera
-    animation: mymove 5s;
-}
-
-@-webkit-keyframes mymove {
-    50% {line-height: 50px;}
-}
-
-@keyframes mymove {
-    50% {line-height: 50px;}
-}*/

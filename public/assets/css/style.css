@@ -37,6 +37,9 @@ main {
 	right: 0px;
 	padding: 15px;
 }
+#navbar-links span {
+	margin: 0 5px 0 5px;
+}
 #navbar-links a {
 	color: #0680AF;
 }

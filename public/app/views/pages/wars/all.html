@@ -1,41 +1,43 @@
-<div class="page-header"> 
-	<h1>
-		Wars
-		<a href="/wars/create" class="btn btn-default"> 
-			<span class="glyphicon glyphicon-plus"></span> 
-			New War
-		</a> 
-	</h1>
+<div class="col-xs-12"> 
+	<div class="page-header"> 
+		<h1>
+			Wars
+			<a href="/wars/create" class="btn btn-default"> 
+				<span class="glyphicon glyphicon-plus"></span> 
+				New War
+			</a> 
+		</h1>
+	</div>
+	<!-- LOADING MESSAGE -->
+	<div class="jumbotron text-center" ng-show="war.processing"> 
+		<span class="glyphicon glyphicon-repeat spinner"></span>
+		<p>Loading Wars...</p>
+	</div>
+	<table class="table table-bordered table-striped" ng-show="war.wars"> 
+		<thead>
+			<tr>
+				<th>Number</th> 
+				<th>Exp Gained</th>
+				<th>Us</th>
+				<th>Them</th>
+				<th>Date</th>
+				<th>Photo</th>
+				<th class="col-sm-2"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- LOOP OVER THE USERS -->
+			<tr ng-repeat="battle in war.wars"> 
+				<td>{{ battle.number }}</td>
+				<td>{{ battle.exp }}</td>
+				<td>{{ battle.ourScore }}</td>
+				<td>{{ battle.theirScore }}</td>
+				<td>{{ battle.date.toString().substr(0,10) }}</td>
+				<td><a ng-href="{{ battle.img }}" target="_blank">Overview</a></td>
+				<td class="col-xm-2">
+					<a ng-href="/wars/{{ battle._id }}" class="btn btn-primary">Edit</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>
-<!-- LOADING MESSAGE -->
-<div class="jumbotron text-center" ng-show="war.processing"> 
-	<span class="glyphicon glyphicon-repeat spinner"></span>
-	<p>Loading Wars...</p>
-</div>
-<table class="table table-bordered table-striped" ng-show="war.wars"> 
-	<thead>
-		<tr>
-			<th>Number</th> 
-			<th>Exp Gained</th>
-			<th>Us</th>
-			<th>Them</th>
-			<th>Date</th>
-			<th>Date</th>
-			<th class="col-sm-2"></th>
-		</tr>
-	</thead>
-	<tbody>
-		<!-- LOOP OVER THE USERS -->
-		<tr ng-repeat="battle in war.wars"> 
-			<td>{{ battle.number }}</td>
-			<td>{{ battle.exp }}</td>
-			<td>{{ battle.ourScore }}</td>
-			<td>{{ battle.theirScore }}</td>
-			<td>{{ battle.date.toString().substr(0,10) }}</td>
-			<td><img ng-src="{{ battle.img }}"></td>
-			<td class="col-sm-2">
-				<a ng-href="/wars/{{ battle._id }}" class="btn btn-danger">Edit</a>
-			</td>
-		</tr>
-	</tbody>
-</table>

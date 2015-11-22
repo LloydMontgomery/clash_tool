@@ -2,6 +2,7 @@ angular.module('mainCtrl', ['br.fullpage'])
 
 .controller('mainController', function($rootScope, $location, Auth, User) {
 	var vm = this;
+
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
 	
@@ -26,6 +27,7 @@ angular.module('mainCtrl', ['br.fullpage'])
 					// if a user successfully logs in, redirect to users page
 					if (data.data.success) {
 						// vm.user = vm.loginData.name;
+						console.log(data);
 						$location.path('/users');
 					}
 					else {

@@ -19,14 +19,6 @@ module.exports = function(app, express) {
 	// Get an instance of the express router
 	var apiRouter = express.Router();
 
-	// middleware to use for all requests
-	apiRouter.use(function(req, res, next) {
-		// do logging
-		// we'll add more to the middleware in Chapter 10
-		// this is where we will authenticate users
-		next(); // make sure we go to the next routes and don't stop here
-	});
-
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	apiRouter.post('/authenticate', function(req, res) {
 		// find the user
@@ -163,16 +155,6 @@ module.exports = function(app, express) {
 		// next() used to be here
 	});
 
-	apiRouter.route('/users')
-	// get all the users (accessed at GET http://localhost:8080/api/users)
-	.get(function(req, res) {
-		User.find(function(err, users) {
-			if (err) res.send(err);
-			// return the users
-			res.json(users);
-		});
-	});
-
 	// API endpoint to get user information
 	apiRouter.get('/me', function(req, res) {
 		res.send(req.decoded);
@@ -191,6 +173,16 @@ module.exports = function(app, express) {
 					message: 'Failed to authenticate token.'
 				});
 			}
+		});
+	});
+
+	apiRouter.route('/users')
+	// get all the users (accessed at GET http://localhost:8080/api/users)
+	.get(function(req, res) {
+		User.find(function(err, users) {
+			if (err) res.send(err);
+			// return the users
+			res.json(users);
 		});
 	});
 

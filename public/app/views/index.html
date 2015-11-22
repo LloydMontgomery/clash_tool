@@ -13,6 +13,7 @@
 
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
+	<link rel="stylesheet" href="assets/css/colour-scheme.css">
 	<link rel="stylesheet" href="assets/css/auth.css">
 	<link rel="stylesheet" href="assets/css/home.css">
 	<link rel="stylesheet" href="assets/css/font-styles.css">
@@ -54,13 +55,21 @@
 				</a>
 			</div>
 			<div id="navbar-links" class="pull-right">
-				<div ng-if="main.loggedIn">
-					Hello {{ main.user }}!
+				<span ng-if="main.loggedIn">
+					<!-- Hello {{ main.user }}! -->
+					<a href="/wars">Wars</a>
+				</span>
+				<span ng-if="main.loggedIn">
+					<!-- Hello {{ main.user }}! -->
+					<a href="/users">Users</a>
+				</span>
+				<span ng-if="main.loggedIn">
+					<!-- Hello {{ main.user }}! -->
 					<a ng-click="main.doLogout()">Logout</a>
-				</div>
-				<div ng-if="!main.loggedIn">
-					<a ng-click="main.doLogin()" href="/login">Login</a>
-				</div>
+				</span>
+				<span ng-if="!main.loggedIn">
+					<a href="/login">Login</a>
+				</span>
 			</div>
 		</div>
 	</nav>
