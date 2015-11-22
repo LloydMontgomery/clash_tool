@@ -1,4 +1,4 @@
-angular.module('mainCtrl', [])
+angular.module('mainCtrl', ['br.fullpage'])
 
 .controller('mainController', function($rootScope, $location, Auth, User) {
 	var vm = this;
@@ -73,6 +73,5 @@ angular.module('mainCtrl', [])
 		vm.user = {}; 
 		$location.path('/login');
 	};
-
 
 });

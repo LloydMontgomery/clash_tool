@@ -1,5 +1,5 @@
 main { 
-	padding-top: 50px; 
+	padding-top: 50px;
 }
 
 #content-views {
@@ -11,17 +11,66 @@ main {
 	position: absolute;
 }
 
-/*.ng-enter {
-	-webkit-animation:zoomInDown 1.2s both ease-in;
-	-moz-animation:zoomInDown 1.2s both ease-in;
-	animation:zoomInDown 1.2s both ease-in;
+.page-scroll, .navbar
+{
+	background-color: black;
+	color: #0680AF !important;
+/*	background-color: #0680AF;
+	color: black !important;*/
 }
 
-.ng-leave { 
-	-webkit-animation:zoomOutDown 0.5s both ease-in;
-	-moz-animation:zoomOutDown 0.5s both ease-in;
-	animation:zoomOutDown 0.5s both ease-in;
-}*/
+
+/* ===================== NAVBAR ===================== */
+.navbar {
+	height: 50px !important;
+}
+.navbar-header {
+	width: 250px;
+}
+.navbar-brand {
+	color: #0680AF !important;
+}
+#navbar-links {
+	position: absolute;
+	height: 50px;
+	top: 0px;
+	right: 0px;
+	padding: 15px;
+}
+#navbar-links a {
+	color: #0680AF;
+}
+
+
+
+
+.help-tip
+{
+	margin-top: 20px;
+}
+
+#navigation-buttons .btn
+{
+	margin: 5px 0px 5px 0px;
+
+	width: 100%;
+}
+
+#gf-logo
+{
+	width: 80%;
+}
+
+.title
+{
+	margin: 100px 0 50px 0;
+}
+
+a
+{
+	color: black;
+}
+
 
 /* HEADER ===================== */
 header .navbar {
@@ -31,31 +80,7 @@ header .navbar {
 	border-radius: 0;
 }
 
-/* ANIMATIONS ====================== */ 
-.spinner {
-	animation:spin 1s infinite;
-	-webkit-animation:spin 1s infinite;
-	-moz-animation:spin 1s infinite;
-}
 
-@keyframes spin {
-	from { transform:rotate(0deg); } 
-	to { transform:rotate(360deg); }
-}
-@-webkit-keyframes spin {
-	from { -webkit-transform:rotate(0deg); } 
-	to { -webkit-transform:rotate(360deg); }
-}
-@-moz-keyframes spin {
-	from { -moz-transform:rotate(0deg); }
-	to { -moz-transform:rotate(360deg); }
-}
-
-/*.show-hide-message.ng-hide-remove { 
-	-webkit-animation:zoomIn 0.3s both ease; 
-	-moz-animation:zoomIn 0.3s both ease; 
-	animation:zoomIn 0.3s both ease;
-}*/
 
 
 

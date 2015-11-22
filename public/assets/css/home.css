@@ -1,0 +1,137 @@
+/* General Page CSS */
+.section {
+	min-height: 100vh;
+	width: 100vw;
+	padding-bottom: 20px;
+
+	text-align: center;
+}
+.section .row {
+	margin: 0px !important;
+}
+
+/* Every Other Section Starting with the First One */
+#intro-section, #rules-section, #history-section {
+	background-color: white;
+}
+
+/* Every Other Section Starting with the Second One */
+#about-section, #members-section, #collaboration-section {
+	background-color: #eee;
+}
+
+/* Intro Section */
+#intro-section {
+	padding-top: 75px;	
+}
+#intro-section #clan-description {
+	margin: 20px;
+}
+#intro-section .btn {
+	border-radius: 20px !important;
+	box-shadow: 0px 0px 10px #dadada;
+}
+#intro-section .intro-spacer {
+	height: 50px;
+}
+
+/* About Section */
+#about-section {
+}
+#about-section .about-container {
+	margin-bottom: 12px;
+	padding: 10px;
+	padding-bottom: 20px;
+
+	border-radius: 10px;
+
+	box-shadow: 0px 0px 10px 5px #dadada;
+	background-color: white;
+}
+
+/* Rules Section */
+#rules-section {
+}
+.rules-container{
+	margin-bottom: 12px;
+	padding: 10px;
+	padding-bottom: 20px;
+
+	border-radius: 10px;
+
+	box-shadow: 0px 0px 10px 5px #dadada;
+	background-color: white;
+}
+
+/* Members Section */
+#members-section {
+}
+#member-panel-main-container{
+	width: auto;
+	margin: 0 auto 0 auto;
+}
+.member-panel-container{
+	padding: 6px;
+	border-width: 0;
+	background-color: transparent;
+}
+.member-panel{
+	margin: 0px 0px 0px 0px;
+
+	border-radius: 10px;
+
+	background-color: white;
+	box-shadow: 0px 0px 10px #dadada;
+	padding: 5px;
+}
+#members h4, #members h5{
+	height: 25px;
+}
+.filler{
+	color: white;
+}
+.smaller-text{
+	font-size: 90%;
+}
+
+/* History Section */
+#history-section {
+}
+.war-win  { color: green; }
+.war-loss { color: red; }
+.war-tie  { color: black; }
+.panel, .panel-heading{
+	border-radius: 20px !important;
+}
+.panel-default>.panel-heading{
+	background-color: white;
+}
+.panel-default>.panel-heading:hover{
+	background-color: #eee;
+}
+.panel-body > img{
+	width: 100%;
+	margin: 2px;
+}
+
+/* Collaboration Section */
+#collaboration-section {
+}
+#collaboration-section a, #collaboration-section button {
+	height: 100px;
+	width: 150px;
+
+	margin: 3px 10px 20px 10px;
+	padding-top: 15px;
+
+	border: solid lightgrey 2px;
+	border-radius: 50% !important;
+
+	background: white;
+
+	color: black;
+}
+a h4 {
+	margin-top: 25px;
+}
+

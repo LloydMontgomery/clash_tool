@@ -1,34 +1,34 @@
 {
-	"name": "clash-tool",
-	"version": "1.0.0",
-	"description": "This is a tool to help Clashers learn more about Clash of Clans",
-	"main": "server.js",
-	"scripts": {
-	"start": "node server.js",
-	"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"dependencies": {
-		"bcrypt-nodejs": "0.0.3",
-		"body-parser": "^1.14.1",
-		"bower": "^1.6.5",
-		"express": "^4.13.3",
-		"jsonwebtoken": "^5.4.1",
-		"mongoose": "^4.2.5",
-		"morgan": "^1.6.1",
-		"ejs": "*",
-		"aws-sdk": "*"
-	},
-	"engines": {
-		"node": "0.12.5"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/LloydMontgomery/clash_tool.git"
-	},
-	"author": "Lloyd Montgomery",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/LloydMontgomery/clash_tool/issues"
-	},
-	"homepage": "https://github.com/LloydMontgomery/clash_tool#readme"
+  "name": "clash-tool",
+  "version": "1.0.0",
+  "description": "This is a tool to help Clashers learn more about Clash of Clans",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "aws-sdk": "*",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.14.1",
+    "bower": "^1.6.5",
+    "ejs": "*",
+    "express": "^4.13.3",
+    "jsonwebtoken": "^5.4.1",
+    "mongoose": "^4.2.5",
+    "morgan": "^1.6.1"
+  },
+  "engines": {
+    "node": "0.12.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LloydMontgomery/clash_tool.git"
+  },
+  "author": "Lloyd Montgomery",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LloydMontgomery/clash_tool/issues"
+  },
+  "homepage": "https://github.com/LloydMontgomery/clash_tool#readme"
 }

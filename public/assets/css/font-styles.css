@@ -1,0 +1,27 @@
+@font-face{
+	font-family: "Supercell-magic";
+	src: url('../fonts/Supercell-magic-webfont.ttf') format('truetype');
+}
+@font-face{
+	font-family: "QuincyCF-Light";
+	src: url('../fonts/QuincyCF-Light-webfont.ttf');
+}
+@font-face{
+	font-family: "QuincyCF-Regular";
+	src: url('../fonts/QuincyCF-Regular-webfont.ttf');
+}
+@font-face{
+	font-family: "QuincyCF-Black";
+	src: url('../fonts/QuincyCF-Black-webfont.ttf') format('truetype');
+}
+
+h1, .navbar, #navigation-buttons
+{
+    font-family: "Supercell-Magic";
+    color: black;
+}
+
+#clan-description, .rules-container, .member-panel, .panel-group, .help-tip, #band a, #band button
+{
+	font-family: "QuincyCF-Black";
+}

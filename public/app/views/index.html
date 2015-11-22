@@ -10,13 +10,27 @@
 	<!-- CSS -->
 	<link rel="stylesheet" href="assets/libs/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets/libs/angular-animate/animate.css">
+
+	<!-- Custom CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
 	<link rel="stylesheet" href="assets/css/auth.css">
+	<link rel="stylesheet" href="assets/css/home.css">
+	<link rel="stylesheet" href="assets/css/font-styles.css">
+	<link rel="stylesheet" href="assets/css/animations.css">
+
+	<!-- jQuery -->
+	<script src="assets/js/jquery.js"></script>
 
 	<!-- JS / LIBS -->
 	<script src="assets/libs/angular/angular.min.js"></script>
 	<script src="assets/libs/angular-route/angular-route.min.js"></script>
 	<script src="assets/libs/angular-animate/angular-animate.min.js"></script>
+
+	<!-- Scrolling Nav JavaScript -->
+	<script src="assets/js/jquery.easing.min.js"></script>
+
+	<!-- Custom JS -->
+	<script src="assets/libs/br-fullpage/dist/br-fullpage.min.js"></script>
 
 	<!-- APP -->
 	<script src="app/controllers/mainCtrl.js"></script>
@@ -30,45 +44,31 @@
 
 </head>
 
-<body ng-app="ClashTool" ng-controller="mainController as main"> 
-	<!-- NAVBAR -->
-	<header>
-		<div class="navbar navbar-inverse" ng-if="main.loggedIn"> 
-			<div class="container">
-				<div class="navbar-header">
-					<a href="/" class="navbar-brand">
-						<span class="glyphicon glyphicon-fire text-danger"></span> 
-						User CRM
-					</a>
+<body ng-app="ClashTool" ng-controller="mainController as main">
+	<!-- NAVIGATION -->
+	<nav class="navbar navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a href="/" class="navbar-brand">
+					Space Monkeys
+				</a>
+			</div>
+			<div id="navbar-links" class="pull-right">
+				<div ng-if="main.loggedIn">
+					Hello {{ main.user }}!
+					<a ng-click="main.doLogout()">Logout</a>
 				</div>
-				<ul class="nav navbar-nav">
-					<li> 
-						<a href="/users">
-							<span class="glyphicon glyphicon-user"></span> 
-							Users
-						</a>
-					</li> 
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li ng-if="!main.loggedIn">
-						<a href="/login">
-							Login
-						</a>
-					</li>
-					<li ng-if="main.loggedIn" class="navbar-text">
-						Hello {{ main.user }}!
-					</li>
-					<li ng-if="main.loggedIn">
-						<a href="#" ng-click="main.doLogout()">Logout</a>
-					</li>
-				</ul>
+				<div ng-if="!main.loggedIn">
+					<a ng-click="main.doLogin()" href="/login">Login</a>
+				</div>
 			</div>
 		</div>
-	</header>
-	<main class="container"> 
+	</nav>
+	<main> 
 		<!-- ANGULAR VIEWS --> 
 		<div ng-view></div>
 	</main>
+
 </body>
 
 </html>
