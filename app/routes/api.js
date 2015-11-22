@@ -7,7 +7,7 @@ var express	= require('express'),			// Express simplifies Node
 
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
-var S3_BUCKET = process.env.S3_BUCKET
+var S3_BUCKET = process.env.S3_BUCKET_NAME;
 
 module.exports = function(app, express) {
 	var superSecret = config.secret;  // This is for the token
