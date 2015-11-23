@@ -8,7 +8,7 @@ var express	= require('express'),			// Express simplifies Node
 var config = {}; // This is to prevent errors later
 try {
 	config = require('../../config');
-} catch {
+} catch (e) {
 	console.log("Running on Heroku, use Config Vars");
 }
 

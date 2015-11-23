@@ -14,7 +14,7 @@ var express		= require('express'),			// Express simplifies Node
 var config = {};  // This is to prevent errors later
 try {
 	config = require('./config');
-} catch {
+} catch (e) {
 	console.log("Running on Heroku, use Config Vars");
 }
 
@@ -36,8 +36,11 @@ app.use(function(req, res, next) {
 // Log all requests to the console
 app.use(morgan('dev'));
 
+var DATABASE_CONNECT = config.DATABASE_CONNECT || process.env.DATABASE_CONNECT;
+console.log("HERE");
+console.log(DATABASE_CONNECT);
 // Set the Mongolab URL for database interactions
-mongoose.connect(config.DATABASE_CONNECT, options);
+mongoose.connect(DATABASE_CONNECT, options);
 
 // set static files location
 // set the public folder to serve public assets such as HTML, CSS, and JS files

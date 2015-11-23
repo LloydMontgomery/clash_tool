@@ -77,11 +77,8 @@ angular.module('authService', [])
 	interceptorFactory.request = function(config) { 
 		console.log("Token Attached: ");
 		
-
 		// grab the token
 		var token = AuthToken.getToken();
-
-		console.log(token);
 		// if the token exists, add it to the header as x-access-token
 		if (token) 
 			config.headers['x-access-token'] = token;
