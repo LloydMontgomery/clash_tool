@@ -9,12 +9,27 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	// check to see if a user is logged in on every request
 	$rootScope.$on('$routeChangeStart', function() {
 
+		var checkRoutePermission = function(route) {
+			if (route == '/' || route == '/login' ){
+				// Do Something
+			}
+			else {
+				if (vm.userInfo.admin == true) {
+					// Do Something
+				}
+				else
+					$location.path('/');
+			}
+			
+		}
+
 		vm.loggedIn = Auth.isLoggedIn();
 
 		// get user information on route change
 		if (vm.loggedIn) {
 			Auth.getUser().then(function(data) {
-				vm.user = data.data.name;
+				vm.userInfo = data.data;
+				checkRoutePermission($location.path());
 			});
 		}
 
@@ -37,7 +52,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		}
 	});
 
-
 	// function to handle login form
 	vm.processAuth = function() {
 		vm.processing = true;
@@ -48,7 +62,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					vm.processing = false;
 					// if a user successfully logs in, redirect to users page
 					if (data.data.success) {
-						$location.path('/users');
+						$location.path('/');
 					}
 					else {
 						vm.loginData.password = '';  // Clear password
@@ -91,8 +105,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	vm.doLogout = function() {
 		Auth.logout();
 		// reset all user info 
-		vm.user = {}; 
-		$location.path('/login');
+		vm.userInfo = {}; 
+		$location.path('/');
 	};
 
 });

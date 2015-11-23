@@ -54,9 +54,11 @@ module.exports = function(app, express) {
 					// create a token
 					var token = jwt.sign({
 						name: user.name,
-			        	id: user._id
+			        	id: user._id,
+			        	admin: user.admin
 			        }, TOKEN_SECRET, 
 			        { expiresIn: 7200 // expires in 2 hours 
+			        // { expiresIn: 10 // expires in 10 seconds (This is for debugging)
 					});
 					// Save this for later
 					req.decoded = jwt.decode(token);
@@ -145,7 +147,8 @@ module.exports = function(app, express) {
 			// verifies secret and checks exp
 			jwt.verify(token, TOKEN_SECRET, function(err, decoded) { 
 				if (err) {
-					return res.status(403).send({ 
+					return res.status(403).send({
+						error: err,
 						success: false,
 						message: 'Failed to authenticate token.'
 					});
@@ -159,6 +162,7 @@ module.exports = function(app, express) {
 			// If there is no token
 			// Return an HTTP response of 403 (access forbidden) and an error message 
 			return res.status(403).send({
+				error: { name: 'NoTokenProvidedError' },
 				success: false,
 				message: 'No token provided.'
 			});
@@ -184,6 +188,7 @@ module.exports = function(app, express) {
 				next();
 			} else {
 				return res.status(403).send({
+					error: err,
 					success: false,
 					message: 'Failed to authenticate token.'
 				});

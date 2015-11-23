@@ -1,4 +1,4 @@
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.nav, .pagination, .carousel, .panel-title, a { cursor: pointer; cursor: hand; }
 
 main { 
 	padding-top: 50px;

@@ -48,16 +48,13 @@
 				</a>
 			</div>
 			<div id="navbar-links" class="pull-right">
-				<span ng-if="main.loggedIn">
-					<!-- Hello {{ main.user }}! -->
+				<span ng-if="main.loggedIn  && main.userInfo.admin">
 					<a href="/wars">Wars</a>
 				</span>
-				<span ng-if="main.loggedIn">
-					<!-- Hello {{ main.user }}! -->
+				<span ng-if="main.loggedIn && main.userInfo.admin">
 					<a href="/users">Users</a>
 				</span>
 				<span ng-if="main.loggedIn">
-					<!-- Hello {{ main.user }}! -->
 					<a ng-click="main.doLogout()">Logout</a>
 				</span>
 				<span ng-if="!main.loggedIn">
