@@ -30,7 +30,7 @@ app.use(function(req, res, next) {
 app.use(morgan('dev'));
 
 // Set the Mongolab URL for database interactions
-mongoose.connect(config.database, options);
+mongoose.connect(config.DATABASE_CONNECT, options);
 
 // set static files location
 // set the public folder to serve public assets such as HTML, CSS, and JS files
@@ -53,9 +53,10 @@ app.get('*', function(req, res) {
 
 
 // --------------------------- START THE SERVER ---------------------------- //
-
-app.listen(config.port);
-console.log('Node server listening on ' + config.port);
+console.log(process.env);
+var PORT = config.PORT || process.env.PORT
+app.listen(PORT);
+console.log('Node server listening on ' + PORT);
 
 
 

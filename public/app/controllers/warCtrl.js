@@ -31,26 +31,63 @@ angular.module('warCtrl', ['warService'])
 	vm.warData.inClan = true;
 	vm.warData.admin = false;
 
-	// function to create a user
+	vm.upload_file = function(file, signed_request, url){
+		vm.message= ''; // Clear message
+		var xhr = new XMLHttpRequest();
+		xhr.open("PUT", signed_request);
+		xhr.setRequestHeader('x-amz-acl', 'public-read');
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				vm.warData.img = url
+				// call the userService function to update
+				War.create(vm.warData) 
+					.success(function(data) {
+						vm.processing = false; // clear the form
+						// bind the message from our API to vm.message
+						vm.message = data.message;
+						$location.path('/wars');
+				});
+			}
+		};
+		xhr.onerror = function() {
+			vm.message = data.message;
+		};
+		xhr.send(file);
+	}
+
+	// function to save the war
 	vm.saveWar = function() { 
-
-		vm.processing = true;
-		// clear the message
+		vm.processing = true; 
 		vm.message = '';
-		// use the create function in the userService
-		War.create(vm.warData) 
-			.success(function(data) {
-				vm.processing = false;
-				// clear the form
-				vm.warData = {};
-				vm.message = data.message;
 
-		});
+		if (vm.warData.file != null) {
+			console.log("Saving Photo");
+			War.upload(vm.warData.file)
+				.then(function(data) {
+					vm.processing = false;
+					if (data.status == 200) {
+						console.log(data.data);
+						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
+					} else {
+						vm.message = 'Could not get signed URL.';
+					}
+			});
+		}
+		else {
+			// call the userService function to update
+			War.create(vm.warData) 
+				.success(function(data) {
+					vm.processing = false; // clear the form
+					// bind the message from our API to vm.message
+					vm.message = data.message;
+					$location.path('/wars');
+			});
+		}
 	};
 })
 
 // controller applied to user edit page
-.controller('warEditController', function($routeParams, War) { 
+.controller('warEditController', function($routeParams, $location, War) { 
 	var vm = this;
 	// variable to hide/show elements of the view // differentiates between create or edit pages 
 	vm.type = 'edit';
@@ -68,7 +105,6 @@ angular.module('warCtrl', ['warService'])
 		xhr.setRequestHeader('x-amz-acl', 'public-read');
 		xhr.onload = function() {
 			if (xhr.status === 200) {
-
 				vm.warData.img = url
 				// call the userService function to update
 				War.update($routeParams.war_id, vm.warData) 
@@ -76,6 +112,7 @@ angular.module('warCtrl', ['warService'])
 						vm.processing = false; // clear the form
 						// bind the message from our API to vm.message
 						vm.message = data.message;
+						$location.path('/wars');
 				});
 			}
 		};
@@ -85,29 +122,24 @@ angular.module('warCtrl', ['warService'])
 		xhr.send(file);
 	}
 
-	vm.get_signed_request = function(file){
-		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "/api/sign_s3?file_name="+file.name+"&file_type="+file.type);
-		xhr.onreadystatechange = function(){
-			if (xhr.readyState === 4){
-				if (xhr.status === 200){
-					var response = JSON.parse(xhr.responseText);
-					vm.upload_file(file, response.signed_request, response.url);
-				} else {
-					alert("Could not get signed URL.");
-				}
-			}
-		};
-		xhr.send();
-	}
-
-	// function to save the user
+	// function to save the war
 	vm.saveWar = function() { 
 		vm.processing = true; 
 		vm.message = '';
 
-		if (vm.warData.file != null)
-			vm.get_signed_request(vm.warData.file);
+		if (vm.warData.file != null) {
+			console.log("Saving Photo");
+			War.upload(vm.warData.file)
+				.then(function(data) {
+					vm.processing = false;
+					if (data.status == 200) {
+						console.log(data.data);
+						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
+					} else {
+						vm.message = 'Could not get signed URL.';
+					}
+			});
+		}
 		else {
 			// call the userService function to update
 			War.update($routeParams.war_id, vm.warData) 
@@ -115,11 +147,11 @@ angular.module('warCtrl', ['warService'])
 					vm.processing = false; // clear the form
 					// bind the message from our API to vm.message
 					vm.message = data.message;
+					$location.path('/wars');
 			});
 		}
 	};
 });
-
 
 
 

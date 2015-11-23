@@ -35,5 +35,5 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
-
+/config.js
 .bowerrc

@@ -22,6 +22,10 @@ angular.module('warService', [])
 	warFactory.delete = function(id) { 
 		return $http.delete('/api/wars/' + id);
 	};
+	// upload a war photo to S3
+	warFactory.upload = function(file) { 
+		return $http.get('/api/sign_s3?file_name=' + file.name + '&file_type=' + file.type);
+	};
 	// return our entire warFactory object
 	return warFactory;
 });
