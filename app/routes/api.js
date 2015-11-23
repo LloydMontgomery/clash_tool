@@ -7,6 +7,8 @@ var express	= require('express'),			// Express simplifies Node
 // Need to try/catch the config setup
 try {
 	var config = require('../../config');
+} catch {
+	console.log("Running on Heroku, use Config Vars");
 }
 
 // Grab some config variables stored locally in the config or in the env if running on Heroku
