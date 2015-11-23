@@ -27,9 +27,7 @@ angular.module('warCtrl', ['warService'])
 	vm.type = 'create';
 
 	vm.warData = {};
-	vm.warData.approved = true;
-	vm.warData.inClan = true;
-	vm.warData.admin = false;
+	vm.warData.date = new Date();
 
 	vm.upload_file = function(file, signed_request, url){
 		vm.message= ''; // Clear message
@@ -60,8 +58,7 @@ angular.module('warCtrl', ['warService'])
 		vm.processing = true; 
 		vm.message = '';
 
-		if (vm.warData.file != null) {
-			console.log("Saving Photo");
+		if (vm.warData.file) {
 			War.upload(vm.warData.file)
 				.then(function(data) {
 					vm.processing = false;
@@ -72,16 +69,9 @@ angular.module('warCtrl', ['warService'])
 						vm.message = 'Could not get signed URL.';
 					}
 			});
-		}
-		else {
-			// call the userService function to update
-			War.create(vm.warData) 
-				.success(function(data) {
-					vm.processing = false; // clear the form
-					// bind the message from our API to vm.message
-					vm.message = data.message;
-					$location.path('/wars');
-			});
+		} else {
+			vm.processing = false;
+			vm.message = 'War Photo Required';
 		}
 	};
 })
@@ -97,6 +87,7 @@ angular.module('warCtrl', ['warService'])
 		.success(function(data) {
 			vm.warData = data;
 			vm.warData.date = new Date(vm.warData.date);
+			vm.warData.originalImg
 	});
 
 	vm.upload_file = function(file, signed_request, url){

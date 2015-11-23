@@ -8,8 +8,10 @@ var WarSchema = new Schema({
 	exp: { type: Number, required: true},
 	ourScore: { type: Number, required: true, select: true },
 	theirScore: { type: Number, required: true, select: true },
+	ourDest: { type: Number, required: true, select: true },
+	theirDest: { type: Number, required: true, select: true },
 	date: { type: Date, required: true, select: true },
-	img: { type: String, select: true}
+	img: { type: String, required: true, select: true},
 });
 
 // return the model

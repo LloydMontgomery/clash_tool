@@ -10,7 +10,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	$rootScope.$on('$routeChangeStart', function() {
 
 		vm.loggedIn = Auth.isLoggedIn();
-		console.log(vm.loggedIn);
 
 		// get user information on route change
 		if (vm.loggedIn) {
@@ -31,6 +30,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			War.all().success(function(data) {
 				// bind the users that come back to vm.users
 				vm.wars = data;
+				console.log(vm.wars);
 				vm.wars.sort(function(a, b) {
 					return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
 				});
@@ -49,15 +49,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					vm.processing = false;
 					// if a user successfully logs in, redirect to users page
 					if (data.data.success) {
-						// vm.user = vm.loginData.name;
-						console.log(data);
 						$location.path('/users');
 					}
 					else {
 						vm.loginData.password = '';  // Clear password
 						vm.loginData.passwordConfirm = '';  // Clear password
 						vm.error = 'ID or password incorrect';
-						//vm.error = data.data.message;
 					}
 			});
 		}

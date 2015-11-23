@@ -97,9 +97,9 @@
 /* History Section */
 #history-section {
 }
+
 .war-win  { color: green; }
 .war-loss { color: red; }
-.war-tie  { color: black; }
 .panel, .panel-heading{
 	border-radius: 20px !important;
 }

@@ -101,33 +101,19 @@
 						<div class="history-container col-xs-12">
 							<!-- War Entry -->
 							 <uib-accordion close-others="true">
-								<uib-accordion-group ng-repeat="war in main.wars" heading="Static Header, initially expanded">
-									This content is straight in the template.
-								</uib-accordion-group>
-								<uib-accordion-group heading="Static Header, initially expanded">
-									This content is straight in the template.
+								<uib-accordion-group ng-repeat="war in main.wars">
+									<uib-accordion-heading>
+										<span class="pull-left"> {{ war.date.toString().substr(0,10) }} </span>
+										<span class="pull-right"> +{{ war.exp }} Exp </span>
+										<div ng-class="(war.ourScore > war.theirScore) ? 'war-win' :'war-loss'"> 
+											{{ war.ourScore }} - {{ war.theirScore }} 
+										</div>
+									</uib-accordion-heading>
+									<img ng-src="{{war.img}}" style="width:100%">
 								</uib-accordion-group>
 							</uib-accordion>
-							<!-- War Entry -->
-							<!-- <div class="panel panel-default" ng-click="$('#collapse3').collapse('toggle')">
-								<div class="panel-heading" role="tab" id="heading3">
-									<h4 class="panel-title">
-										<a class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="collapse3">
-											<span class="pull-left"> 11.12.15 </span>
-											<span class="pull-right"> +130 Exp </span>
-											<div class="war-win"> 27-23 </div>
-										</a>
-									</h4>
-								</div>
-								<div id="collapse3" class="panel-collapse collapse" role="tabpanel" ng-click="$('#collapse3').collapse('toggle')" aria-labelledby="heading3">
-									<div class="panel-body">
-										<img src="./img/war-history/w3.png">
-									</div>
-								</div>
-							</div> -->
 							<span class="help-tip"> (Did ya try clicking one?) </span>
 						</div>
-						<div class="col-xs-1"> <!-- Space Div --> </div>
 					</div>
 				</div>
 			</div>

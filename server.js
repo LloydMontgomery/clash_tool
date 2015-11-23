@@ -37,8 +37,6 @@ app.use(function(req, res, next) {
 app.use(morgan('dev'));
 
 var DATABASE_CONNECT = config.DATABASE_CONNECT || process.env.DATABASE_CONNECT;
-console.log("HERE");
-console.log(DATABASE_CONNECT);
 // Set the Mongolab URL for database interactions
 mongoose.connect(DATABASE_CONNECT, options);
 
@@ -63,7 +61,6 @@ app.get('*', function(req, res) {
 
 
 // --------------------------- START THE SERVER ---------------------------- //
-console.log(process.env);
 var PORT = config.PORT || process.env.PORT;
 app.listen(PORT);
 console.log('Node server listening on ' + PORT);

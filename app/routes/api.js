@@ -197,6 +197,11 @@ module.exports = function(app, express) {
 	apiRouter.route('/sign_s3')
 	// (accessed at GET http://localhost:8080/api/sign_s3) 
 	.get(function(req, res){
+		console.log("TESTING");
+		console.log(AWS_ACCESS_KEY);
+		console.log(AWS_SECRET_KEY);
+		console.log(S3_BUCKET_NAME);
+
 		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 		var s3 = new aws.S3();
 		var s3_params = {
@@ -212,7 +217,7 @@ module.exports = function(app, express) {
 			} else{
 				var return_data = {
 					signed_request: data,
-					url: 'https://'+S3_BUCKET+'.s3.amazonaws.com/'+req.query.file_name
+					url: 'https://'+S3_BUCKET_NAME+'.s3.amazonaws.com/'+req.query.file_name
 				};
 				res.write(JSON.stringify(return_data));
 				res.end();
@@ -287,6 +292,9 @@ module.exports = function(app, express) {
 		war.ourScore = req.body.ourScore;
 		war.theirScore = req.body.theirScore;
 		war.date = req.body.date;
+		war.ourDest = req.body.ourDest;
+		war.theirDest = req.body.theirDest;
+		war.img = req.body.img;
 
 		// save the war and check for errors
 		war.save(function(err) { 
