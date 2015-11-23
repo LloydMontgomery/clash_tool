@@ -5,17 +5,12 @@ var express	= require('express'),			// Express simplifies Node
 	config	= require('../../config'),
 	aws 	= require('aws-sdk');			// This is for uploading to S3
 
-// var AWS_ACCESS_KEY = 'AKIAILWSLQCC2XYXQENQ'; // process.env.AWS_ACCESS_KEY;
-var AWS_SECRET_KEY = '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'; // process.env.AWS_SECRET_KEY;
-var S3_BUCKET = 'clashtool'; // process.env.S3_BUCKET_NAME;
-
 // Grab some config variables stored locally in the config or in the env if running on Heroku
-var AWS_ACCESS_KEY 	= config.AWS_ACCESS_KEY || process.env.AWS_ACCESS_KEY,
-	AWS_SECRET_KEY 	= config.AWS_SECRET_KEY || process.env.AWS_SECRET_KEY,
-	S3_BUCKET_NAME 	= config.S3_BUCKET 		|| process.env.S3_BUCKET_NAME,
-	TOKEN_SECRET 	= config.TOKEN_SECRET 	|| process.env.TOKEN_SECRET,
-	PORT			= config.PORT			|| process.env.PORT;
-
+var AWS_ACCESS_KEY 	= config.AWS_ACCESS_KEY_ID 		|| process.env.AWS_ACCESS_KEY_ID,
+	AWS_SECRET_KEY 	= config.AWS_SECRET_ACCESS_KEY 	|| process.env.AWS_SECRET_ACCESS_KEY,
+	S3_BUCKET_NAME 	= config.S3_BUCKET_NAME			|| process.env.S3_BUCKET_NAME,
+	TOKEN_SECRET 	= config.TOKEN_SECRET 			|| process.env.TOKEN_SECRET,
+	PORT			= config.PORT					|| process.env.PORT;
 
 module.exports = function(app, express) {
 
