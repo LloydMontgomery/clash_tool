@@ -11,8 +11,9 @@ var express		= require('express'),			// Express simplifies Node
 					replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 10000 } } };
 
 // Need to try/catch the config setup
+var config = {};  // This is to prevent errors later
 try {
-	var config = require('./config');
+	config = require('./config');
 } catch {
 	console.log("Running on Heroku, use Config Vars");
 }

@@ -5,8 +5,9 @@ var express	= require('express'),			// Express simplifies Node
 	aws 	= require('aws-sdk');			// This is for uploading to S3
 
 // Need to try/catch the config setup
+var config = {}; // This is to prevent errors later
 try {
-	var config = require('../../config');
+	config = require('../../config');
 } catch {
 	console.log("Running on Heroku, use Config Vars");
 }
