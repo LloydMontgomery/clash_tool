@@ -11,8 +11,9 @@ var express		= require('express'),			// Express simplifies Node
 					replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 10000 } } };
 
 // Need to try/catch the config setup
-try
+try {
 	var config = require('./config');
+}
 
 
 // --------------------------- APP CONFIGURATION ---------------------------- //
@@ -57,7 +58,7 @@ app.get('*', function(req, res) {
 
 // --------------------------- START THE SERVER ---------------------------- //
 console.log(process.env);
-var PORT = config.PORT || process.env.PORT
+var PORT = config.PORT || process.env.PORT;
 app.listen(PORT);
 console.log('Node server listening on ' + PORT);
 
