@@ -30,7 +30,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			War.all().success(function(data) {
 				// bind the users that come back to vm.users
 				vm.wars = data;
-				console.log(vm.wars);
 				vm.wars.sort(function(a, b) {
 					return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
 				});

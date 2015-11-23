@@ -197,11 +197,6 @@ module.exports = function(app, express) {
 	apiRouter.route('/sign_s3')
 	// (accessed at GET http://localhost:8080/api/sign_s3) 
 	.get(function(req, res){
-		console.log("TESTING");
-		console.log(AWS_ACCESS_KEY);
-		console.log(AWS_SECRET_KEY);
-		console.log(S3_BUCKET_NAME);
-
 		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 		var s3 = new aws.S3();
 		var s3_params = {
@@ -215,6 +210,7 @@ module.exports = function(app, express) {
 			if(err){
 				console.log(err);
 			} else{
+				var date = new Date()
 				var return_data = {
 					signed_request: data,
 					url: 'https://'+S3_BUCKET_NAME+'.s3.amazonaws.com/'+req.query.file_name
@@ -287,7 +283,6 @@ module.exports = function(app, express) {
 		// create a new instance of the User model
 		var war = new War();
 		// set the users information (comes from the request)
-		war.number = req.body.number;
 		war.exp = req.body.exp;
 		war.ourScore = req.body.ourScore;
 		war.theirScore = req.body.theirScore;

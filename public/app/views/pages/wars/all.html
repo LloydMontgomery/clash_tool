@@ -16,7 +16,6 @@
 	<table class="table table-bordered table-striped" ng-show="war.wars"> 
 		<thead>
 			<tr>
-				<th>Number</th> 
 				<th>Exp Gained</th>
 				<th>Us</th>
 				<th>Them</th>
@@ -27,8 +26,7 @@
 		</thead>
 		<tbody>
 			<!-- LOOP OVER THE USERS -->
-			<tr ng-repeat="battle in war.wars"> 
-				<td>{{ battle.number }}</td>
+			<tr ng-repeat="battle in war.wars">
 				<td>{{ battle.exp }}</td>
 				<td>{{ battle.ourScore }}</td>
 				<td>{{ battle.theirScore }}</td>

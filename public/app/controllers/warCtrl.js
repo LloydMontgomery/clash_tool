@@ -14,7 +14,7 @@ angular.module('warCtrl', ['warService'])
 		// bind the wars that come back to vm.wars
 		vm.wars = data;
 		vm.wars.sort(function(a, b) {
-			return (a.number < b.number) ? 1 : (a.number > b.number) ? -1 : 0;
+			return (a.date < b.date) ? 1 : (a.date > b.date) ? -1 : 0;
 		});
 	});
 })
@@ -59,7 +59,7 @@ angular.module('warCtrl', ['warService'])
 		vm.message = '';
 
 		if (vm.warData.file) {
-			War.upload(vm.warData.file)
+			War.upload(vm.warData)
 				.then(function(data) {
 					vm.processing = false;
 					if (data.status == 200) {

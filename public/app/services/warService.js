@@ -23,8 +23,8 @@ angular.module('warService', [])
 		return $http.delete('/api/wars/' + id);
 	};
 	// upload a war photo to S3
-	warFactory.upload = function(file) { 
-		return $http.get('/api/sign_s3?file_name=' + file.name + '&file_type=' + file.type);
+	warFactory.upload = function(data) { 
+		return $http.get('/api/sign_s3?file_name=' + data.date.toDateString() + '&file_type=' + data.file.type);
 	};
 	// return our entire warFactory object
 	return warFactory;
