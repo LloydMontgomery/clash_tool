@@ -2,8 +2,11 @@ var express	= require('express'),			// Express simplifies Node
 	User 	= require('../models/user'),	// User Schema
 	War 	= require('../models/war'),		// War Schema
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
-	config	= require('../../config'),
 	aws 	= require('aws-sdk');			// This is for uploading to S3
+
+// Need to try/catch the config setup
+try
+    var config = require('../../config');
 
 // Grab some config variables stored locally in the config or in the env if running on Heroku
 var AWS_ACCESS_KEY 	= config.AWS_ACCESS_KEY_ID 		|| process.env.AWS_ACCESS_KEY_ID,

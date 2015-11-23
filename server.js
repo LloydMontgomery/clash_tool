@@ -7,9 +7,12 @@ var express		= require('express'),			// Express simplifies Node
 	morgan		= require('morgan'),			// Outputs all api calls to the terminal
 	bcrypt 		= require('bcrypt-nodejs'),		// Encryption for user passwords
 	path 		= require('path'),
-	config		= require('./config');
 	options 	= { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 10000 } },
 					replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 10000 } } };
+
+// Need to try/catch the config setup
+try
+	var config = require('./config');
 
 
 // --------------------------- APP CONFIGURATION ---------------------------- //
