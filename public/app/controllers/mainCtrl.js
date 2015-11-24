@@ -3,6 +3,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 .controller('mainController', function($rootScope, $location, Auth, User, War) {
 	var vm = this;
 
+	vm.standardSizing = 'col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4';
+
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
 	
