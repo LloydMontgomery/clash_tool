@@ -14,7 +14,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	$rootScope.$on('$routeChangeStart', function() {
 
 		vm.route = $location.path();
-		console.log(vm.route);
 
 		var checkRoutePermission = function(route) {
 			if (route == '/' || route == '/login' ){

@@ -6,8 +6,12 @@
 
 	text-align: center;
 }
-.section .row {
+.section{
 	margin: 0px !important;
+}
+.title
+{
+	margin: 100px 0 50px 0;
 }
 
 /* Every Other Section Starting with the First One */
@@ -25,7 +29,7 @@
 	padding-top: 75px;	
 }
 #intro-section #clan-description {
-	margin: 50px;
+	margin-top: 50px;
 }
 #intro-section .intro-spacer {
 	height: 50px;
@@ -42,9 +46,8 @@
 
 	background-color: black;
 }
-.routeButton > h3 {
-	margin-top: 20px;
-	
+.routeButton h4 {
+	margin-top: 25px;
 	color: #0680AF !important;
 }
 
@@ -130,7 +133,7 @@
 /* Collaboration Section */
 #collaboration-section {
 }
-#collaboration-section a {
+.userButton {
 	height: 100px;
 	width: 150px;
 
@@ -140,11 +143,11 @@
 	border: solid lightgrey 2px;
 	border-radius: 50% !important;
 
-	background: white;
+	background-color: black;
 
-	color: black;
 }
-a h4 {
+.userButton h4 {
 	margin-top: 25px;
+	color: #0680AF !important;
 }
 

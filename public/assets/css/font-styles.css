@@ -15,7 +15,7 @@
 	src: url('../fonts/QuincyCF-Black-webfont.ttf') format('truetype');
 }
 
-h1, .navbar, #navigation-buttons, .routeButton
+h1, .navbar, #navigation-buttons, .routeButton, .userButton
 {
     font-family: "Supercell-Magic";
     color: black;
