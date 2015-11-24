@@ -3,7 +3,9 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 .controller('mainController', function($rootScope, $location, Auth, User, War) {
 	var vm = this;
 
-	vm.standardSizing = 'col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4';
+	vm.authSizing = 'col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4';
+	vm.mainPageSizing = 'col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3';
+	vm.buttonRoutingSizing = 'col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4';
 
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
