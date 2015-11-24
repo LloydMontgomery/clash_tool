@@ -9,11 +9,13 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	// check to see if a user is logged in on every request
 	$rootScope.$on('$routeChangeStart', function() {
 
+		vm.route = $location.path();
+		console.log(vm.route);
+
 		var checkRoutePermission = function(route) {
 			if (route == '/' || route == '/login' ){
 				// Do Something
-			}
-			else {
+			} else {
 				if (vm.userInfo.admin == true) {
 					// Do Something
 				}

@@ -24,17 +24,29 @@
 	animation:zoomIn 0.3s both ease;
 }*/
 
-.ng-enter {
+.ng-enter { /*:not(.excludeAnimation) {*/
 	-webkit-animation:zoomInDown 1.2s both ease-in;
 	-moz-animation:zoomInDown 1.2s both ease-in;
 	animation: zoomInDown 1.2s both ease-in;
 }
 
-.ng-leave { 
+.ng-leave { /*:not(.excludeAnimation) {*/
 	-webkit-animation:zoomOutDown 0.5s both ease-in;
 	-moz-animation:zoomOutDown 0.5s both ease-in;
 	animation: zoomOutDown 0.5s both ease-in;
 }
+
+/*.ng-enter.excludeAnimation {
+	-webkit-animation:fadeIn 1.2s both ease-in;
+	-moz-animation:fadeIn 1.2s both ease-in;
+	animation: fadeIn 1.2s both ease-in;
+}
+
+.ng-leave.excludeAnimation { 
+	-webkit-animation:fadeOut 0.5s both ease-in;
+	-moz-animation:fadeOut 0.5s both ease-in;
+	animation: fadeOut 0.5s both ease-in;
+}*/
 
 
 

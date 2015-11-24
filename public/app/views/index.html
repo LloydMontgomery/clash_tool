@@ -49,17 +49,21 @@
 				</a>
 			</div>
 			<div id="navbar-links" class="pull-right">
-				<span ng-if="main.loggedIn  && main.userInfo.admin">
+				<span ng-show="main.loggedIn  && main.userInfo.admin">
 					<a href="/wars">Wars</a>
 				</span>
-				<span ng-if="main.loggedIn && main.userInfo.admin">
+				<span ng-show="main.loggedIn && main.userInfo.admin">
 					<a href="/users">Users</a>
 				</span>
-				<span ng-if="main.loggedIn">
+				<span ng-show="main.loggedIn">
 					<a ng-click="main.doLogout()">Logout</a>
 				</span>
-				<span ng-if="!main.loggedIn">
+				<span ng-show="!main.loggedIn && main.route != '/login'">
 					<a href="/login">Login</a>
+				</span>
+				{{ vm.route }}
+				<span ng-show="!main.loggedIn && main.route == '/login'">
+					<a href="/">Main Page</a>
 				</span>
 			</div>
 		</div>
