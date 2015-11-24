@@ -110,10 +110,9 @@
 	font-size: 90%;
 }
 
-/* History Section */
+/* War History Section */
 #history-section {
 }
-
 .war-win  { color: green; }
 .war-loss { color: red; }
 .panel, .panel-heading{
@@ -128,6 +127,17 @@
 .panel-body > img{
 	width: 100%;
 	margin: 2px;
+}
+.warCenter {
+	text-align: center;
+}
+.warLeft {
+	width: 90px;
+	float: left;
+}
+.warRight {
+	width: 90px;
+	float: right;
 }
 
 /* Collaboration Section */

@@ -17,7 +17,7 @@
 				<a href="/users" class="routeButton btn" type="button" ng-show="main.loggedIn  && main.userInfo.admin">
 					<h4>Users</h4>
 				</a>
-				<a href="/users" class="routeButton btn" type="button" ng-show="main.loggedIn  && main.userInfo.admin">
+				<a href="/wars" class="routeButton btn" type="button" ng-show="main.loggedIn  && main.userInfo.admin">
 					<h4>Wars</h4>
 				</a>
 			</div>
@@ -100,12 +100,12 @@
 				<div class="history-container col-xs-12">
 					<!-- War Entry -->
 					 <uib-accordion close-others="true">
-						<uib-accordion-group ng-repeat="war in main.wars">
+						<uib-accordion-group ng-repeat="war in main.wars" class="warEntry">
 							<uib-accordion-heading>
-								<span class="pull-left"> {{ war.date.toString().substr(0,10) }} </span>
-								<span class="pull-right"> +{{ war.exp }} Exp </span>
-								<div ng-class="(war.ourScore > war.theirScore) ? 'war-win' :'war-loss'"> 
-									{{ war.ourScore }} - {{ war.theirScore }} 
+								<div class="warLeft"> {{ war.date.toString().substr(0,10) }} </div>
+								<div class="warRight"> +{{ war.exp }} Exp </div>
+								<div class="warCenter" ng-class="(war.ourScore > war.theirScore) ? 'war-win' : (war.ourScore < war.theirScore) ? 'war-loss' : (war.ourDest > war.theirDest) ? 'war-win' : 'war-loss'"> 
+									{{ war.ourScore }} - {{ war.theirScore }}
 								</div>
 							</uib-accordion-heading>
 							<img ng-src="{{war.img}}" style="width:100%">

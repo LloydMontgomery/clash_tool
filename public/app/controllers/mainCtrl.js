@@ -109,6 +109,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	// function to handle logging out
 	vm.doLogout = function() {
 		Auth.logout();
+		vm.loggedIn = false;
 		// reset all user info 
 		vm.userInfo = {}; 
 		$location.path('/');
