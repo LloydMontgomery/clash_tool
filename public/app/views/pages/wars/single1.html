@@ -1,0 +1,69 @@
+<div class="col-xs-12">
+	<div class="page-header">
+		<h1 ng-if="war.type == 'create'">Create War</h1> 
+		<h1 ng-if="war.type == 'edit'">Edit War</h1>
+	</div>
+	<form class="form-horizontal" ng-submit="war.saveWar()">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Exp</label> 
+			<div class="col-sm-6">
+				<input type="number" class="form-control" ng-model="war.warData.exp" required>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Our Score</label> 
+			<div class="col-sm-6">
+				<input type="number" class="form-control" ng-model="war.warData.ourScore" required>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Their Score</label> 
+			<div class="col-sm-6">
+				<input type="number" class="form-control" ng-model="war.warData.theirScore" required>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Our Total Destruction</label> 
+			<div class="col-sm-6">
+				<input type="number" class="form-control" ng-model="war.warData.ourDest" required>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Their Total Destruction</label> 
+			<div class="col-sm-6">
+				<input type="number" class="form-control" ng-model="war.warData.theirDest" required>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Date</label> 
+			<div class="col-sm-6">
+				<input type="date" class="form-control" ng-model="war.warData.date" required>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">War Overview</label> 
+			<div class="col-sm-6">
+				<input type="file" fileread="war.warData.file">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-6 col-sm-offset-2">
+				<img ng-src="{{war.warData.img}}" style="width:100%">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-6">
+				<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="war.type == 'create'">Create War</button>
+				<button type="submit" class="btn btn-success btn-lg btn-block" ng-if="war.type == 'edit'">Update War</button>
+			</div>
+		</div>
+	</form>
+	<div class="row show-hide-message" ng-show="war.message">
+		<div class="col-sm-6 col-sm-offset-2">
+			<div class="alert alert-info"> 
+				{{ war.message }}
+			</div>
+		</div>
+	</div>
+</div>
