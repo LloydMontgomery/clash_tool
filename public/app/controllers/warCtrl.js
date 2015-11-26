@@ -26,54 +26,65 @@ angular.module('warCtrl', ['warService'])
 	// differentiates between create or edit pages 
 	vm.type = 'create';
 
+	vm.sizeOptions = [	{display: '10 vs 10', value: 10}, 
+						{display: '15 vs 15', value: 15},
+						{display: '20 vs 20', value: 20}];
+
+	vm.statusOptions = [ 	'Preparation',
+							'Battle',
+							'Over'];
+
 	vm.warData = {};
-	vm.warData.date = new Date();
 
-	vm.upload_file = function(file, signed_request, url){
-		vm.message= ''; // Clear message
-		var xhr = new XMLHttpRequest();
-		xhr.open("PUT", signed_request);
-		xhr.setRequestHeader('x-amz-acl', 'public-read');
-		xhr.onload = function() {
-			if (xhr.status === 200) {
-				vm.warData.img = url
-				// call the userService function to update
-				War.create(vm.warData) 
-					.success(function(data) {
-						vm.processing = false; // clear the form
-						// bind the message from our API to vm.message
-						vm.message = data.message;
-						$location.path('/wars');
-				});
-			}
-		};
-		xhr.onerror = function() {
-			vm.message = data.message;
-		};
-		xhr.send(file);
-	}
 
-	// function to save the war
-	vm.saveWar = function() { 
-		vm.processing = true; 
-		vm.message = '';
+	// vm.warData = {};
+	// vm.warData.date = new Date();
 
-		if (vm.warData.file) {
-			War.upload(vm.warData)
-				.then(function(data) {
-					vm.processing = false;
-					if (data.status == 200) {
-						console.log(data.data);
-						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
-					} else {
-						vm.message = 'Could not get signed URL.';
-					}
-			});
-		} else {
-			vm.processing = false;
-			vm.message = 'War Photo Required';
-		}
-	};
+	// vm.upload_file = function(file, signed_request, url){
+	// 	vm.message= ''; // Clear message
+	// 	var xhr = new XMLHttpRequest();
+	// 	xhr.open("PUT", signed_request);
+	// 	xhr.setRequestHeader('x-amz-acl', 'public-read');
+	// 	xhr.onload = function() {
+	// 		if (xhr.status === 200) {
+	// 			vm.warData.img = url
+	// 			// call the userService function to update
+	// 			War.create(vm.warData) 
+	// 				.success(function(data) {
+	// 					vm.processing = false; // clear the form
+	// 					// bind the message from our API to vm.message
+	// 					vm.message = data.message;
+	// 					$location.path('/wars');
+	// 			});
+	// 		}
+	// 	};
+	// 	xhr.onerror = function() {
+	// 		vm.message = data.message;
+	// 	};
+	// 	xhr.send(file);
+	// }
+
+	// // function to save the war
+	// vm.saveWar = function() { 
+	// 	vm.processing = true; 
+	// 	vm.message = '';
+
+	// 	if (vm.warData.file) {
+	// 		War.upload(vm.warData)
+	// 			.then(function(data) {
+	// 				vm.processing = false;
+	// 				if (data.status == 200) {
+	// 					console.log(data.data);
+	// 					vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
+	// 				} else {
+	// 					vm.message = 'Could not get signed URL.';
+	// 				}
+	// 		});
+	// 	} else {
+	// 		vm.processing = false;
+	// 		vm.message = 'War Photo Required';
+	// 	}
+	// };
 })
 
 // controller applied to user edit page
