@@ -1,0 +1,42 @@
+/* War Stats section */
+#warStats > div {
+	padding: 5px;
+}
+
+#warStats > div > div {
+	border-radius: 15px;
+	background: #eee;
+	padding: 10px 10px 0 10px;
+	width: 100%;
+}
+
+#warStats > div > div > div {
+	height: 30px;
+	margin-bottom: 10px;
+	background: white;
+}
+
+#warStats select {
+	width: 100%;
+	height: 100%;
+}
+
+
+
+/* Warrior Stats section */
+#warriorStats {
+	padding: 5px 20px 5px 20px;
+}
+
+#warriorStats > div {
+	border-radius: 15px;
+	background: #eee;
+	padding: 5px 5px 0 5px;
+	width: 100%;
+}
+
+#warriorStats > div > div {
+	height: 30px;
+	margin-bottom: 5px;
+	background: white;
+}

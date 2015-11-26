@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "angular": "^1.4.8",
+    "kerberos": "~0.0.17",
     "aws-sdk": "*",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
