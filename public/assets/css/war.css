@@ -1,6 +1,7 @@
 /* War Stats section */
 #warStats > div {
 	padding: 5px;
+	text-align: center;
 }
 
 #warStats > div > div {
@@ -17,8 +18,16 @@
 }
 
 #warStats select {
-	width: 100%;
+/*	width: 100%;*/
 	height: 100%;
+	-webkit-appearance: none;
+	background: white;
+	border: none;
+
+	margin: 0 auto;
+
+/*	padding: 0 auto;*/
+	font-size: 20px;
 }
 
 
