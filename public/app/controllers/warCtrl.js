@@ -26,13 +26,24 @@ angular.module('warCtrl', ['warService'])
 	// differentiates between create or edit pages 
 	vm.type = 'create';
 
-	vm.sizeOptions = [	{display: '10 vs 10', value: 10}, 
-						{display: '15 vs 15', value: 15},
-						{display: '20 vs 20', value: 20}];
+	// vm.sizeOptions = [	{display: '10 vs 10', value: 10}, 
+	// 					{display: '15 vs 15', value: 15},
+	// 					{display: '20 vs 20', value: 20}];
+	vm.sizeOptions = [10, 15, 20];
 
 	vm.statusOptions = [ 	'Preparation',
 							'Battle',
 							'Over'];
+
+	// vm.maxStars = [1, 2, 3];
+	vm.setMaxStars = function() {
+		vm.maxStars = Array.apply(null, Array((vm.warData.size*3)+1)).map(function (_, i) {return i;});
+		
+		if (vm.warData.ourScore > (vm.warData.size*3))
+			vm.warData.ourScore = Number(vm.warData.size*3);
+		console.log(vm.warData.ourScore);
+
+	};
 
 	vm.warData = {};
 

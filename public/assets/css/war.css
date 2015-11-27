@@ -28,6 +28,19 @@
 
 /*	padding: 0 auto;*/
 	font-size: 20px;
+	color: #999;
+}
+
+#warStats span {
+	height: 100%;
+	-webkit-appearance: none;
+	background: white;
+	border: none;
+
+	margin: 0 auto;
+	font-size: 15px;
+	color: #999;
+
 }
 
 
@@ -40,12 +53,12 @@
 #warriorStats > div {
 	border-radius: 15px;
 	background: #eee;
-	padding: 5px 5px 0 5px;
+	padding: 10px 10px 0 10px;
 	width: 100%;
 }
 
 #warriorStats > div > div {
 	height: 30px;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	background: white;
 }

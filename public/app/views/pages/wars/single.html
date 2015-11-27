@@ -11,19 +11,20 @@
 			<div class="col-sm-4 col-xs-12">
 				<div class="col-xs-12">
 					<div>
-						<select ng-model="war.warData.size">
+						<select ng-model="war.warData.size" ng-change="war.setMaxStars()">
 							<option value="" disabled selected>&nbsp;&nbsp;# vs #</option>
-							<option ng-repeat="option in war.sizeOptions" value="{{ option.value }}">{{ option.display }}</option>
+							<!-- <option ng-repeat="option in war.sizeOptions" value="{{ option.value }}">{{ option.display }}</option> -->
+							<option ng-repeat="option in war.sizeOptions" value="{{ option }}">{{ option }}</option>
 						</select>
 					</div>
 					<div>
-						<!-- <select ng-model="war.warData.status">
-							<option value="" disabled selected>Status</option>
+						<select ng-model="war.warData.status">
+							<option value="" disabled selected>&nbsp;&nbsp;Status</option>
 							<option ng-repeat="option in war.statusOptions" value="{{ option }}">{{ option }}</option>
-						</select> -->
+						</select>
 					</div>
 					<div>
-						<!-- Start display -->
+						<span>HH:MM:SS</span>
 					</div>
 				</div>
 			</div>
@@ -31,10 +32,13 @@
 				<div class ="col-xs-12">
 					<div>
 						<!-- space monkeys header -->
-						<!-- <h4>Space Monkeys</h4> -->
+						<span>Space Monkeys</span>
 					</div>
 					<div>
-						<!-- Stars -->
+						<select ng-model="war.warData.ourScore">
+							<option value="" disabled selected>Stars</option>
+							<option ng-repeat="option in war.maxStars" value="{{ option }}">{{ option }}</option>
+						</select>
 					</div>
 					<div>
 						<!-- Destruction -->
@@ -44,10 +48,10 @@
 			<div class="col-sm-4 col-xs-12">
 				<div class ="col-xs-12">
 					<div>
-						<!-- opponent name input field -->
+						<input ng-model="war.warData.name" type="text" class="form-control" placeholder="Opponent Name">
 					</div>
 					<div>
-						<!-- Stars -->
+						<span>***</span>
 					</div>
 					<div>
 						<!-- Destruction -->
@@ -66,6 +70,6 @@
 		</div>
 	</form>
 	
-		
+	{{ war.warData }}	
 		
 </div>
