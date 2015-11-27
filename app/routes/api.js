@@ -127,12 +127,22 @@ module.exports = function(app, express) {
 	apiRouter.route('/wars')
 	// get all the wars (accessed at GET http://localhost:8080/api/wars)
 	.get(function(req, res) {
-		War.find(function(err, wars) {
+		War.find({ status : 'Preparation' }, '-exp', function(err, wars) {
 			if (err) res.send(err);
 			// return the wars
 			res.json(wars);
 		});
 	});
+
+	// apiRouter.route('/wars')
+	// // get all the wars (accessed at GET http://localhost:8080/api/wars)
+	// .get(function(req, res) {
+	// 	War.find(function(err, wars) {
+	// 		if (err) res.send(err);
+	// 		// return the wars
+	// 		res.json(wars);
+	// 	});
+	// });
 
 
 	// ======================== BASIC AUTHENTICATION ======================== //
@@ -287,23 +297,29 @@ module.exports = function(app, express) {
 	.post(function(req, res) {
 		// create a new instance of the User model
 		var war = new War();
+
 		// set the users information (comes from the request)
 		war.exp = req.body.exp;
 		war.ourScore = req.body.ourScore;
 		war.theirScore = req.body.theirScore;
-		war.date = req.body.date;
 		war.ourDest = req.body.ourDest;
 		war.theirDest = req.body.theirDest;
+		war.start = req.body.start;
+		war.size = req.body.size;
+		war.status = req.body.status;
 		war.img = req.body.img;
+		war.warriors = req.body.warriors;
 
 		// save the war and check for errors
-		war.save(function(err) { 
+		war.save(function(err) {
 			if (err) {
 				// duplicate entry
 				if (err.code == 11000)
-					return res.json({ success: false, message: 'A war with that number already exists.' }); 
-				else
+					return res.json({ success: false, message: 'A war with that date already exists.' }); 
+				else {
+					console.log(err);
 					return res.send(err);
+				}
 			}
 			res.json({ 
 				success: true,
