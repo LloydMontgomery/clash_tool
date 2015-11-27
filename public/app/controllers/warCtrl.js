@@ -20,7 +20,7 @@ angular.module('warCtrl', ['warService'])
 })
 
 // controller applied to War creation page
-.controller('warCreateController', function(War) { 
+.controller('warCreateController', function($routeParams, $location, War) { 
 	var vm = this;
 	// variable to hide/show elements of the view 
 	// differentiates between create or edit pages 
@@ -34,57 +34,95 @@ angular.module('warCtrl', ['warService'])
 							'Battle',
 							'Over'];
 
-	vm.warData = {};
+	// vm.warData = {};
+
+	// vm.warData.warriors = [];
+
+	vm.warData = {
+		exp: 125,
+		ourScore: 50,
+		theirScore: 30,
+		ourDest: 90,
+		theirDest: 70,
+		start: Date(),
+		size: 10,
+		status: 'Preparation',
+		img: 'https://s3-us-west-2.amazonaws.com/clashtool/Sun+Nov+22+2015',
+		warriors: [{	name: 'Zephyro',
+						attack1: 'Hold',
+						attack2: 'Hold',
+						lock1: false,
+						lock2: false,
+						stars1: Number,
+						stars2: Number,
+						viewed: false },
+					{	name: 'Jessica',
+						attack1: '1',
+						attack2: 'Hold',
+						lock1: false,
+						lock2: true,
+						stars1: Number,
+						stars2: Number,
+						viewed: false}]
+	};
+
+	vm.warData.file = null;  // Just while testing, don't want to be pushing images every test
 
 
 	// vm.warData = {};
 	// vm.warData.date = new Date();
 
-	// vm.upload_file = function(file, signed_request, url){
-	// 	vm.message= ''; // Clear message
-	// 	var xhr = new XMLHttpRequest();
-	// 	xhr.open("PUT", signed_request);
-	// 	xhr.setRequestHeader('x-amz-acl', 'public-read');
-	// 	xhr.onload = function() {
-	// 		if (xhr.status === 200) {
-	// 			vm.warData.img = url
-	// 			// call the userService function to update
-	// 			War.create(vm.warData) 
-	// 				.success(function(data) {
-	// 					vm.processing = false; // clear the form
-	// 					// bind the message from our API to vm.message
-	// 					vm.message = data.message;
-	// 					$location.path('/wars');
-	// 			});
-	// 		}
-	// 	};
-	// 	xhr.onerror = function() {
-	// 		vm.message = data.message;
-	// 	};
-	// 	xhr.send(file);
-	// }
+	vm.upload_file = function(file, signed_request, url){
+		vm.message=''; // Clear message
+		var xhr = new XMLHttpRequest();
+		xhr.open("PUT", signed_request);
+		xhr.setRequestHeader('x-amz-acl', 'public-read');
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				vm.warData.img = url
+				// call the userService function to update
+				War.create(vm.warData) 
+					.success(function(data) {
+						vm.processing = false; // clear the form
+						// bind the message from our API to vm.message
+						vm.message = data.message;
+						$location.path('/wars');
+				});
+			}
+		};
+		xhr.onerror = function() {
+			vm.message = data.message;
+		};
+		xhr.send(file);
+	}
 
-	// // function to save the war
-	// vm.saveWar = function() { 
-	// 	vm.processing = true; 
-	// 	vm.message = '';
+	// function to save the war
+	vm.saveWar = function() { 
+		vm.processing = true; 
+		vm.message = '';
 
-	// 	if (vm.warData.file) {
-	// 		War.upload(vm.warData)
-	// 			.then(function(data) {
-	// 				vm.processing = false;
-	// 				if (data.status == 200) {
-	// 					console.log(data.data);
-	// 					vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
-	// 				} else {
-	// 					vm.message = 'Could not get signed URL.';
-	// 				}
-	// 		});
-	// 	} else {
-	// 		vm.processing = false;
-	// 		vm.message = 'War Photo Required';
-	// 	}
-	// };
+		if (vm.warData.file) {
+			War.upload(vm.warData)
+				.then(function(data) {
+					vm.processing = false;
+					if (data.status == 200) {
+						console.log(data.data);
+						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
+					} else {
+						vm.message = 'Could not get signed URL.';
+					}
+			});
+		} else {
+			// call the userService function to update
+			War.create(vm.warData) 
+				.then(function(data) {
+					vm.processing = false; // clear the form
+					// bind the message from our API to vm.message
+					vm.message = data.data;
+					// $location.path('/wars');
+			});
+		}
+	};
 })
 
 // controller applied to user edit page
@@ -98,7 +136,6 @@ angular.module('warCtrl', ['warService'])
 		.success(function(data) {
 			vm.warData = data;
 			vm.warData.date = new Date(vm.warData.date);
-			vm.warData.originalImg
 	});
 
 	vm.upload_file = function(file, signed_request, url){

@@ -102,7 +102,7 @@
 					 <uib-accordion close-others="true">
 						<uib-accordion-group ng-repeat="war in main.wars" class="warEntry">
 							<uib-accordion-heading>
-								<div class="warLeft"> {{ war.date.toString().substr(0,10) }} </div>
+								<div class="warLeft"> {{ war.start.toString().substr(0,10) }} </div>
 								<div class="warRight"> +{{ war.exp }} Exp </div>
 								<div class="warCenter" ng-class="(war.ourScore > war.theirScore) ? 'war-win' : (war.ourScore < war.theirScore) ? 'war-loss' : (war.ourDest > war.theirDest) ? 'war-win' : 'war-loss'"> 
 									{{ war.ourScore }} - {{ war.theirScore }}

@@ -43,13 +43,13 @@ angular.module('app.routes', ['ngRoute'])
 	})
 	// form to create a new user // same view as edit page 
 	.when('/wars/create', {
-		templateUrl	: 'app/views/pages/wars/single.html',
+		templateUrl	: 'app/views/pages/wars/single1.html',
 		controller	: 'warCreateController',
 		controllerAs: 'war'
 	})
 	//page to edit a user
 	.when('/wars/:war_id', {
-		templateUrl	: 'app/views/pages/wars/single.html',
+		templateUrl	: 'app/views/pages/wars/single1.html',
 		controller	: 'warEditController',
 		controllerAs: 'war'
 	});
