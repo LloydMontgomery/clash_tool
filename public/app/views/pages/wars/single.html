@@ -49,11 +49,13 @@
 						<div >
 							{{ war.warData.size }} vs {{ war.warData.size }}
 						</div>
+						<hr>
 						<div>
 							{{ war.warData.status }}
 						</div>
+						<hr>
 						<div>
-							<timer end-time="1451628000000" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+							<timer ng-attr-end-time="war.timeRemaining" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 						</div>
 					</div>
 				</div>
@@ -90,11 +92,12 @@
 						<div >
 							{{ war.warData.size }} vs {{ war.warData.size }}
 						</div>
+						<hr>
 						<div>
 							{{ war.warData.status }}
 						</div>
+						<hr>
 						<div>
-							<timer end-time="1451628000000" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 						</div>
 					</div>
 				</div>
@@ -131,11 +134,12 @@
 						<div >
 							{{ war.warData.size }} vs {{ war.warData.size }}
 						</div>
+						<hr>
 						<div>
 							{{ war.warData.status }}
 						</div>
+						<hr>
 						<div>
-							<timer end-time="1451628000000" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 						</div>
 					</div>
 				</div>

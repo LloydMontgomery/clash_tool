@@ -274,21 +274,23 @@ angular.module('warCtrl', ['warService'])
 			console.log(vm.warData);
 			// vm.warData.
 			vm.loadingPage = false;
+
+			vm.timeRemaining = 1451628000000;
 	});
 
 	// function to save the war
 	vm.saveWar = function() { 
-		vm.processing = true; 
+		// vm.processing = true; 
 		vm.message = '';
 
 		// call the userService function to update
-		War.update($routeParams.war_id, vm.warData) 
-			.success(function(data) {
-				vm.processing = false; // clear the form
-				// bind the message from our API to vm.message
-				// vm.message = data.message;
-				$location.path('/wars');
-		});
+		// War.update($routeParams.war_id, vm.warData) 
+		// 	.success(function(data) {
+		// 		vm.processing = false; // clear the form
+		// 		// bind the message from our API to vm.message
+		// 		// vm.message = data.message;
+		// 		$location.path('/wars');
+		// });
 	};
 });
 
