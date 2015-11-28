@@ -25,6 +25,8 @@ angular.module('warCtrl', ['warService'])
 
 	/* ========================= POPULATE HTML PAGE ========================= */
 
+	vm.warData = {};
+
 	vm.type = 'create';
 
 	vm.sizeOptions = [	{display: '10 vs 10', value: 10}, 
@@ -40,31 +42,51 @@ angular.module('warCtrl', ['warService'])
 	vm.statusOptions = [ 	'Preparation',
 							'Battle',
 							'Over'];
-	vm.hourOptions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
-	vm.minuteOptions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,
+
+	// Date and Time picker for war start
+	vm.warData.startDate = new Date();
+	vm.warData.startHour = vm.warData.startDate.getHours().toString();
+	vm.warData.startMinute = vm.warData.startDate.getMinutes().toString();
+	vm.hourOptions = [01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+	vm.minuteOptions = [01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,
 					  30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59];
 
-	vm.countdown;
+	vm.dest1Options = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,
+					  26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,
+					  51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,
+					  76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100];
+	vm.dest2Options = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25',
+					  '26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50',
+					  '51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75',
+					  '76','77','78','79','80','81','82','83','84','85','86','87','88','89','90','91','92','93','94','95','96','97','98','99'];
+
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
-		vm.maxStars = Array.apply(null, Array((vm.warData.size*3)+1)).map(function (_, i) {return i;});
+		vm.maxStars = Array.apply(null, Array((vm.warData.size.value*3)+1)).map(function (_, i) {return i;});
 		
-		if (vm.warData.ourScore > (vm.warData.size*3))
-			vm.warData.ourScore = Number(vm.warData.size*3);
+		if (vm.warData.ourScore > (vm.warData.size.value*3))
+			vm.warData.ourScore = Number(vm.warData.size.value*3);
 
 	};
 
-	vm.setCountdown = function () {
-		
-	}
-	vm.setCountdown();
+	vm.warriorList = function () {
+		if (vm.warData.name) {
+			vm.showWarriors = true;
+
+			vm.processing = true;
+			
+			// Database call
+			// On callback success: processing = false & vm.warriorsReady = true
+		}
+
+	};
 
 
 
 
-	vm.warData = {};
+	
 
 	// vm.warData.warriors = [];
 
