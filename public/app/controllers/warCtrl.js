@@ -77,16 +77,22 @@ angular.module('warCtrl', ['warService'])
 
 			vm.processing = true;
 			
+			// call the warService function to retrieve last war
+			War.last() 
+				.then(function(data) {
+					console.log(data.data.warriors);
+					vm.warData.warriors = data.data.warriors;
+					vm.processing = false; // clear the form
+					// bind the message from our API to vm.message
+					vm.message = data.message;
+					
+			});
+
 			// Database call
 			// On callback success: processing = false & vm.warriorsReady = true
 		}
 
 	};
-
-
-
-
-	
 
 	// vm.warData.warriors = [];
 
