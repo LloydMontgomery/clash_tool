@@ -13,8 +13,7 @@
 					<div>
 						<select ng-model="war.warData.size" ng-change="war.setMaxStars()">
 							<option value="" disabled selected>&nbsp;&nbsp;# vs #</option>
-							<!-- <option ng-repeat="option in war.sizeOptions" value="{{ option.value }}">{{ option.display }}</option> -->
-							<option ng-repeat="option in war.sizeOptions" value="{{ option }}">{{ option }}</option>
+							<option ng-repeat="option in war.sizeOptions" value="{{ option.value }}">{{ option.display }}</option>
 						</select>
 					</div>
 					<div>
@@ -23,8 +22,23 @@
 							<option ng-repeat="option in war.statusOptions" value="{{ option }}">{{ option }}</option>
 						</select>
 					</div>
-					<div>
-						<span>HH:MM:SS</span>
+					<div ng-if="war.type == 'view'">
+						<timer countdown="10" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+					</div>
+					<div ng-if="war.type != 'view'">
+						<div class="col-xs-6">
+							<select ng-model="war.warData.startHour">
+								<option value="" disabled selected>Hour</option>
+								<option ng-repeat="option in war.hourOptions" value="{{ option }}">{{ option }}</option>
+							</select>
+						</div>
+						<div class="col-xs-6">
+							<input type="date" ng-model="war.warData.startDate">
+							<select ng-model="war.warData.startMinute">
+								<option value="" disabled selected>Minute</option>
+								<option ng-repeat="option in war.minuteOptions" value="{{ option }}">{{ option }}</option>
+							</select>
+						</div>
 					</div>
 				</div>
 			</div>

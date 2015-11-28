@@ -22,59 +22,79 @@ angular.module('warCtrl', ['warService'])
 // controller applied to War creation page
 .controller('warCreateController', function($routeParams, $location, War) { 
 	var vm = this;
-	// variable to hide/show elements of the view 
-	// differentiates between create or edit pages 
+
+	/* ========================= POPULATE HTML PAGE ========================= */
+
 	vm.type = 'create';
 
-	// vm.sizeOptions = [	{display: '10 vs 10', value: 10}, 
-	// 					{display: '15 vs 15', value: 15},
-	// 					{display: '20 vs 20', value: 20}];
-	vm.sizeOptions = [10, 15, 20];
+	vm.sizeOptions = [	{display: '10 vs 10', value: 10}, 
+						{display: '15 vs 15', value: 15},
+						{display: '20 vs 20', value: 20},
+						{display: '25 vs 25', value: 25},
+						{display: '30 vs 30', value: 30},
+						{display: '35 vs 35', value: 35},
+						{display: '40 vs 40', value: 40},
+						{display: '45 vs 45', value: 45},
+						{display: '50 vs 50', value: 50}];
 
 	vm.statusOptions = [ 	'Preparation',
 							'Battle',
 							'Over'];
+	vm.hourOptions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+	vm.minuteOptions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,
+					  30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59];
 
-	// vm.maxStars = [1, 2, 3];
+	vm.countdown;
+
+	/* ======================== DYNAMIC PAGE CONTROL ======================== */
+
 	vm.setMaxStars = function() {
 		vm.maxStars = Array.apply(null, Array((vm.warData.size*3)+1)).map(function (_, i) {return i;});
 		
 		if (vm.warData.ourScore > (vm.warData.size*3))
 			vm.warData.ourScore = Number(vm.warData.size*3);
-		console.log(vm.warData.ourScore);
 
 	};
-	// vm.warData = {};
+
+	vm.setCountdown = function () {
+		
+	}
+	vm.setCountdown();
+
+
+
+
+	vm.warData = {};
 
 	// vm.warData.warriors = [];
 
-	vm.warData = {
-		exp: 125,
-		ourScore: 50,
-		theirScore: 30,
-		ourDest: 90,
-		theirDest: 70,
-		start: Date(),
-		size: 10,
-		status: 'Preparation',
-		img: 'https://s3-us-west-2.amazonaws.com/clashtool/Sun+Nov+22+2015',
-		warriors: [{	name: 'Zephyro',
-						attack1: 'Hold',
-						attack2: 'Hold',
-						lock1: false,
-						lock2: false,
-						stars1: Number,
-						stars2: Number,
-						viewed: false },
-					{	name: 'Jessica',
-						attack1: '1',
-						attack2: 'Hold',
-						lock1: false,
-						lock2: true,
-						stars1: Number,
-						stars2: Number,
-						viewed: false}]
-	};
+	// vm.warData = {
+	// 	exp: 125,
+	// 	ourScore: 50,
+	// 	theirScore: 30,
+	// 	ourDest: 90,
+	// 	theirDest: 70,
+	// 	start: Date(),
+	// 	size: 10,
+	// 	status: 'Preparation',
+	// 	img: 'https://s3-us-west-2.amazonaws.com/clashtool/Sun+Nov+22+2015',
+	// 	warriors: [{	name: 'Zephyro',
+	// 					attack1: 'Hold',
+	// 					attack2: 'Hold',
+	// 					lock1: false,
+	// 					lock2: false,
+	// 					stars1: Number,
+	// 					stars2: Number,
+	// 					viewed: false },
+	// 				{	name: 'Jessica',
+	// 					attack1: '1',
+	// 					attack2: 'Hold',
+	// 					lock1: false,
+	// 					lock2: true,
+	// 					stars1: Number,
+	// 					stars2: Number,
+	// 					viewed: false}]
+	// };
 
 	vm.warData.file = null;  // Just while testing, don't want to be pushing images every test
 
