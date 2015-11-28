@@ -4,91 +4,136 @@
 		<h1 ng-if="war.type == 'edit'">Update War Log</h1>
 	</div>
 
-	<form>
+	<form ng-show="!war.loadingPage">
 		<!-- War Stats -->
 		<!-- {{ war.warData.size }} -->
 		<div id="warStats" class="col-xs-12">
 			<div class="col-sm-4 col-xs-12">
 				<div class="col-xs-12">
-					<div>
-						<select ng-init="war.warData.size = war.sizeOptions[0]" ng-model="war.warData.size" ng-change="war.check()"
-								ng-options="option.display for option in war.sizeOptions">
-						</select>
-					</div>
-					<hr>
-					<div>
-						<select ng-if="war.type == 'view'" ng-model="war.warData.status" ng-change="war.check()"
-								ng-options="option.display for option in war.statusOptions">
-						</select>
-						<div ng-if="war.type != 'view'">
-							<input type="date" ng-change="war.check()" ng-model="war.warData.startDate" class="unstyled">
-						</div>
-					</div>
-					<hr>
-					<div ng-if="war.type == 'view'">
-						<timer countdown="10" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
-					</div>
+					<!-- Content for Create and Edit Page -->
 					<div ng-if="war.type != 'view'">
 						<div>
-							<select ng-model="war.warData.startHour" ng-change="war.check()">
-								<option ng-repeat="option in war.hourOptions" value="{{option}}">{{ option }}</option>
+							<select ng-init="war.warData.size = war.sizeOptions[0]" ng-model="war.warData.size" ng-change="war.check()"
+									ng-options="option.display for option in war.sizeOptions">
 							</select>
-							<span>:&nbsp;&nbsp;</span>
-							<select ng-model="war.warData.startMinute" ng-change="war.check()">
-								<option ng-repeat="option in war.minuteOptions" value="{{option}}">{{ option }}</option>
+						</div>
+						<hr>
+						<div>
+							<select ng-if="war.type == 'view'" ng-model="war.warData.status" ng-change="war.check()"
+									ng-options="option.display for option in war.statusOptions">
 							</select>
+							<div ng-if="war.type != 'view'">
+								<input type="date" ng-change="war.check()" ng-model="war.warData.startDate" class="unstyled">
+							</div>
+						</div>
+						<hr>
+						<div ng-if="war.type == 'view'">
+							<timer countdown="10" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+						</div>
+						<div ng-if="war.type != 'view'">
+							<div>
+								<select ng-model="war.warData.startHour" ng-change="war.check()">
+									<option ng-repeat="option in war.hourOptions" value="{{option}}">{{ option }}</option>
+								</select>
+								<span>:&nbsp;&nbsp;</span>
+								<select ng-model="war.warData.startMinute" ng-change="war.check()">
+									<option ng-repeat="option in war.minuteOptions" value="{{option}}">{{ option }}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<!-- Content for View Page -->
+					<div ng-if="war.type == 'view'">
+						<div >
+							{{ war.warData.size }} vs {{ war.warData.size }}
+						</div>
+						<div>
+							{{ war.warData.status }}
+						</div>
+						<div>
+							<timer end-time="1451628000000" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-sm-4 col-xs-12">
 				<div class ="col-xs-12">
-					<div id="clanName">
-						Space Monkeys
-					</div>
-					<hr>
-					<div>
-						<select ng-init="war.setMaxStars()" ng-model="war.warData.ourScore">
-							<option value="" disabled selected>Stars</option>
-							<option ng-repeat="option in war.maxStars" value="{{option}}">{{ option }}</option>
-						</select>
-					</div>
-					<hr>
-					<div>
+					<!-- Content for Create and Edit Page -->
+					<div ng-if="war.type != 'view'">
+						<div id="clanName">
+							Space Monkeys
+						</div>
+						<hr>
 						<div>
-							<select ng-init="war.warData.ourDest1 = war.dest1Options[0]" ng-model="war.warData.ourDest1" ng-change="war.check()">
-								<option ng-repeat="option in war.dest1Options" value="{{option}}">{{ option }}</option>
+							<select ng-init="war.setMaxStars()" ng-model="war.warData.ourScore">
+								<option value="" disabled selected>Stars</option>
+								<option ng-repeat="option in war.maxStars" value="{{option}}">{{ option }}</option>
 							</select>
-							<span>.&nbsp;&nbsp;</span>
-							<select ng-init="war.warData.ourDest2 = war.dest2Options[0]"ng-model="war.warData.ourDest2" ng-change="war.check()">
-								<option ng-repeat="option in war.dest2Options" value="{{option}}">{{ option }}</option>
-							</select>
+						</div>
+						<hr>
+						<div>
+							<div>
+								<select ng-init="war.warData.ourDest1 = war.dest1Options[0]" ng-model="war.warData.ourDest1" ng-change="war.check()">
+									<option ng-repeat="option in war.dest1Options" value="{{option}}">{{ option }}</option>
+								</select>
+								<span>.&nbsp;&nbsp;</span>
+								<select ng-init="war.warData.ourDest2 = war.dest2Options[0]"ng-model="war.warData.ourDest2" ng-change="war.check()">
+									<option ng-repeat="option in war.dest2Options" value="{{option}}">{{ option }}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<!-- Content for View Page -->
+					<div ng-if="war.type == 'view'">
+						<div >
+							{{ war.warData.size }} vs {{ war.warData.size }}
+						</div>
+						<div>
+							{{ war.warData.status }}
+						</div>
+						<div>
+							<timer end-time="1451628000000" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-sm-4 col-xs-12">
 				<div class ="col-xs-12">
-					<div>
-						<input ng-model="war.warData.name" type="text" class="form-control" placeholder="Opponent Name">
-					</div>
-					<hr>
-					<div>
-						<select ng-model="war.warData.theirScore">
-							<option value="" disabled selected>Stars</option>
-							<option ng-repeat="option in war.maxStars" value="{{ option }}">{{ option }}</option>
-						</select>
-					</div>
-					<hr>
-					<div>
+					<!-- Content for Create and Edit Page -->
+					<div ng-if="war.type != 'view'">
 						<div>
-							<select ng-init="war.warData.theirDest1 = war.dest1Options[0]" ng-model="war.warData.theirDest1" ng-change="war.check()">
-								<option ng-repeat="option in war.dest1Options" value="{{option}}">{{ option }}</option>
+							<input ng-model="war.warData.name" type="text" class="form-control" placeholder="Opponent Name">
+						</div>
+						<hr>
+						<div>
+							<select ng-model="war.warData.theirScore">
+								<option value="" disabled selected>Stars</option>
+								<option ng-repeat="option in war.maxStars" value="{{ option }}">{{ option }}</option>
 							</select>
-							<span>.&nbsp;&nbsp;</span>
-							<select ng-init="war.warData.theirDest2 = war.dest2Options[0]" ng-model="war.warData.theirDest2" ng-change="war.check()">
-								<option ng-repeat="option in war.dest2Options" value="{{option}}">{{ option }}</option>
-							</select>
+						</div>
+						<hr>
+						<div>
+							<div>
+								<select ng-init="war.warData.theirDest1 = war.dest1Options[0]" ng-model="war.warData.theirDest1" ng-change="war.check()">
+									<option ng-repeat="option in war.dest1Options" value="{{option}}">{{ option }}</option>
+								</select>
+								<span>.&nbsp;&nbsp;</span>
+								<select ng-init="war.warData.theirDest2 = war.dest2Options[0]" ng-model="war.warData.theirDest2" ng-change="war.check()">
+									<option ng-repeat="option in war.dest2Options" value="{{option}}">{{ option }}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<!-- Content for View Page -->
+					<div ng-if="war.type == 'view'">
+						<div >
+							{{ war.warData.size }} vs {{ war.warData.size }}
+						</div>
+						<div>
+							{{ war.warData.status }}
+						</div>
+						<div>
+							<timer end-time="1451628000000" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 						</div>
 					</div>
 				</div>
@@ -113,6 +158,10 @@
 			</div>
 		</div>
 	</form>
+	<div ng-show="war.loadingPage" class="jumbotron text-center" ng-show="war.processing"> 
+		<span class="glyphicon glyphicon-repeat spinner"></span>
+		<p>Loading War...</p>
+	</div>
 	
 	<!-- {{ war.warData }}	 -->
 		
