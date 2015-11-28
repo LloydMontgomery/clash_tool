@@ -7,6 +7,14 @@ angular.module('warService', [])
 		return $http.get('/api/wars/' + id);
 	};
 	// get all wars
+	warFactory.partial = function() { 
+		return $http.get('/api/partialWars/');
+	};
+	// get all wars
+	warFactory.last = function() { 
+		return $http.get('/api/lastWar/');
+	};
+	// get all wars
 	warFactory.all = function() { 
 		return $http.get('/api/wars/');
 	};

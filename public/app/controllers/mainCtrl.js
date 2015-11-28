@@ -47,14 +47,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
 				});
 			});
-			War.all().then(function(data) {
-				console.log(data);
+			War.partial().then(function(data) {
 				// bind the users that come back to vm.users
 				vm.wars = data.data;
 				vm.wars.sort(function(a, b) {
 					return (a.start < b.start) ? -1 : (a.start > b.start) ? 1 : 0;
 				});
-				console.log(vm.wars)
 			});
 		}
 	});

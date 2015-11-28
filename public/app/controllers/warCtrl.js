@@ -84,16 +84,22 @@ angular.module('warCtrl', ['warService'])
 
 			vm.processing = true;
 			
+			// call the warService function to retrieve last war
+			War.last() 
+				.then(function(data) {
+					console.log(data.data.warriors);
+					vm.warData.warriors = data.data.warriors;
+					vm.processing = false; // clear the form
+					// bind the message from our API to vm.message
+					vm.message = data.message;
+					
+			});
+
 			// Database call
 			// On callback success: processing = false & vm.warriorsReady = true
 		}
 
 	};
-
-
-
-
-	
 
 	// vm.warData.warriors = [];
 
@@ -248,6 +254,41 @@ angular.module('warCtrl', ['warService'])
 					$location.path('/wars');
 			});
 		}
+	};
+})
+
+// controller applied to user edit page
+.controller('warViewController', function($routeParams, $location, War) { 
+	var vm = this;
+	// variable to hide/show elements of the view // differentiates between create or edit pages 
+	vm.type = 'view';
+
+	vm.loadingPage = true;
+	// get the war data for the user you want to edit // $routeParams is the way we grab data from the URL 
+	War.get($routeParams.war_id)
+		.success(function(data) {
+
+			vm.warData = data;
+			vm.warData.date = new Date(vm.warData.date);
+
+			console.log(vm.warData);
+			// vm.warData.
+			vm.loadingPage = false;
+	});
+
+	// function to save the war
+	vm.saveWar = function() { 
+		vm.processing = true; 
+		vm.message = '';
+
+		// call the userService function to update
+		War.update($routeParams.war_id, vm.warData) 
+			.success(function(data) {
+				vm.processing = false; // clear the form
+				// bind the message from our API to vm.message
+				// vm.message = data.message;
+				$location.path('/wars');
+		});
 	};
 });
 

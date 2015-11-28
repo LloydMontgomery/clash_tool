@@ -41,16 +41,22 @@ angular.module('app.routes', ['ngRoute'])
 		controller	: 'warController',
 		controllerAs: 'war'
 	})
-	// form to create a new user // same view as edit page 
+	// form to create a new war // same view as edit page 
 	.when('/wars/create', {
 		templateUrl	: 'app/views/pages/wars/single.html',
 		controller	: 'warCreateController',
 		controllerAs: 'war'
 	})
-	//page to edit a user
+	//page to edit a war
 	.when('/wars/:war_id', {
 		templateUrl	: 'app/views/pages/wars/single.html',
 		controller	: 'warEditController',
+		controllerAs: 'war'
+	})
+	//page to view a war
+	.when('/wars/view/:war_id', {
+		templateUrl	: 'app/views/pages/wars/single.html',
+		controller	: 'warViewController',
 		controllerAs: 'war'
 	});
 	// get rid of the hash in the URL

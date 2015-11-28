@@ -11,7 +11,6 @@ var WarSchema = new Schema({
 	theirDest: 	{ type: Number, required: true, select: true },
 	start: 		{ type: Date, required: true, select: true, index: { unique: true }},
 	size: 		{ type: Number, required: true, select: true },
-	status: 	{ type: String, required: true, select: true },
 	img: 		{ type: String, required: true, select: true },
 	warriors:	{ type: [{	name: String,
 							attack1: String,

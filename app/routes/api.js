@@ -124,25 +124,25 @@ module.exports = function(app, express) {
 		});
 	});
 
-	apiRouter.route('/wars')
+	apiRouter.route('/partialWars')
 	// get all the wars (accessed at GET http://localhost:8080/api/wars)
 	.get(function(req, res) {
-		War.find({ status : 'Preparation' }, '-exp', function(err, wars) {
+		War.find({  }, '-ourDest -theirDest -size -warriors', function(err, wars) {
 			if (err) res.send(err);
 			// return the wars
 			res.json(wars);
 		});
 	});
 
-	// apiRouter.route('/wars')
-	// // get all the wars (accessed at GET http://localhost:8080/api/wars)
-	// .get(function(req, res) {
-	// 	War.find(function(err, wars) {
-	// 		if (err) res.send(err);
-	// 		// return the wars
-	// 		res.json(wars);
-	// 	});
-	// });
+	apiRouter.route('/lastWar')
+	// get all the wars (accessed at GET http://localhost:8080/api/lastWar)
+	.get(function(req, res) {
+		War.findOne( function(err, wars) {
+			if (err) res.send(err);
+			// return the wars
+			res.json(wars);
+		});
+	});
 
 
 	// ======================== BASIC AUTHENTICATION ======================== //
@@ -185,6 +185,16 @@ module.exports = function(app, express) {
 	// API endpoint to get user information
 	apiRouter.get('/me', function(req, res) {
 		res.send(req.decoded);
+	});
+
+	apiRouter.route('/wars')
+	// get all the wars (accessed at GET http://localhost:8080/api/wars)
+	.get(function(req, res) {
+		War.find(function(err, wars) {
+			if (err) res.send(err);
+			// return the wars
+			res.json(wars);
+		});
 	});
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
@@ -306,8 +316,6 @@ module.exports = function(app, express) {
 		war.theirDest = req.body.theirDest;
 		war.start = req.body.start;
 		war.size = req.body.size;
-		war.status = req.body.status;
-		war.img = req.body.img;
 		war.warriors = req.body.warriors;
 
 		// save the war and check for errors
