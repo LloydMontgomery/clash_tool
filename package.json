@@ -8,16 +8,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "angular": "^1.4.8",
-    "kerberos": "~0.0.17",
-    "aws-sdk": "*",
+    "aws-sdk": "^2.2.19",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.1",
-    "bower": "^1.6.5",
-    "ejs": "*",
-    "express": "^4.13.3",
     "jsonwebtoken": "^5.4.1",
-    "mongoose": "^4.2.5",
+    "mongoose": "^4.2.8",
     "morgan": "^1.6.1"
   },
   "engines": {
