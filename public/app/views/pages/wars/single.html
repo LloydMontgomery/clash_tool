@@ -148,14 +148,14 @@
 		</div>
 		<!-- Warriors Stats -->
 		<div ng-show="war.showWarriors" id="warriorStats" class="col-xs-12">
-			<div class="jumbotron text-center" ng-show="war.processing"> 
+			<div class="jumbotron text-center" ng-show="!war.warriorsReady1 || !war.warriorsReady2"> 
 				<span class="glyphicon glyphicon-repeat spinner"></span>
 				<p>Loading Warriors...</p>
 			</div>
-			<div ng-show="war.warriorsReady" class="col-xs-12">
+			<div ng-show="war.warriorsReady1 && war.warriorsReady2" class="col-xs-12">
 				<!-- Warrior Template -->
 				<div>
-					<table class="table table-bordered table-striped" ng-show="war.wars"> 
+					<table class="table table-bordered table-striped"> 
 						<!-- <thead>
 							<tr>
 								<th>Exp Gained</th>
@@ -167,17 +167,22 @@
 							</tr>
 						</thead> -->
 						<tbody>
-							<tr ng-repeat="warrior in war.warData.warriors">
+							<tr ng-repeat="warrior in war.warData.warriors" class="excludeAnimation">
 								<td>
 									<select>
 										<option value="">dropdown</option>
 									</select>
 								</td>
-								<td>{{ warrior.name }}</td>
+								<td>
+									<!-- <select ng-init=" = warrior.name" ng-model=""
+											ng-options="option.display for option in war.statusOptions">
+									</select> -->
+									{{ warrior.name }}
+								</td>
 								<td>{{ warrior.attack1 }}</td>
-								<td>{{ warrior.lock1 }}</td>
+								<td><span ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicon glyphicon-lock"></span></td>
 								<td>{{ warrior.attack2 }}</td>
-								<td>{{ warrior.lock2 }}</td>
+								<td><span ng-show="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicon glyphicon-lock"></span></td>
 							</tr>
 						</tbody>
 					</table>

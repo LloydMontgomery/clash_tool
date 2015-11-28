@@ -54,6 +54,7 @@ hr {
 
 }
 
+/* Button */
 #warriorList button {
 	background-color: #000;
 	color: #0680AF !important;
@@ -68,13 +69,12 @@ hr {
 
 #warriorStats > div {
 	border-radius: 15px;
-	background: #eee;
-	padding: 10px 10px 0 10px;
+	box-shadow: 0px 0px 10px 5px #dadada;
+	padding: 15px 15px 0 15px;
 	width: 100%;
 }
 
 #warriorStats > div > div {
-	height: 30px;
 	margin-bottom: 10px;
 	background: white;
 }

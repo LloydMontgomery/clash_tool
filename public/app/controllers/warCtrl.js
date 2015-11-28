@@ -1,5 +1,5 @@
 // start our angular module and inject userService
-angular.module('warCtrl', ['warService'])
+angular.module('warCtrl', ['warService', 'userService'])
 // user controller for the main page
 // inject the War factory 
 .controller('warController', function(War) {
@@ -20,7 +20,7 @@ angular.module('warCtrl', ['warService'])
 })
 
 // controller applied to War creation page
-.controller('warCreateController', function($routeParams, $location, War) { 
+.controller('warCreateController', function($routeParams, $location, War, User) { 
 	var vm = this;
 
 	/* ========================= POPULATE HTML PAGE ========================= */
@@ -81,22 +81,26 @@ angular.module('warCtrl', ['warService'])
 	vm.warriorList = function () {
 		if (vm.warData.name) {
 			vm.showWarriors = true;
-
-			vm.processing = true;
 			
 			// call the warService function to retrieve last war
 			War.last() 
 				.then(function(data) {
 					console.log(data.data.warriors);
 					vm.warData.warriors = data.data.warriors;
-					vm.processing = false; // clear the form
+					vm.warriorsReady1 = true;
 					// bind the message from our API to vm.message
 					vm.message = data.message;
 					
 			});
 
-			// Database call
-			// On callback success: processing = false & vm.warriorsReady = true
+			User.all() 
+				.then(function(data) {
+					console.log(data.data);
+					vm.warData.users = data.data;
+					vm.warriorsReady2 = true;
+					// bind the message from our API to vm.message
+					vm.message = data.message;	
+			});
 		}
 
 	};
