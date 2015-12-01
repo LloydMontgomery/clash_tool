@@ -128,13 +128,28 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 	};
 
+	// vm.warData.warriors = [{
+	// 	name: 'Zephyro',
+	// 	attack1: 'Hold',
+	// 	attack2: 'Hold',
+	// 	lock1: false,
+	// 	lock2: false,
+	// 	stars1: Number,
+	// 	stars2: Number,
+	// 	viewed: Boolean
+	// }];
+
 
 	// function to save the war
 	vm.saveWar = function() { 
-		vm.processing = true; 
-		vm.message = '';
-
+		vm.processing = true;
 		console.log(vm.warData);
+		
+		// Cleanse the data before passing to the database
+		var warDataCleansed = vm.warData;
+		// warDataCleansed.
+
+		
 
 		// // call the userService function to update
 		// War.create(vm.warData) 

@@ -316,7 +316,8 @@ module.exports = function(app, express) {
 		war.warriors = req.body.warriors;
 
 		// Optional Information //
-		war.exp = req.body.exp;
+		if (req.body.exp != 0)
+			war.exp = req.body.exp;
 		war.ourScore = req.body.ourScore;
 		war.theirScore = req.body.theirScore;
 		war.ourDest = req.body.ourDest;
