@@ -308,15 +308,22 @@ module.exports = function(app, express) {
 		// create a new instance of the User model
 		var war = new War();
 
-		// set the users information (comes from the request)
+		// set the war information (comes from the request)
+		// Required information //
+		war.opponent = req.body.opponent;
+		war.start = req.body.start;
+		war.size = req.body.size;
+		war.warriors = req.body.warriors;
+
+		// Optional Information //
 		war.exp = req.body.exp;
 		war.ourScore = req.body.ourScore;
 		war.theirScore = req.body.theirScore;
 		war.ourDest = req.body.ourDest;
 		war.theirDest = req.body.theirDest;
-		war.start = req.body.start;
-		war.size = req.body.size;
-		war.warriors = req.body.warriors;
+		
+		
+		
 
 		// save the war and check for errors
 		war.save(function(err) {

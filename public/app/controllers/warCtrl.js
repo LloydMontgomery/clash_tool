@@ -44,13 +44,13 @@ angular.module('warCtrl', ['warService', 'userService'])
 							'Over'];
 
 	// Date and Time picker for war start
-	vm.warData.startDate = new Date();
+	vm.warData.start = new Date();
 
-	vm.warData.startHour = vm.warData.startDate.getHours().toString();
+	vm.warData.startHour = vm.warData.start.getHours().toString();
 	if(vm.warData.startHour.length == 1)
 		vm.warData.startHour = '0' + vm.warData.startHour.toString();
 
-	vm.warData.startMinute = vm.warData.startDate.getMinutes().toString();
+	vm.warData.startMinute = vm.warData.start.getMinutes().toString();
 	if(vm.warData.startMinute.length == 1)
 		vm.warData.startMinute = '0' + vm.warData.startMinute.toString();
 	
@@ -78,120 +78,74 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	};
 
-	vm.warriorList = function () {
-		if (vm.warData.name) {
-			vm.showWarriors = true;
-			
-			// call the warService function to retrieve last war
-			War.last() 
-				.then(function(data) {
-					console.log(data.data.warriors);
-					vm.warData.warriors = data.data.warriors;
-					vm.warriorsReady1 = true;
-					// bind the message from our API to vm.message
-					vm.message = data.message;
-					
-			});
-
-			User.all() 
-				.then(function(data) {
-					console.log(data.data);
-					vm.warData.users = data.data;
-					vm.warriorsReady2 = true;
-					// bind the message from our API to vm.message
-					vm.message = data.message;	
-			});
+	vm.checkDate = function() {
+		vm.warData.start.setHours(parseInt(vm.warData.startHour), parseInt(vm.warData.startMinute), 0);
+		// var tempDate = vm.warData.startDate;
+		// tempDate = tempDate.setHours(parseInt(vm.warData.startHour), parseInt(vm.warData.startMinute));
+		now = new Date();
+		if ((now.getTime() - vm.warData.start.getTime()) > 169200000) {
+			vm.inProgress = false;
+			vm.inProgressClass = '';
+		} else {
+			vm.inProgressClass = 'greyedOutText';
+			vm.inProgress = true;
 		}
+	}; vm.checkDate();  // Self-run on load
 
+	vm.checkWarStatus = function (arg) {
+		console.log(arg);
+		if (vm.inProgress) {  // Let the user know the war is in progress
+			console.log("Hello");
+		}
 	};
 
-	// vm.warData.warriors = [];
-
-	// vm.warData = {
-	// 	exp: 125,
-	// 	ourScore: 50,
-	// 	theirScore: 30,
-	// 	ourDest: 90,
-	// 	theirDest: 70,
-	// 	start: Date(),
-	// 	size: 10,
-	// 	status: 'Preparation',
-	// 	img: 'https://s3-us-west-2.amazonaws.com/clashtool/Sun+Nov+22+2015',
-	// 	warriors: [{	name: 'Zephyro',
-	// 					attack1: 'Hold',
-	// 					attack2: 'Hold',
-	// 					lock1: false,
-	// 					lock2: false,
-	// 					stars1: Number,
-	// 					stars2: Number,
-	// 					viewed: false },
-	// 				{	name: 'Jessica',
-	// 					attack1: '1',
-	// 					attack2: 'Hold',
-	// 					lock1: false,
-	// 					lock2: true,
-	// 					stars1: Number,
-	// 					stars2: Number,
-	// 					viewed: false}]
-	// };
-
-	vm.warData.file = null;  // Just while testing, don't want to be pushing images every test
+	vm.warriorList = function () {
+		console.log("EYO");
+		if (vm.warData.opponent) {
+			vm.showWarriors = true;
 
 
-	// vm.warData = {};
-	// vm.warData.date = new Date();
+			
+			// call the warService function to retrieve last war
+			// War.last() 
+			// 	.then(function(data) {
+			// 		console.log(data.data.warriors);
+			// 		vm.warData.warriors = data.data.warriors;
+			// 		vm.warriorsReady1 = true;
+			// 		// bind the message from our API to vm.message
+			// 		vm.message = data.message;
+					
+			// });
 
-	vm.upload_file = function(file, signed_request, url){
-		vm.message=''; // Clear message
-		var xhr = new XMLHttpRequest();
-		xhr.open("PUT", signed_request);
-		xhr.setRequestHeader('x-amz-acl', 'public-read');
-		xhr.onload = function() {
-			if (xhr.status === 200) {
-				vm.warData.img = url
-				// call the userService function to update
-				War.create(vm.warData) 
-					.success(function(data) {
-						vm.processing = false; // clear the form
-						// bind the message from our API to vm.message
-						vm.message = data.message;
-						$location.path('/wars');
-				});
-			}
-		};
-		xhr.onerror = function() {
-			vm.message = data.message;
-		};
-		xhr.send(file);
-	}
+			// User.all() 
+			// 	.then(function(data) {
+			// 		console.log(data.data);
+			// 		vm.warData.users = data.data;
+			// 		vm.warriorsReady2 = true;
+			// 		// bind the message from our API to vm.message
+			// 		vm.message = data.message;	
+			// });
+		}
+	};
+
 
 	// function to save the war
 	vm.saveWar = function() { 
 		vm.processing = true; 
 		vm.message = '';
 
-		if (vm.warData.file) {
-			War.upload(vm.warData)
-				.then(function(data) {
-					vm.processing = false;
-					if (data.status == 200) {
-						console.log(data.data);
-						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
-					} else {
-						vm.message = 'Could not get signed URL.';
-					}
-			});
-		} else {
-			// call the userService function to update
-			War.create(vm.warData) 
-				.then(function(data) {
-					vm.processing = false; // clear the form
-					// bind the message from our API to vm.message
-					vm.message = data.data;
-					// $location.path('/wars');
-			});
-		}
+		console.log(vm.warData);
+
+		// // call the userService function to update
+		// War.create(vm.warData) 
+		// 	.then(function(data) {
+		// 		vm.processing = false; // clear the form
+		// 		// bind the message from our API to vm.message
+		// 		vm.message = data.data;
+		// 		// $location.path('/wars');
+		// });
 	};
+
 })
 
 // controller applied to user edit page
@@ -275,11 +229,17 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.warData = data;
 			vm.warData.date = new Date(vm.warData.date);
 
-			console.log(vm.warData);
+			// console.log(vm.warData);
 			// vm.warData.
 			vm.loadingPage = false;
 
-			vm.timeRemaining = 1451628000000;
+			now = new Date().getTime();
+			myDate = new Date(2015, 10, 30, 20, 0, 0, 0).getTime();  // Current Date
+			console.log(myDate);
+			console.log(now);
+			console.log(myDate - now);
+
+			vm.timeRemaining = myDate;
 	});
 
 	// function to save the war
