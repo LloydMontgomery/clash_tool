@@ -4,25 +4,22 @@
 }
 
 #dateTime {
-	/*position: relative;*/
-	/*left: 20px;*/
-
 	background-color: transparent;
 }
 
-#warStats > div , #extraContent {
+#warStats > div {
 	padding: 5px;
 	text-align: center;
 }
 
-#warStats > div > div, #extraContent > div {
+#warStats > div > div {
 	border-radius: 15px;
 	box-shadow: 0px 0px 10px 5px #dadada;
 	padding: 15px 15px 0 15px;
 	width: 100%;
 }
 
-#warStats > div > div > div > div , #extraContent > div > div {
+#warStats > div > div > div > div {
 	border-radius: 5px;
 	height: 30px;
 	margin-bottom: 15px;
@@ -78,6 +75,7 @@ hr {
 
 /* Warrior Stats section */
 #warriorStats {
+	margin-bottom: 15px;
 	padding: 5px 20px 5px 20px;
 }
 

@@ -29,6 +29,14 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.type = 'create';
 
+	vm.attackOptions = [
+		'Pick',
+		'Hold',
+		'Ask',
+		'Scout',
+		'Practice'
+	];
+
 	vm.sizeOptions = [	{display: '10 vs 10', value: 10},
 						{display: '15 vs 15', value: 15},
 						{display: '20 vs 20', value: 20},
@@ -43,16 +51,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 	var now = new Date();
 	vm.warData.start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 
-	vm.dest1Options = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25',
-					  '26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50',
-					  '51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75',
-					  '76','77','78','79','80','81','82','83','84','85','86','87','88','89','90','91','92','93','94','95','96','97','98','99','100'];
-	vm.dest2Options = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25',
-					  '26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50',
-					  '51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75',
-					  '76','77','78','79','80','81','82','83','84','85','86','87','88','89','90','91','92','93','94','95','96','97','98','99'];
-
-
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
@@ -60,6 +58,11 @@ angular.module('warCtrl', ['warService', 'userService'])
 		
 		if (vm.warData.ourScore > (vm.warData.size.value*3))
 			vm.warData.ourScore = Number(vm.warData.size.value*3);
+
+		// If warriors are displaying, we need to adjust
+		console.log(vm.warriorsReady);
+		if (vm.warriorsReady)
+			vm.adjustWarriorList();
 
 	};
 
@@ -81,6 +84,74 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 	}; vm.checkDate();  // Self-run on load
 
+	vm.adjustTargets = function() {
+		var target;
+		vm.attackOptions = [
+			'Pick',
+			'Hold',
+			'Ask',
+			'Scout',
+			'Practice'
+		];
+
+		// console.log(vm.warData);
+		for (var i = 0; i < vm.warData.size.value; i++) {
+			target = (i + 1).toString();
+			found = false;
+			for (var w = 0; w < vm.warData.warriors.length; w++) {
+				if (target === vm.warData.warriors[w].attack1) {
+					found = true;
+					break;
+				}
+			};
+			if (!found)
+				vm.attackOptions.push(target);
+
+		};
+	};
+
+	vm.adjustUsers = function() {
+		vm.warData.actUsers = [];  // Empty the array
+		var found;
+
+		for (var u = 0; u < vm.warData.users.length; u++) {
+			found = false;
+			for (var w = 0; w < vm.warData.warriors.length; w++) {
+				if (vm.warData.warriors[w].name === vm.warData.users[u].name) {
+					found = true;
+					break;
+				}
+			};
+			if (!found)
+				vm.warData.actUsers.push(vm.warData.users[u].name);
+		};
+	};
+
+	vm.adjustWarriorList = function() {
+		console.log("adjustWarriorList");
+		var change = vm.warData.size.value - vm.warData.warriors.length;
+		if (change > 0) {  // Then we need to add spots
+			for (var i = 0; i < change; i++) {
+				vm.warData.warriors.push({
+					name: 'Pick Warrior',
+					attack1: 'Pick',
+					attack2: 'Hold',
+					lock1: false,
+					lock2: false,
+					stars1: 0,
+					stars2: 0,
+					viewed: false
+				});
+			};
+		} else if (change < 0) { // Then we need to remove spots
+			for (var i = 0; i < (-change); i++) {
+				vm.warData.warriors.pop();
+			};
+		}  // Else it is the same as before..? Not sure this is possible, and either way it doesn't have to be handled
+		vm.adjustUsers();
+		vm.adjustTargets();
+	};
+
 	vm.warriorList = function () {
 		vm.message = '';
 
@@ -88,12 +159,14 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.message = 'Please set Opponent name';
 			return;
 		}
+		vm.showWarriors = true;  // When the UI should show the warriors
 
+		// Generate the warrior list templates
 		vm.warData.warriors = [];
 		for (var i = 0; i < vm.warData.size.value; i++) {
 			vm.warData.warriors.push({
-				name: '',
-				attack1: 'Hold',
+				name: 'Pick Warrior',
+				attack1: 'Pick',
 				attack2: 'Hold',
 				lock1: false,
 				lock2: false,
@@ -106,26 +179,19 @@ angular.module('warCtrl', ['warService', 'userService'])
 		// call the warService function to retrieve last war
 		War.last() 
 			.then(function(data) {
-				console.log(data.data.warriors);
 				for (var i = 0; i < data.data.warriors.length; i++) {
 					vm.warData.warriors[i] = data.data.warriors[i]
 				};
-				vm.warriorsReady1 = true;
-				// bind the message from our API to vm.message
-				vm.message = data.message;
+
+				User.all() 
+					.then(function(data) {
+						vm.warData.users = data.data;
+						vm.adjustUsers();
+						vm.adjustTargets();
+						vm.warriorsReady = true;
+				});
 				
 		});
-
-		User.all() 
-			.then(function(data) {
-				console.log(data.data);
-				vm.warData.users = data.data;
-				vm.warriorsReady2 = true;
-				// bind the message from our API to vm.message
-				vm.message = data.message;	
-		});
-
-		vm.showWarriors = true;  // When the UI should show the warriors
 	};
 
 
@@ -189,18 +255,24 @@ angular.module('warCtrl', ['warService', 'userService'])
 			}
 		}
 
+		for (var i = 0; i < vm.warData.warriors.length; i++) {
+			if (vm.warData.warriors[i].name == 'Pick Warrior') {
+				vm.message = 'Please Fill all Warrior Slots';
+				return;
+			}
+		};
 		warDataCleansed.warriors = vm.warData.warriors;
 
 		console.log(warDataCleansed);
 
 		// call the userService function to update
-		War.create(warDataCleansed)
-			.then(function(data) {
-				vm.processing = false; // clear the form
-				// bind the message from our API to vm.message
-				vm.message = data.data;
-				// $location.path('/wars');
-		});
+		// War.create(warDataCleansed)
+		// 	.then(function(data) {
+		// 		vm.processing = false; // clear the form
+		// 		// bind the message from our API to vm.message
+		// 		vm.message = data.data;
+		// 		// $location.path('/wars');
+		// });
 	};
 
 })

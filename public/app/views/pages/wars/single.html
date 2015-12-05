@@ -14,7 +14,7 @@
 					<!-- Content for Create and Edit Page -->
 					<div ng-if="war.type != 'view'">
 						<div>
-							<select ng-init="war.warData.size = war.sizeOptions[0]" ng-model="war.warData.size"
+							<select ng-change="war.setMaxStars()" ng-init="war.warData.size = war.sizeOptions[0]" ng-model="war.warData.size"
 									ng-options="option.display for option in war.sizeOptions">
 							</select>
 						</div>
@@ -122,32 +122,14 @@
 					</div>
 				</div>
 			</div>
-			<!-- Exp and Extras Div -->
-<!-- 			<div class="col-xs-12" id="extraContent" ng-show="war.inProgress">
-				<div>
-					<div>
-						<div class="col-sm-4 col-xs-12">
-							Hello
-						</div>
-						<hr class="hidden-sm col-xs-12">
-						<div class="col-sm-4 col-xs-12">
-							Hello Again
-						</div>
-						<hr class="hidden-sm col-xs-12">
-						<div class="col-sm-4 col-xs-12">
-							MMMMHELLO
-						</div>
-					</div>
-				</div>
-			</div> -->
 		</div>
 		<!-- Warriors Stats -->
 		<div ng-show="war.showWarriors" id="warriorStats" class="col-xs-12">
-			<div class="jumbotron text-center" ng-show="!war.warriorsReady1 || !war.warriorsReady2"> 
+			<div class="jumbotron text-center" ng-show="!war.warriorsReady"> 
 				<span class="glyphicon glyphicon-repeat spinner"></span>
 				<p>Loading Warriors...</p>
 			</div>
-			<div ng-show="war.warriorsReady1 && war.warriorsReady2" class="col-xs-12">
+			<div ng-show="war.warriorsReady" class="col-xs-12">
 				<!-- Warrior Template -->
 				<div>
 					<table class="table table-bordered table-striped"> 
@@ -164,19 +146,31 @@
 						<tbody>
 							<tr ng-repeat="warrior in war.warData.warriors" class="excludeAnimation">
 								<td>
-									<select>
-										<option value="">dropdown</option>
-									</select>
+									
 								</td>
 								<td>
-									<!-- <select ng-init=" = warrior.name" ng-model=""
-											ng-options="option.display for option in war.statusOptions">
-									</select> -->
-									{{ warrior.name }}
+									<select ng-change="war.adjustUsers()" ng-model="warrior.name">
+										<option value="{{warrior.name}}" selected>{{warrior.name}}</option>
+										<option ng-repeat="option in war.warData.actUsers" value="{{ option }}">{{ option }}</option>
+									</select>
 								</td>
-								<td>{{ warrior.attack1 }}</td>
+								<!-- Attack 1 -->
+								<td>
+									<select ng-disabled="warrior.name == 'Pick Warrior'" ng-change="war.adjustTargets()" ng-model="warrior.attack1">
+										<option value="{{warrior.attack1}}" selected>{{warrior.attack1}}</option>
+										<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
+									</select>
+								</td>
+								<!-- Lock 1 -->
 								<td><span ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicon glyphicon-lock"></span></td>
-								<td>{{ warrior.attack2 }}</td>
+								<!-- Attack 2 -->
+								<td>
+									<select ng-disabled="warrior.name == 'Pick Warrior'" ng-change="war.adjustTargets()" ng-model="warrior.attack2">
+										<option value="{{warrior.attack2}}" selected>{{warrior.attack2}}</option>
+										<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
+									</select>
+								</td>
+								<!-- Lock 2 -->
 								<td><span ng-show="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicon glyphicon-lock"></span></td>
 							</tr>
 						</tbody>
@@ -191,22 +185,22 @@
 				</div>
 			</div>
 		</div>
-		<div ng-click="war.warriorList()" ng-if="war.type == 'create'" ng-show="!war.showWarriors" class="form-group col-sm-offset-4 col-sm-4">
+		<div ng-click="war.warriorList()" ng-if="war.type == 'create'" ng-hide="war.showWarriors" class="form-group col-sm-offset-4 col-sm-4">
 			<div id="warriorList">
 				<button class="btn btn-success btn-lg btn-block">Warrior List</button>
 			</div>
 		</div>
-		<div ng-show="war.showWarriors" class="form-group col-sm-offset-4 col-sm-4">
+		<div ng-show="war.showWarriors && war.warriorsReady" class="form-group col-sm-offset-4 col-sm-4">
 			<div ng-click="war.saveWar()" id="warriorList">
 				<button class="btn btn-success btn-lg btn-block" ng-if="war.type == 'create'">Create War</button>
 				<button class="btn btn-success btn-lg btn-block" ng-if="war.type != 'create'">Update War</button>
 			</div>
 		</div>
-		<div ng-show="war.showWarriors" class="form-group">
+<!-- 		<div ng-show="war.showWarriors" class="form-group">
 			<div class="col-sm-offset-2 col-sm-6">
 				
 			</div>
-		</div>
+		</div> -->
 	</form>
 	<div ng-show="war.loadingPage" class="jumbotron text-center" ng-show="war.processing"> 
 		<span class="glyphicon glyphicon-repeat spinner"></span>
