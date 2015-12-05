@@ -82,7 +82,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 	}; vm.checkDate();  // Self-run on load
 
 	vm.warriorList = function () {
-		console.log("EYO");
 		vm.message = '';
 
 		if (!vm.warData.opponent) {
@@ -90,66 +89,50 @@ angular.module('warCtrl', ['warService', 'userService'])
 			return;
 		}
 
-		vm.showWarriors = true;
+		vm.warData.warriors = [];
+		for (var i = 0; i < vm.warData.size.value; i++) {
+			vm.warData.warriors.push({
+				name: '',
+				attack1: 'Hold',
+				attack2: 'Hold',
+				lock1: false,
+				lock2: false,
+				stars1: 0,
+				stars2: 0,
+				viewed: false
+			});
+		};
 
-
-		
 		// call the warService function to retrieve last war
-		// War.last() 
-		// 	.then(function(data) {
-		// 		console.log(data.data.warriors);
-		// 		vm.warData.warriors = data.data.warriors;
-		// 		vm.warriorsReady1 = true;
-		// 		// bind the message from our API to vm.message
-		// 		vm.message = data.message;
+		War.last() 
+			.then(function(data) {
+				console.log(data.data.warriors);
+				for (var i = 0; i < data.data.warriors.length; i++) {
+					vm.warData.warriors[i] = data.data.warriors[i]
+				};
+				vm.warriorsReady1 = true;
+				// bind the message from our API to vm.message
+				vm.message = data.message;
 				
-		// });
+		});
 
-		// User.all() 
-		// 	.then(function(data) {
-		// 		console.log(data.data);
-		// 		vm.warData.users = data.data;
-		// 		vm.warriorsReady2 = true;
-		// 		// bind the message from our API to vm.message
-		// 		vm.message = data.message;	
-		// });
+		User.all() 
+			.then(function(data) {
+				console.log(data.data);
+				vm.warData.users = data.data;
+				vm.warriorsReady2 = true;
+				// bind the message from our API to vm.message
+				vm.message = data.message;	
+		});
+
+		vm.showWarriors = true;  // When the UI should show the warriors
 	};
-
-	vm.warData.warriors = [{
-		name: 'Zephyro',
-		attack1: 'Hold',
-		attack2: 'Hold',
-		lock1: false,
-		lock2: false,
-		stars1: Number,
-		stars2: Number,
-		viewed: Boolean
-	},{
-		name: 'Jessica',
-		attack1: '2',
-		attack2: 'Hold',
-		lock1: false,
-		lock2: false,
-		stars1: Number,
-		stars2: Number,
-		viewed: Boolean
-	},{
-		name: 'Imperial',
-		attack1: '3',
-		attack2: 'Hold',
-		lock1: false,
-		lock2: false,
-		stars1: Number,
-		stars2: Number,
-		viewed: Boolean
-	}];
 
 
 	// function to save the war
 	vm.saveWar = function() { 
 		vm.processing = true;
 		vm.message = '';
-		console.log(vm.warData);
 		
 		// Cleanse the data before passing to the database
 		var warDataCleansed = {};
