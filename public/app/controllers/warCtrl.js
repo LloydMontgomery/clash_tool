@@ -29,7 +29,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.type = 'create';
 
-	vm.sizeOptions = [	{display: '10 vs 10', value: 10}, 
+	vm.sizeOptions = [	{display: '10 vs 10', value: 10},
 						{display: '15 vs 15', value: 15},
 						{display: '20 vs 20', value: 20},
 						{display: '25 vs 25', value: 25},
@@ -44,7 +44,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 							'Over'];
 
 	// Date and Time picker for war start
-	vm.warData.start = new Date();
+	var now = new Date();
+	vm.warData.start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 
 	vm.warData.startHour = vm.warData.start.getHours().toString();
 	if(vm.warData.startHour.length == 1)
@@ -101,58 +102,126 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.warriorList = function () {
 		console.log("EYO");
-		if (vm.warData.opponent) {
-			vm.showWarriors = true;
+		vm.message = '';
 
-
-			
-			// call the warService function to retrieve last war
-			// War.last() 
-			// 	.then(function(data) {
-			// 		console.log(data.data.warriors);
-			// 		vm.warData.warriors = data.data.warriors;
-			// 		vm.warriorsReady1 = true;
-			// 		// bind the message from our API to vm.message
-			// 		vm.message = data.message;
-					
-			// });
-
-			// User.all() 
-			// 	.then(function(data) {
-			// 		console.log(data.data);
-			// 		vm.warData.users = data.data;
-			// 		vm.warriorsReady2 = true;
-			// 		// bind the message from our API to vm.message
-			// 		vm.message = data.message;	
-			// });
+		if (!vm.warData.opponent) {
+			vm.message = 'Please set Opponent name';
+			return;
 		}
+
+		vm.showWarriors = true;
+
+
+		
+		// call the warService function to retrieve last war
+		// War.last() 
+		// 	.then(function(data) {
+		// 		console.log(data.data.warriors);
+		// 		vm.warData.warriors = data.data.warriors;
+		// 		vm.warriorsReady1 = true;
+		// 		// bind the message from our API to vm.message
+		// 		vm.message = data.message;
+				
+		// });
+
+		// User.all() 
+		// 	.then(function(data) {
+		// 		console.log(data.data);
+		// 		vm.warData.users = data.data;
+		// 		vm.warriorsReady2 = true;
+		// 		// bind the message from our API to vm.message
+		// 		vm.message = data.message;	
+		// });
 	};
 
-	// vm.warData.warriors = [{
-	// 	name: 'Zephyro',
-	// 	attack1: 'Hold',
-	// 	attack2: 'Hold',
-	// 	lock1: false,
-	// 	lock2: false,
-	// 	stars1: Number,
-	// 	stars2: Number,
-	// 	viewed: Boolean
-	// }];
+	vm.warData.warriors = [{
+		name: 'Zephyro',
+		attack1: 'Hold',
+		attack2: 'Hold',
+		lock1: false,
+		lock2: false,
+		stars1: Number,
+		stars2: Number,
+		viewed: Boolean
+	},{
+		name: 'Jessica',
+		attack1: '2',
+		attack2: 'Hold',
+		lock1: false,
+		lock2: false,
+		stars1: Number,
+		stars2: Number,
+		viewed: Boolean
+	},{
+		name: 'Imperial',
+		attack1: '3',
+		attack2: 'Hold',
+		lock1: false,
+		lock2: false,
+		stars1: Number,
+		stars2: Number,
+		viewed: Boolean
+	}];
 
 
 	// function to save the war
 	vm.saveWar = function() { 
 		vm.processing = true;
+		vm.message = '';
 		console.log(vm.warData);
 		
 		// Cleanse the data before passing to the database
-		var warDataCleansed = vm.warData;
-		// warDataCleansed.
+		var warDataCleansed = {};
+
+		if (vm.warData.opponent == '') {
+			vm.message = 'Please set Opponent name';
+			return;
+		}
+
+		warDataCleansed.opponent = vm.warData.opponent;
+		warDataCleansed.size = vm.warData.size.value;
+		warDataCleansed.start = vm.warData.start;
+
+		if (vm.inProgress == false) {
+			if (vm.warData.ourScore == undefined) {
+				vm.message = 'Please set Stars for SpaceMonkeys';
+				return;
+			}
+			if (vm.warData.theirScore == undefined) {
+				vm.message = 'Please set Stars for ' + warDataCleansed.opponent;
+				return;
+			}
+
+			// Convert the strings into a number using the two parts
+			warDataCleansed.ourDest = Number(vm.warData.ourDest1) + (Number(vm.warData.ourDest2)/100);
+			warDataCleansed.theirDest = Number(vm.warData.theirDest1) + (Number(vm.warData.theirDest2)/100);
+			warDataCleansed.ourScore = Number(vm.warData.ourScore);
+			warDataCleansed.theirScore = Number(vm.warData.theirScore);
+			warDataCleansed.start = vm.warData.start;
+
+			if (warDataCleansed.ourScore > warDataCleansed.theirScore)
+				warDataCleansed.outcome = 'war-win';
+			else if (warDataCleansed.ourScore < warDataCleansed.theirScore)
+				warDataCleansed.outcome = 'war-loss';
+			else if (warDataCleansed.ourDest > warDataCleansed.theirDest)
+				warDataCleansed.outcome = 'war-win';
+			else if (warDataCleansed.ourDest < warDataCleansed.theirDest)
+				warDataCleansed.outcome = 'war-loss';
+			else {
+				vm.message = 'Please change Destruction of clans';
+				return;
+			}
+		}
+
+		warDataCleansed.warriors = vm.warData.warriors;
+
+		console.log(warDataCleansed);
+
 
 		
 
-		// // call the userService function to update
-		// War.create(vm.warData) 
+		// call the userService function to update
+		// War.create(vm.warDataCleansed)
 		// 	.then(function(data) {
 		// 		vm.processing = false; // clear the form
 		// 		// bind the message from our API to vm.message

@@ -1,4 +1,4 @@
-<div class="col-xs-12">
+<div class="col-xs-12" id="warPage">
 	<div>
 		<h1 ng-if="war.type == 'create'">War Has Begun!</h1>
 		<h1 ng-if="war.type == 'edit'">Update War Log</h1>
@@ -21,7 +21,8 @@
 						<hr>
 						<div>
 							<div>
-								<input ng-change="war.checkDate()" type="date" ng-model="war.warData.start" class="unstyled">
+								<!-- <input ng-change="war.checkDate()" type="date" ng-model="war.warData.start" class="unstyled"> -->
+								<input ng-change="war.checkDate()" type="datetime-local" ng-model="war.warData.start">
 							</div>
 						</div>
 						<hr>
@@ -70,13 +71,7 @@
 						<hr>
 						<div>
 							<div>
-								<select ng-disabled="war.inProgress" ng-init="war.warData.ourDest1 = war.dest1Options[0]" ng-model="war.warData.ourDest1" ng-class="war.inProgressClass">
-									<option ng-repeat="option in war.dest1Options" value="{{option}}">{{ option }}</option>
-								</select>
-								<span>.&nbsp;&nbsp;</span>
-								<select ng-disabled="war.inProgress" ng-init="war.warData.ourDest2 = war.dest2Options[0]" ng-model="war.warData.ourDest2" ng-class="war.inProgressClass">
-									<option ng-repeat="option in war.dest2Options" value="{{option}}">{{ option }}</option>
-								</select>
+								<input ng-model="war.warData.ourDest" type="number" class="form-control" placeholder="Opponent Name">
 							</div>
 						</div>
 					</div>
@@ -137,10 +132,23 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div ng-click="war.warriorList()" ng-if="war.type == 'create'" ng-show="!war.showWarriors" class="form-group col-sm-offset-4 col-sm-4">
-			<div id="warriorList">
-				<button class="btn btn-success btn-lg btn-block">Warrior List</button>
+			<!-- Exp and Extras Div -->
+			<div class="col-xs-12" id="extraContent" ng-show="war.inProgress">
+				<div>
+					<div>
+						<div class="col-sm-4 col-xs-12">
+							Hello
+						</div>
+						<hr class="hidden-sm col-xs-12">
+						<div class="col-sm-4 col-xs-12">
+							Hello Again
+						</div>
+						<hr class="hidden-sm col-xs-12">
+						<div class="col-sm-4 col-xs-12">
+							MMMMHELLO
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<!-- Warriors Stats -->
@@ -184,6 +192,18 @@
 						</tbody>
 					</table>
 				</div>
+			</div>
+		</div>
+		<div class="row show-hide-message" ng-show="war.message">
+			<div class="col-sm-4 col-sm-offset-4 col-xs-12">
+				<div class="alert alert-info">
+					{{ war.message }}
+				</div>
+			</div>
+		</div>
+		<div ng-click="war.warriorList()" ng-if="war.type == 'create'" ng-show="!war.showWarriors" class="form-group col-sm-offset-4 col-sm-4">
+			<div id="warriorList">
+				<button class="btn btn-success btn-lg btn-block">Warrior List</button>
 			</div>
 		</div>
 		<div ng-show="war.showWarriors" class="form-group col-sm-offset-4 col-sm-4">
