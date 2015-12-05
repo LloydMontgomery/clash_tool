@@ -2,6 +2,14 @@
 #warStats {
 	margin-bottom: 15px;
 }
+
+#dateTime {
+	position: relative;
+	left: 20px;
+
+	background-color: transparent;
+}
+
 #warStats > div , #extraContent {
 	padding: 5px;
 	text-align: center;

@@ -39,25 +39,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 						{display: '45 vs 45', value: 45},
 						{display: '50 vs 50', value: 50}];
 
-	vm.statusOptions = [ 	'Preparation',
-							'Battle',
-							'Over'];
-
 	// Date and Time picker for war start
 	var now = new Date();
 	vm.warData.start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-
-	vm.warData.startHour = vm.warData.start.getHours().toString();
-	if(vm.warData.startHour.length == 1)
-		vm.warData.startHour = '0' + vm.warData.startHour.toString();
-
-	vm.warData.startMinute = vm.warData.start.getMinutes().toString();
-	if(vm.warData.startMinute.length == 1)
-		vm.warData.startMinute = '0' + vm.warData.startMinute.toString();
-	
-	vm.hourOptions = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23'];
-	vm.minuteOptions = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29',
-					  '30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59'];
 
 	vm.dest1Options = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25',
 					  '26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50',
@@ -80,14 +64,18 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.checkDate = function() {
-		vm.warData.start.setHours(parseInt(vm.warData.startHour), parseInt(vm.warData.startMinute), 0);
-		// var tempDate = vm.warData.startDate;
-		// tempDate = tempDate.setHours(parseInt(vm.warData.startHour), parseInt(vm.warData.startMinute));
 		now = new Date();
-		if ((now.getTime() - vm.warData.start.getTime()) > 169200000) {
+		vm.warStatus = "In Progress";
+		if ((now.getTime() - vm.warData.start.getTime()) > 169200000) {  // Over 47 hours since war started
+			vm.warStatus = "War Over";
 			vm.inProgress = false;
 			vm.inProgressClass = '';
-		} else {
+		} else if ((now.getTime() - vm.warData.start.getTime()) > 86400000) {  // Between 24 and 47 hours since beginning
+			vm.warStatus = "Battle Day";
+			vm.inProgressClass = 'greyedOutText';
+			vm.inProgress = true;
+		} else {  // Between 0 and 24 hours since beginning
+			vm.warStatus = "Preparation Day";
 			vm.inProgressClass = 'greyedOutText';
 			vm.inProgress = true;
 		}
