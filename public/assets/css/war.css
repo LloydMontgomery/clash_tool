@@ -1,6 +1,7 @@
 /* General War Page CSS */
 #warPage {
 	min-height: 100%;
+	position: absolute;
 }
 
 /* War Stats section */

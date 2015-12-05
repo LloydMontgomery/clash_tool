@@ -4,12 +4,12 @@
 }
 
 /* Letters are the Accent Colour */
-#footer a {
+footer a {
 	color: #0680AF;
 }
 
 /* Background is Black */
-#footer {
+footer {
 	background-color: black;
 }
 

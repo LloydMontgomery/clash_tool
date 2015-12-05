@@ -29,6 +29,18 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.type = 'create';
 
+	vm.command = 'Move';
+	vm.commandOptions = [
+		'Move',
+		'^ 3',
+		'^ 2',
+		'^ 1',
+		' X ',
+		'v 1',
+		'v 2',
+		'v 3'
+	];
+
 	vm.attackOptions = [
 		'Pick',
 		'Hold',
@@ -60,7 +72,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.warData.ourScore = Number(vm.warData.size.value*3);
 
 		// If warriors are displaying, we need to adjust
-		console.log(vm.warriorsReady);
+
 		if (vm.warriorsReady)
 			vm.adjustWarriorList();
 
@@ -84,7 +96,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 	}; vm.checkDate();  // Self-run on load
 
-	vm.adjustTargets = function() {
+	vm.adjustTargets = function(selected) {
 		var target;
 		vm.attackOptions = [
 			'Pick',
@@ -111,6 +123,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.adjustUsers = function() {
+		console.log("adjustUsers");
+		console.log(vm.warData.users);
 		vm.warData.actUsers = [];  // Empty the array
 		var found;
 
@@ -135,7 +149,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.warData.warriors.push({
 					name: 'Pick Warrior',
 					attack1: 'Pick',
-					attack2: 'Hold',
+					attack2: 'Ask',
 					lock1: false,
 					lock2: false,
 					stars1: 0,
@@ -150,6 +164,45 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}  // Else it is the same as before..? Not sure this is possible, and either way it doesn't have to be handled
 		vm.adjustUsers();
 		vm.adjustTargets();
+	};
+
+	vm.moveWarrior = function(warrior, command) {
+		var index = -1;
+
+		// Find the index of the warrior
+		for (var i = 0; i < vm.warData.warriors.length; i++) {
+			if (vm.warData.warriors[i].name === warrior) {
+				index = i;
+				break;
+			}
+		};
+
+		// Save and remove the warrior from the list
+		var save = vm.warData.warriors[i];
+		vm.warData.warriors.splice(i, 1);
+
+		if (command == '^ 3')  // attempt to move up 3, otherwise catch overflow and set to 0
+			index = ((index - 3) < 0 ? 0 : index - 3);  
+		else if (command == '^ 2')  // attempt to move up 2, otherwise catch overflow and set to 0
+			index = ((index - 2) < 0 ? 0 : index - 2);  
+		else if (command == '^ 1')  // attempt to move up 1, otherwise catch overflow and set to 0
+			index = ((index - 1) < 0 ? 0 : index - 1);  
+		else if (command == ' X ') // Delete this entry
+			index = -1;  
+		else if (command == 'v 1')  // attempt to move down 1, otherwise catch overflow and set to max
+			index = ((index + 1) >= vm.warData.warriors.length ? vm.warData.warriors.length - 1 : index + 1);
+		else if (command == 'v 2')  // attempt to move down 2, otherwise catch overflow and set to max
+			index = ((index + 2) >= vm.warData.warriors.length ? vm.warData.warriors.length - 1 : index + 2);
+		else if (command == 'v 3')  // attempt to move down 3, otherwise catch overflow and set to max
+			index = ((index + 3) >= vm.warData.warriors.length ? vm.warData.warriors.length - 1 : index + 3);  
+
+
+		if (index != -1)  // We have to insert the element back into the array
+			vm.warData.warriors.splice(index, 0, save);
+		else  // Delete an entry, and correct warrior list
+			vm.adjustWarriorList()
+
+		vm.command = 'Move';  // Reset value to 'Move'
 	};
 
 	vm.warriorList = function () {
@@ -167,7 +220,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.warData.warriors.push({
 				name: 'Pick Warrior',
 				attack1: 'Pick',
-				attack2: 'Hold',
+				attack2: 'Ask',
 				lock1: false,
 				lock2: false,
 				stars1: 0,
@@ -180,7 +233,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		War.last() 
 			.then(function(data) {
 				for (var i = 0; i < data.data.warriors.length; i++) {
-					vm.warData.warriors[i] = data.data.warriors[i]
+					vm.warData.warriors[i].name = data.data.warriors[i].name
 				};
 
 				User.all() 
@@ -258,7 +311,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		for (var i = 0; i < vm.warData.warriors.length; i++) {
 			if (vm.warData.warriors[i].name == 'Pick Warrior') {
 				vm.message = 'Please Fill all Warrior Slots';
-				return;
+				// return;
 			}
 		};
 		warDataCleansed.warriors = vm.warData.warriors;

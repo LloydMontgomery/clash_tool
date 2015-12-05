@@ -86,24 +86,19 @@ header .navbar {
 
 
 /* FOOTER ===================== */
-* {
-    margin: 0;
-}
-html, body {
-    height: 100%;
-}
-#wrapper {
+html {
+    position: relative;
     min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0 auto -55px; /* the bottom margin is the negative value of the footer's height */
 }
-#footer, #push {
-    height: 55px; /* .push must be the same height as .footer */
-    color: grey;
+body {
+    margin: 0 0 100px; /* bottom = footer height */
 }
-i {
-	background-color: pink;
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
 }
 
 
