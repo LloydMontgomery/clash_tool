@@ -67,7 +67,7 @@
 						<hr>
 						<div>
 							<div>
-								<input ng-model="war.warData.ourDest" type="number" class="form-control" placeholder="Our Destruction" class="unstyled">
+								<input ng-disabled="war.inProgress" ng-model="war.warData.ourDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
 							</div>
 						</div>
 					</div>
@@ -103,13 +103,7 @@
 						<hr>
 						<div>
 							<div>
-								<select ng-disabled="war.inProgress" ng-init="war.warData.theirDest1 = war.dest1Options[0]" ng-model="war.warData.theirDest1" ng-class="war.inProgressClass">
-									<option ng-repeat="option in war.dest1Options" value="{{option}}">{{ option }}</option>
-								</select>
-								<span>.&nbsp;&nbsp;</span>
-								<select ng-disabled="war.inProgress" ng-init="war.warData.theirDest2 = war.dest2Options[0]" ng-model="war.warData.theirDest2" ng-class="war.inProgressClass">
-									<option ng-repeat="option in war.dest2Options" value="{{option}}">{{ option }}</option>
-								</select>
+								<input ng-disabled="war.inProgress" ng-model="war.warData.theirDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
 							</div>
 						</div>
 					</div>

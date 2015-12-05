@@ -56,7 +56,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
-		vm.maxStars = Array.apply(null, Array((vm.warData.size.value*3)+1)).map(function (_, i) {return i;});
+		vm.maxStars = Array.apply(null, Array((vm.warData.size.value*3)+1)).map(function (_, i) {return ((vm.warData.size.value*3) - i);});
 		
 		if (vm.warData.ourScore > (vm.warData.size.value*3))
 			vm.warData.ourScore = Number(vm.warData.size.value*3);
@@ -67,7 +67,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		now = new Date();
 		vm.warStatus = "In Progress";
 		if ((now.getTime() - vm.warData.start.getTime()) > 169200000) {  // Over 47 hours since war started
-			vm.warStatus = "War Over";
+			vm.warStatus = "War Over";  // Never displayed, but still the context
 			vm.inProgress = false;
 			vm.inProgressClass = '';
 		} else if ((now.getTime() - vm.warData.start.getTime()) > 86400000) {  // Between 24 and 47 hours since beginning
@@ -80,13 +80,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.inProgress = true;
 		}
 	}; vm.checkDate();  // Self-run on load
-
-	vm.checkWarStatus = function (arg) {
-		console.log(arg);
-		if (vm.inProgress) {  // Let the user know the war is in progress
-			console.log("Hello");
-		}
-	};
 
 	vm.warriorList = function () {
 		console.log("EYO");
@@ -169,8 +162,13 @@ angular.module('warCtrl', ['warService', 'userService'])
 		warDataCleansed.opponent = vm.warData.opponent;
 		warDataCleansed.size = vm.warData.size.value;
 		warDataCleansed.start = vm.warData.start;
+		warDataCleansed.inProgress = vm.inProgress;
 
 		if (vm.inProgress == false) {
+			if (vm.warData.exp == undefined) {
+				vm.message = 'Please set Exp Gained';
+				return;
+			}
 			if (vm.warData.ourScore == undefined) {
 				vm.message = 'Please set Stars for SpaceMonkeys';
 				return;
@@ -179,13 +177,20 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.message = 'Please set Stars for ' + warDataCleansed.opponent;
 				return;
 			}
+			if (vm.warData.ourDest == undefined) {
+				vm.message = 'Please set Destruction for Space Monkeys';
+				return;
+			}
+			if (vm.warData.theirDest == undefined) {
+				vm.message = 'Please set Destruction for ' + warDataCleansed.opponent;
+				return;
+			}
 
-			// Convert the strings into a number using the two parts
-			warDataCleansed.ourDest = Number(vm.warData.ourDest1) + (Number(vm.warData.ourDest2)/100);
-			warDataCleansed.theirDest = Number(vm.warData.theirDest1) + (Number(vm.warData.theirDest2)/100);
+			warDataCleansed.exp = vm.warData.exp;
+			warDataCleansed.ourDest = vm.warData.ourDest;
+			warDataCleansed.theirDest = vm.warData.theirDest;
 			warDataCleansed.ourScore = Number(vm.warData.ourScore);
 			warDataCleansed.theirScore = Number(vm.warData.theirScore);
-			warDataCleansed.start = vm.warData.start;
 
 			if (warDataCleansed.ourScore > warDataCleansed.theirScore)
 				warDataCleansed.outcome = 'war-win';
@@ -205,17 +210,14 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		console.log(warDataCleansed);
 
-
-		
-
 		// call the userService function to update
-		// War.create(vm.warDataCleansed)
-		// 	.then(function(data) {
-		// 		vm.processing = false; // clear the form
-		// 		// bind the message from our API to vm.message
-		// 		vm.message = data.data;
-		// 		// $location.path('/wars');
-		// });
+		War.create(warDataCleansed)
+			.then(function(data) {
+				vm.processing = false; // clear the form
+				// bind the message from our API to vm.message
+				vm.message = data.data;
+				// $location.path('/wars');
+		});
 	};
 
 })

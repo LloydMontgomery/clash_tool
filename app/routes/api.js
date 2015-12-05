@@ -306,6 +306,7 @@ module.exports = function(app, express) {
 	// create a war (accessed at POST http://localhost:8080/api/wars)
 	.post(function(req, res) {
 		// create a new instance of the User model
+		console.log(req.body);
 		var war = new War();
 
 		// set the war information (comes from the request)
@@ -315,17 +316,15 @@ module.exports = function(app, express) {
 		war.size = req.body.size;
 		war.warriors = req.body.warriors;
 
-		// Optional Information //
-		if (req.body.exp)
+		// Optional Information if War is Over//
+		if (!req.body.inProgress) {
 			war.exp = req.body.exp;
-		// if ()
-		war.ourScore = req.body.ourScore;
-		war.theirScore = req.body.theirScore;
-		war.ourDest = req.body.ourDest;
-		war.theirDest = req.body.theirDest;
-		
-		
-		
+			war.ourScore = req.body.ourScore;
+			war.theirScore = req.body.theirScore;
+			war.ourDest = req.body.ourDest;
+			war.theirDest = req.body.theirDest;
+			war.outcome = req.body.outcome;
+		}
 
 		// save the war and check for errors
 		war.save(function(err) {
