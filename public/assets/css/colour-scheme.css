@@ -3,3 +3,13 @@
 	background-color: #0680AF;
 }
 
+/* Letters are the Accent Colour */
+#footer a {
+	color: #0680AF;
+}
+
+/* Background is Black */
+#footer {
+	background-color: black;
+}
+

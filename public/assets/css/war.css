@@ -1,3 +1,8 @@
+/* General War Page CSS */
+#warPage {
+	min-height: 100%;
+}
+
 /* War Stats section */
 #warStats {
 	margin-bottom: 15px;

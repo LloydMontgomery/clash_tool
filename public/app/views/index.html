@@ -10,6 +10,7 @@
 
 	<!-- CSS LIBS -->
 	<link rel="stylesheet" href="assets/libs/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/libs/bootstrap/dist/css/bootstrap.icon-large.min.css">
 	<link rel="stylesheet" href="assets/libs/angular-animate/animate.css">
 
 	<!-- Custom CSS -->
@@ -66,11 +67,22 @@
 			</div>
 		</div>
 	</nav>
-	<main> 
-		<!-- ANGULAR VIEWS --> 
-		<div ng-view></div>
-	</main>
 
+	<div id="wrapper">
+		<main> 
+			<!-- ANGULAR VIEWS --> 
+			<div ng-view></div>
+		</main>
+
+		<!-- This is for the footer -->
+		<div class="push"></div>
+	</div>
+	<!-- Footer -->
+	<div id="footer">
+		<div class="container">
+			Icons Provided By: <a href="http://glyphicons.com"> glyphicons.com </a>
+		</div>
+	</div>
 </body>
 
 </html>
