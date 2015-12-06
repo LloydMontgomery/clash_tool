@@ -4,7 +4,7 @@
 }
 
 /* Letters are the Accent Colour */
-footer a {
+footer a, .accentBlue {
 	color: #0680AF;
 }
 

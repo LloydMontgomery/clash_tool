@@ -20,7 +20,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 })
 
 // controller applied to War creation page
-.controller('warManipulationController', function($routeParams, $location, War, User) { 
+.controller('warManipulationController', function($route, $routeParams, $location, Auth, War, User) { 
 	var vm = this;
 	vm.loadingPage = true;
 
@@ -78,16 +78,22 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.checkDate = function() {
+		console.log("Checking Date");
+		vm.battleCountdown = vm.warData.start.getTime() + 169200000;  		// Add 47 Hours
+		vm.preparationCountdown = vm.warData.start.getTime() + 82800000;  	// Add 23 Hours
+
 		now = new Date();
-		if ((now.getTime() - vm.warData.start.getTime()) > 169200000) {  // Over 47 hours since war started
+		var timeSinceStart = (now.getTime() - vm.warData.start.getTime())
+		if (timeSinceStart > 169200000) {  // Over 47 hours since war started
 			vm.warStatus = 'War Over';  // Never displayed, but still the context
 			vm.inProgress = false;
 			vm.inProgressClass = '';
-		} else if ((now.getTime() - vm.warData.start.getTime()) > 86400000) {  // Between 24 and 47 hours since beginning
+		} else if (timeSinceStart > 82800000) {  // Between 23 and 47 hours since beginning
+			console.log("BATTLE DAY");
 			vm.warStatus = 'Battle Day';
 			vm.inProgressClass = 'greyedOutText';
 			vm.inProgress = true;
-		} else {  // Between 0 and 24 hours since beginning
+		} else {  // Between 0 and 23 hours since beginning
 			vm.warStatus = 'Preparation Day';
 			vm.inProgressClass = 'greyedOutText';
 			vm.inProgress = true;
@@ -203,45 +209,50 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 		vm.showWarriors = true;  // When the UI should show the warriors
 
-		// Generate the warrior list templates
-		vm.warData.warriors = [];
-		for (var i = 0; i < vm.warData.size; i++) {
-			vm.warData.warriors.push({
-				name: 'Pick Warrior',
-				attack1: 'Pick',
-				attack2: 'Ask',
-				lock1: false,
-				lock2: false,
-				stars1: 0,
-				stars2: 0,
-				viewed: false
-			});
-		};
-
-		// call the warService function to retrieve last war
-		War.last() 
+		User.all()
 			.then(function(data) {
-				if (data.data) {
-					if (vm.type != 'create') {
-						for (var i = 0; i < data.data.warriors.length; i++) {
-							vm.warData.warriors[i] = data.data.warriors[i]
-						};
-					} else {
-						for (var i = 0; i < data.data.warriors.length; i++) {
-							vm.warData.warriors[i].name = data.data.warriors[i].name
-						};
+				vm.warData.users = data.data;
+
+				if (vm.type == 'create') {
+
+					// Generate the warrior list templates
+					vm.warData.warriors = [];
+					for (var i = 0; i < vm.warData.size; i++) {
+						vm.warData.warriors.push({
+							name: 'Pick Warrior',
+							attack1: 'Pick',
+							attack2: 'Ask',
+							lock1: false,
+							lock2: false,
+							stars1: 0,
+							stars2: 0,
+							viewed: false
+						});
 					};
-					
+					// call the warService function to retrieve last war
+					War.last() 
+						.then(function(data) {
+							if (data.data) {
+								if (vm.type != 'create') {
+									for (var i = 0; i < data.data.warriors.length; i++) {
+										vm.warData.warriors[i] = data.data.warriors[i]
+									};
+								} else {
+									for (var i = 0; i < data.data.warriors.length; i++) {
+										vm.warData.warriors[i].name = data.data.warriors[i].name
+									};
+								};
+								
+							}
+							vm.adjustUsers();
+							vm.adjustTargets();
+							vm.warriorsReady = true;
+					});
+
+				} else {  // 
+
 				}
 
-				User.all() 
-					.then(function(data) {
-						vm.warData.users = data.data;
-						vm.adjustUsers();
-						vm.adjustTargets();
-						vm.warriorsReady = true;
-				});
-				
 		});
 	};
 
@@ -341,24 +352,47 @@ angular.module('warCtrl', ['warService', 'userService'])
 		});
 	};
 
+	vm.reloadPage = function () {
+		$route.reload();
+	};
+
 	// Finish loading the page
 	if (vm.type != 'create') {
 		War.get($routeParams.war_id)
 			.then(function(data) {
 				vm.warData = data.data;
 
-				// Set a few parameters that come back in the wrong format
+				// Set Date-Time to be in the proper format
 				vm.warData.start = new Date(vm.warData.start);  // Convert the date string to a date object
 				var now = new Date();
 				vm.warData.start.setTime(vm.warData.start.getTime() - (now.getTimezoneOffset() * 60000));
 
+				// Set a few other attributes that come back in the wrong format
 				vm.warData.ourScore = vm.warData.ourScore.toString();
 				vm.warData.theirScore = vm.warData.theirScore.toString();
 
+				// Set Countdown timers
+				vm.battleCountdown = vm.warData.start.getTime() + 169200000;  		// Add 47 Hours
+				vm.preparationCountdown = vm.warData.start.getTime() + 82800000;  	// Add 23 Hours
+
 				vm.checkDate();
-				// vm.setMaxStars()
-				vm.genWarriorList();
 				vm.loadingPage = false;
+
+				console.log(vm.warData.warriors);
+
+				if (vm.type == 'view') {
+					Auth.getUser().then(function(data) {
+						vm.userInfo = data.data;
+						for (var i = 0; i < vm.warData.warriors.length; i++) {
+							console.log(vm.warData.warriors[i].name + ' ' + vm.userInfo.name);
+							if (vm.warData.warriors[i].name == vm.userInfo.name) {
+								console.log("SUCCESS");
+								vm.warData.warriors[i].viewed = true;
+								vm.updateWar();
+							}
+						};
+					});
+				}
 		});
 	} else {
 		vm.checkDate();

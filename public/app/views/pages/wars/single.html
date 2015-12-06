@@ -6,8 +6,6 @@
 			<h1 ng-if="war.type == 'view'">View War</h1>
 		</div>
 		<hr>
-		{{war.warData}}
-		{{war.attackOptions}}
 		<form ng-show="!war.loadingPage">
 			<!-- War Stats -->
 			<div id="warStats" class="col-xs-12">
@@ -43,11 +41,15 @@
 							</div>
 							<hr>
 							<div>
-								{{ war.warData.status }}
+								{{ war.warStatus }}
 							</div>
 							<hr>
 							<div>
-								<timer ng-attr-end-time="war.timeRemaining" max-time-unit="'hour'" interval="1000">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+								<timer ng-if="war.warStatus == 'Battle Day'" ng-attr-end-time="war.battleCountdown" 
+									max-time-unit="'hour'" interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+								<timer ng-if="war.warStatus == 'Preparation Day'" ng-attr-end-time="war.preparationCountdown" 
+									finish-callback="war.reloadPage()" max-time-unit="'hour'" 
+									interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 							</div>
 						</div>
 					</div>
@@ -76,14 +78,15 @@
 						<!-- Content for View Page -->
 						<div ng-if="war.type == 'view'">
 							<div >
-								{{ war.warData.size }} vs {{ war.warData.size }}
+								Space Monkeys
 							</div>
 							<hr>
 							<div>
-								{{ war.warData.status }}
+								{{ war.warData.ourScore }}
 							</div>
 							<hr>
 							<div>
+								{{ war.warData.ourDest }}
 							</div>
 						</div>
 					</div>
@@ -112,14 +115,15 @@
 						<!-- Content for View Page -->
 						<div ng-if="war.type == 'view'">
 							<div >
-								{{ war.warData.size }} vs {{ war.warData.size }}
+								{{ war.warData.opponent }}
 							</div>
 							<hr>
 							<div>
-								{{ war.warData.status }}
+								{{ war.warData.theirScore }}
 							</div>
 							<hr>
 							<div>
+								{{ war.warData.theirDest }}
 							</div>
 						</div>
 					</div>
@@ -138,51 +142,72 @@
 							<tbody>
 								<tr ng-repeat="warrior in war.warData.warriors" class="excludeAnimation">
 									<td>
-										<select ng-model="war.command" ng-change="war.moveWarrior(warrior.name, war.command)"
-											ng-disabled="warrior.name == 'Pick Warrior'" ng-options="option for option in war.commandOptions">
-										</select>
+										<div ng-if="war.type != 'view'">
+											<select ng-model="war.command" ng-change="war.moveWarrior(warrior.name, war.command)"
+												ng-disabled="warrior.name == 'Pick Warrior'" ng-options="option for option in war.commandOptions">
+											</select>
+										</div>
 									</td>
 									<td>
-										<select ng-model="warrior.name" ng-change="war.adjustUsers()">
-											<option value="{{warrior.name}}" selected>{{warrior.name}}</option>
-											<option ng-repeat="option in war.warData.actUsers" value="{{ option }}">{{ option }}</option>
-										</select>
+										<div>
+											{{ warrior.name }}
+										</div>
+										<div>
+											<span ng-show="warrior.viewed" class="glyphicons glyphicons-eye-open accentBlue"></span>
+											<span ng-hide="warrior.viewed" class="glyphicons glyphicons-eye-open"></span>
+										</div>
 									</td>
 									<!-- Attack 1 -->
 									<td>
-										<select ng-model="warrior.attack1" ng-change="war.adjustTargets(); warrior.lock1 = true"
-											ng-disabled="warrior.name == 'Pick Warrior'">
-											<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
-											<option value="Pick" ng-if="warrior.attack1 != 'Pick'">Pick</option>
-											<option value="Hold" ng-if="warrior.attack1 != 'Hold'">Hold</option>
-											<option value="Ask" ng-if="warrior.attack1 != 'Ask'">Ask</option>
-											<option value="Scout" ng-if="warrior.attack1 != 'Scout'">Scout</option>
-											<option value="Practice" ng-if="warrior.attack1 != 'Practice'">Practice</option>
-											<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
-										</select>
+										<div>
+											<select ng-if="war.type != 'view'" ng-model="warrior.attack1" ng-change="war.adjustTargets(); warrior.lock1 = true"
+												ng-disabled="warrior.name == 'Pick Warrior'">
+												<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
+												<option value="Pick" ng-if="warrior.attack1 != 'Pick'">Pick</option>
+												<option value="Hold" ng-if="warrior.attack1 != 'Hold'">Hold</option>
+												<option value="Ask" ng-if="warrior.attack1 != 'Ask'">Ask</option>
+												<option value="Scout" ng-if="warrior.attack1 != 'Scout'">Scout</option>
+												<option value="Practice" ng-if="warrior.attack1 != 'Practice'">Practice</option>
+												<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
+											</select>
+											<select ng-if="war.type == 'view'" ng-model="warrior.attack1" ng-change="war.adjustTargets(); warrior.lock1 = true"
+												ng-disabled="main.userInfo.name != warrior.name">
+												<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
+												<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
+											</select>
+										</div>
 									</td>
 									<!-- Lock 1 -->
 									<td>
-										<span ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-lock"></span>
-										<span ng-hide="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-unlock"></span>
+										<div>
+											<div>
+												<span ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1; warrior.viewed = false" 
+													class="glyphicons glyphicons-lock"></span>
+												<span ng-hide="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1; warrior.viewed = false" 
+													class="glyphicons glyphicons-unlock"></span>
+											</div>
 									</td>
 									<!-- Attack 2 -->
 									<td>
-										<select ng-model="warrior.attack2" ng-change="war.adjustTargets(); warrior.lock2 = true"
-											ng-disabled="warrior.name == 'Pick Warrior'">
-											<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
-											<option value="Pick" ng-if="warrior.attack2 != 'Pick'">Pick</option>
-											<option value="Hold" ng-if="warrior.attack2 != 'Hold'">Hold</option>
-											<option value="Ask" ng-if="warrior.attack2 != 'Ask'">Ask</option>
-											<option value="Scout" ng-if="warrior.attack2 != 'Scout'">Scout</option>
-											<option value="Practice" ng-if="warrior.attack2 != 'Practice'">Practice</option>
-											<option ng-repeat="option in war.attackOptions2" ng-if="warrior.attack1 != option" value="{{ option }}">{{ option }}</option>
-										</select>
+										<div>
+											<select ng-model="warrior.attack2" ng-change="war.adjustTargets(); warrior.lock2 = true"
+												ng-disabled="main.userInfo.name != warrior.name || warrior.name == 'Pick Warrior'">
+												<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
+												<option value="Pick" ng-if="warrior.attack2 != 'Pick'">Pick</option>
+												<option value="Hold" ng-if="warrior.attack2 != 'Hold'">Hold</option>
+												<option value="Ask" ng-if="warrior.attack2 != 'Ask'">Ask</option>
+												<option value="Scout" ng-if="warrior.attack2 != 'Scout'">Scout</option>
+												<option value="Practice" ng-if="warrior.attack2 != 'Practice'">Practice</option>
+												<option ng-repeat="option in war.attackOptions2" ng-if="warrior.attack1 != option" value="{{ option }}">{{ option }}</option>
+											</select>
+										</div>
 									</td>
 									<!-- Lock 2 -->
 									<td>
-										<span ng-show="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-lock"></span>
-										<span ng-hide="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-unlock"></span>
+										<div>
+											<span ng-show="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-lock"></span>
+											<span ng-hide="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-unlock"></span>
+										</div>
 									</td>
 								</tr>
 							</tbody>
