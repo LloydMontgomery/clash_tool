@@ -2,7 +2,7 @@
 angular.module('warCtrl', ['warService', 'userService'])
 // user controller for the main page
 // inject the War factory 
-.controller('warController', function(War) {
+.controller('warListController', function(War) {
 	var vm = this;
 
 	// set a processing variable to show loading things
@@ -20,14 +20,20 @@ angular.module('warCtrl', ['warService', 'userService'])
 })
 
 // controller applied to War creation page
-.controller('warCreateController', function($routeParams, $location, War, User) { 
+.controller('warManipulationController', function($routeParams, $location, War, User) { 
 	var vm = this;
+	vm.loadingPage = true;
 
 	/* ========================= POPULATE HTML PAGE ========================= */
 
 	vm.warData = {};
 
-	vm.type = 'create';
+	if ($location.path() == '/wars/create')
+		vm.type = 'create';
+	else if ($location.path().substr(0, 11) == '/wars/edit/') // Edit page
+		vm.type = 'edit';
+	else if ($location.path().substr(0, 11) == '/wars/view/')  // view page
+		vm.type = 'view';
 
 	vm.command = 'Move';
 	vm.commandOptions = [
@@ -41,14 +47,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 		'v 3'
 	];
 
-	vm.attackOptions = [
-		'Pick',
-		'Hold',
-		'Ask',
-		'Scout',
-		'Practice'
-	];
+	vm.attackOptions = [];
 
+	vm.warData.size = 10;
 	vm.sizeOptions = [	{display: '10 vs 10', value: 10},
 						{display: '15 vs 15', value: 15},
 						{display: '20 vs 20', value: 20},
@@ -66,65 +67,54 @@ angular.module('warCtrl', ['warService', 'userService'])
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
-		vm.maxStars = Array.apply(null, Array((vm.warData.size.value*3)+1)).map(function (_, i) {return ((vm.warData.size.value*3) - i);});
-		
-		if (vm.warData.ourScore > (vm.warData.size.value*3))
-			vm.warData.ourScore = Number(vm.warData.size.value*3);
+		vm.maxStars = Array.apply(null, Array((vm.warData.size*3)+1)).map(function (_, i) {return ((vm.warData.size*3) - i);});
+		if (vm.warData.ourScore > (vm.warData.size*3))
+			vm.warData.ourScore = Number(vm.warData.size*3);
 
 		// If warriors are displaying, we need to adjust
 
 		if (vm.warriorsReady)
 			vm.adjustWarriorList();
-
 	};
 
 	vm.checkDate = function() {
 		now = new Date();
-		vm.warStatus = "In Progress";
 		if ((now.getTime() - vm.warData.start.getTime()) > 169200000) {  // Over 47 hours since war started
-			vm.warStatus = "War Over";  // Never displayed, but still the context
+			vm.warStatus = 'War Over';  // Never displayed, but still the context
 			vm.inProgress = false;
 			vm.inProgressClass = '';
 		} else if ((now.getTime() - vm.warData.start.getTime()) > 86400000) {  // Between 24 and 47 hours since beginning
-			vm.warStatus = "Battle Day";
+			vm.warStatus = 'Battle Day';
 			vm.inProgressClass = 'greyedOutText';
 			vm.inProgress = true;
 		} else {  // Between 0 and 24 hours since beginning
-			vm.warStatus = "Preparation Day";
+			vm.warStatus = 'Preparation Day';
 			vm.inProgressClass = 'greyedOutText';
 			vm.inProgress = true;
 		}
-	}; vm.checkDate();  // Self-run on load
+	};
 
-	vm.adjustTargets = function(selected) {
+	vm.adjustTargets = function() {
 		var target;
-		vm.attackOptions = [
-			'Pick',
-			'Hold',
-			'Ask',
-			'Scout',
-			'Practice'
-		];
-
-		// console.log(vm.warData);
-		for (var i = 0; i < vm.warData.size.value; i++) {
-			target = (i + 1).toString();
+		vm.attackOptions = [];
+		vm.attackOptions2 = [];
+		
+		for (var i = 0; i < vm.warData.size; i++) {
+			target = 'Attack ' + (i + 1).toString();
 			found = false;
 			for (var w = 0; w < vm.warData.warriors.length; w++) {
-				if (target === vm.warData.warriors[w].attack1) {
+				if ((target) == vm.warData.warriors[w].attack1) {
 					found = true;
 					break;
 				}
 			};
-			if (!found)
+			if (!found) 
 				vm.attackOptions.push(target);
-
+			vm.attackOptions2.push(target);
 		};
 	};
 
 	vm.adjustUsers = function() {
-		console.log("adjustUsers");
-		console.log(vm.warData.users);
 		vm.warData.actUsers = [];  // Empty the array
 		var found;
 
@@ -142,8 +132,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.adjustWarriorList = function() {
-		console.log("adjustWarriorList");
-		var change = vm.warData.size.value - vm.warData.warriors.length;
+		var change = vm.warData.size - vm.warData.warriors.length;
 		if (change > 0) {  // Then we need to add spots
 			for (var i = 0; i < change; i++) {
 				vm.warData.warriors.push({
@@ -205,7 +194,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		vm.command = 'Move';  // Reset value to 'Move'
 	};
 
-	vm.warriorList = function () {
+	vm.genWarriorList = function () {
 		vm.message = '';
 
 		if (!vm.warData.opponent) {
@@ -216,7 +205,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		// Generate the warrior list templates
 		vm.warData.warriors = [];
-		for (var i = 0; i < vm.warData.size.value; i++) {
+		for (var i = 0; i < vm.warData.size; i++) {
 			vm.warData.warriors.push({
 				name: 'Pick Warrior',
 				attack1: 'Pick',
@@ -232,9 +221,18 @@ angular.module('warCtrl', ['warService', 'userService'])
 		// call the warService function to retrieve last war
 		War.last() 
 			.then(function(data) {
-				for (var i = 0; i < data.data.warriors.length; i++) {
-					vm.warData.warriors[i].name = data.data.warriors[i].name
-				};
+				if (data.data) {
+					if (vm.type != 'create') {
+						for (var i = 0; i < data.data.warriors.length; i++) {
+							vm.warData.warriors[i] = data.data.warriors[i]
+						};
+					} else {
+						for (var i = 0; i < data.data.warriors.length; i++) {
+							vm.warData.warriors[i].name = data.data.warriors[i].name
+						};
+					};
+					
+				}
 
 				User.all() 
 					.then(function(data) {
@@ -246,7 +244,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 				
 		});
 	};
-
 
 	// function to save the war
 	vm.saveWar = function() { 
@@ -262,9 +259,13 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 
 		warDataCleansed.opponent = vm.warData.opponent;
-		warDataCleansed.size = vm.warData.size.value;
-		warDataCleansed.start = vm.warData.start;
+		warDataCleansed.size = vm.warData.size;
 		warDataCleansed.inProgress = vm.inProgress;
+
+		// Date/Time needs to be set to UTC time
+		var now = new Date();
+		vm.warData.start.setTime(vm.warData.start.getTime() + (now.getTimezoneOffset() * 60000));
+		warDataCleansed.start = vm.warData.start;
 
 		if (vm.inProgress == false) {
 			if (vm.warData.exp == undefined) {
@@ -319,83 +320,109 @@ angular.module('warCtrl', ['warService', 'userService'])
 		console.log(warDataCleansed);
 
 		// call the userService function to update
-		// War.create(warDataCleansed)
-		// 	.then(function(data) {
-		// 		vm.processing = false; // clear the form
-		// 		// bind the message from our API to vm.message
-		// 		vm.message = data.data;
-		// 		// $location.path('/wars');
-		// });
+		War.create(warDataCleansed)
+			.then(function(data) {
+				vm.processing = false; // clear the form
+				// bind the message from our API to vm.message
+				vm.message = data.data;
+				// $location.path('/wars');
+		});
 	};
 
-})
+	// Finish loading the page
+	if (vm.type != 'create') {
+		War.get($routeParams.war_id)
+			.then(function(data) {
+				vm.warData = data.data;
 
-// controller applied to user edit page
-.controller('warEditController', function($routeParams, $location, War) { 
-	var vm = this;
-	// variable to hide/show elements of the view // differentiates between create or edit pages 
-	vm.type = 'edit';
+				// Set a few parameters that come back in the wrong format
+				vm.warData.start = new Date(vm.warData.start);  // Convert the date string to a date object
+				var now = new Date();
+				vm.warData.start.setTime(vm.warData.start.getTime() - (now.getTimezoneOffset() * 60000));
 
-	// get the user data for the user you want to edit // $routeParams is the way we grab data from the URL 
-	War.get($routeParams.war_id)
-		.success(function(data) {
-			vm.warData = data;
-			vm.warData.date = new Date(vm.warData.date);
-	});
+				vm.warData.ourScore = vm.warData.ourScore.toString();
+				vm.warData.theirScore = vm.warData.theirScore.toString();
 
-	vm.upload_file = function(file, signed_request, url){
-		var xhr = new XMLHttpRequest();
-		xhr.open("PUT", signed_request);
-		xhr.setRequestHeader('x-amz-acl', 'public-read');
-		xhr.onload = function() {
-			if (xhr.status === 200) {
-				vm.warData.img = url
-				// call the userService function to update
-				War.update($routeParams.war_id, vm.warData) 
-					.success(function(data) {
-						vm.processing = false; // clear the form
-						// bind the message from our API to vm.message
-						vm.message = data.message;
-						$location.path('/wars');
-				});
-			}
-		};
-		xhr.onerror = function() {
-			alert("Could not upload file.");
-		};
-		xhr.send(file);
+				vm.checkDate();
+				// vm.setMaxStars()
+				vm.genWarriorList();
+				vm.loadingPage = false;
+		});
+	} else {
+		vm.checkDate();
+		vm.loadingPage = false;
 	}
 
-	// function to save the war
-	vm.saveWar = function() { 
-		vm.processing = true; 
-		vm.message = '';
-
-		if (vm.warData.file != null) {
-			console.log("Saving Photo");
-			War.upload(vm.warData.file)
-				.then(function(data) {
-					vm.processing = false;
-					if (data.status == 200) {
-						console.log(data.data);
-						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
-					} else {
-						vm.message = 'Could not get signed URL.';
-					}
-			});
-		}
-		else {
-			// call the userService function to update
-			War.update($routeParams.war_id, vm.warData) 
-				.success(function(data) {
-					vm.processing = false; // clear the form
-					// bind the message from our API to vm.message
-					vm.message = data.message;
-					$location.path('/wars');
-			});
-		}
-	};
 })
+
+// // controller applied to user edit page
+// .controller('warEditController', function($routeParams, $location, War) { 
+// 	var vm = this;
+// 	// variable to hide/show elements of the view // differentiates between create or edit pages 
+// 	vm.type = 'edit';
+
+// 	// get the user data for the user you want to edit // $routeParams is the way we grab data from the URL 
+// 	War.get($routeParams.war_id)
+// 		.success(function(data) {
+// 			vm.warData = data;
+
+// 			// Set a few parameters that come back in the wrong format
+// 			vm.warData.start = new Date(vm.warData.start);
+// 	});
+
+// 	vm.upload_file = function(file, signed_request, url){
+// 		var xhr = new XMLHttpRequest();
+// 		xhr.open("PUT", signed_request);
+// 		xhr.setRequestHeader('x-amz-acl', 'public-read');
+// 		xhr.onload = function() {
+// 			if (xhr.status === 200) {
+// 				vm.warData.img = url
+// 				// call the userService function to update
+// 				War.update($routeParams.war_id, vm.warData) 
+// 					.success(function(data) {
+// 						vm.processing = false; // clear the form
+// 						// bind the message from our API to vm.message
+// 						vm.message = data.message;
+// 						$location.path('/wars');
+// 				});
+// 			}
+// 		};
+// 		xhr.onerror = function() {
+// 			alert("Could not upload file.");
+// 		};
+// 		xhr.send(file);
+// 	}
+
+// 	// function to save the war
+// 	vm.saveWar = function() { 
+// 		vm.processing = true; 
+// 		vm.message = '';
+
+// 		if (vm.warData.file != null) {
+// 			console.log("Saving Photo");
+// 			War.upload(vm.warData.file)
+// 				.then(function(data) {
+// 					vm.processing = false;
+// 					if (data.status == 200) {
+// 						console.log(data.data);
+// 						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
+// 					} else {
+// 						vm.message = 'Could not get signed URL.';
+// 					}
+// 			});
+// 		}
+// 		else {
+// 			// call the userService function to update
+// 			War.update($routeParams.war_id, vm.warData) 
+// 				.success(function(data) {
+// 					vm.processing = false; // clear the form
+// 					// bind the message from our API to vm.message
+// 					vm.message = data.message;
+// 					$location.path('/wars');
+// 			});
+// 		}
+// 	};
+// })
 
 // controller applied to user edit page
 .controller('warViewController', function($routeParams, $location, War) { 
