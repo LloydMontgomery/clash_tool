@@ -190,6 +190,10 @@
 					</div>
 				</div>
 			</div>
+			<!-- Image Upload Div -->
+			<div ng-show="war.showWarriors" id="warriorStats" class="col-xs-12">
+				
+			</div>
 			<div class="row show-hide-message" ng-show="war.message">
 				<div class="col-sm-4 col-sm-offset-4 col-xs-12">
 					<div class="alert alert-info">
@@ -203,9 +207,9 @@
 				</div>
 			</div>
 			<div ng-show="war.showWarriors && war.warriorsReady" class="form-group row col-sm-offset-4 col-sm-4">
-				<div ng-click="war.saveWar()" id="warriorList">
-					<button class="btn btn-success btn-lg btn-block" ng-if="war.type == 'create'">Create War</button>
-					<button class="btn btn-success btn-lg btn-block" ng-if="war.type != 'create'">Update War</button>
+				<div id="warriorList">
+					<button ng-click="war.saveWar()" class="btn btn-success btn-lg btn-block" ng-if="war.type == 'create'">Create War</button>
+					<button ng-click="war.updateWar()" class="btn btn-success btn-lg btn-block" ng-if="war.type != 'create'">Update War</button>
 				</div>
 			</div>
 		</form>

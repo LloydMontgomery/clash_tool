@@ -363,18 +363,22 @@ module.exports = function(app, express) {
 		War.findById(req.params.war_id, function(err, war) { 
 			if (err) res.send(err);
 			// update the wars info only if its new
-			if (req.body.number) 
-				war.number = req.body.number;
-			if (req.body.exp) 
-				war.exp = req.body.exp;
-			if (req.body.ourScore)
-				war.ourScore = req.body.ourScore;
-			if (req.body.theirScore)
-				war.theirScore = req.body.theirScore;
-			if (req.body.date)
-				war.date = req.body.date;
+
+			war.opponent = req.body.opponent;
+			war.exp = req.body.exp;
+			war.ourScore = req.body.ourScore;
+			war.theirScore = req.body.theirScore;
+			war.ourDest = req.body.ourDest;
+			war.TheirDest = req.body.TheirDest;
+			war.start = req.body.start;
+			war.size = req.body.size;
+			war.warriors = req.body.warriors;
+
+			if (req.body.outcome)
+				war.outcome = req.body.outcome;
 			if (req.body.img)
 				war.img = req.body.img;
+
 			// save the war
 			war.save(function(err) {
 				if (err) res.send(err);

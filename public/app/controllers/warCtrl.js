@@ -329,6 +329,18 @@ angular.module('warCtrl', ['warService', 'userService'])
 		});
 	};
 
+	vm.updateWar = function() {
+		// call the userService function to update
+		War.update($routeParams.war_id, vm.warData) 
+			.then(function(data) {
+				vm.processing = false; // clear the form
+				console.log("HERE");
+				// bind the message from our API to vm.message
+				vm.message = data.data.message;
+				// $location.path('/wars');
+		});
+	};
+
 	// Finish loading the page
 	if (vm.type != 'create') {
 		War.get($routeParams.war_id)
