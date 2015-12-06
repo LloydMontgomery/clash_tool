@@ -249,8 +249,10 @@ angular.module('warCtrl', ['warService', 'userService'])
 							vm.warriorsReady = true;
 					});
 
-				} else {  // 
-
+				} else {  // vm.type == 'Edit' || vm.type == 'View'
+					vm.adjustUsers();
+					vm.adjustTargets();
+					vm.warriorsReady = true;
 				}
 
 		});
@@ -340,15 +342,14 @@ angular.module('warCtrl', ['warService', 'userService'])
 		});
 	};
 
-	vm.updateWar = function() {
+	vm.updateWar = function(print) {
 		// call the userService function to update
 		War.update($routeParams.war_id, vm.warData) 
 			.then(function(data) {
 				vm.processing = false; // clear the form
-				console.log("HERE");
 				// bind the message from our API to vm.message
-				vm.message = data.data.message;
-				// $location.path('/wars');
+				if (print)
+					vm.message = data.data.message;
 		});
 	};
 
@@ -388,11 +389,12 @@ angular.module('warCtrl', ['warService', 'userService'])
 							if (vm.warData.warriors[i].name == vm.userInfo.name) {
 								console.log("SUCCESS");
 								vm.warData.warriors[i].viewed = true;
-								vm.updateWar();
+								vm.updateWar(false);
 							}
 						};
 					});
 				}
+				vm.genWarriorList();
 		});
 	} else {
 		vm.checkDate();

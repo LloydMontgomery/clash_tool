@@ -50,6 +50,9 @@
 								<timer ng-if="war.warStatus == 'Preparation Day'" ng-attr-end-time="war.preparationCountdown" 
 									finish-callback="war.reloadPage()" max-time-unit="'hour'" 
 									interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+								<div ng-if="war.warStatus == 'War Over'" class="excludeAnimation">
+									{{ war.warData.exp }}
+								</div>
 							</div>
 						</div>
 					</div>
@@ -131,7 +134,7 @@
 			</div>
 			<!-- Warriors Stats -->
 			<div ng-show="war.showWarriors" id="warriorStats" class="col-xs-12">
-				<div class="jumbotron text-center" ng-show="!war.warriorsReady"> 
+				<div ng-show="!war.warriorsReady" class="jumbotron text-center"> 
 					<span class="glyphicon glyphicon-repeat spinner"></span>
 					<p>Loading Warriors...</p>
 				</div>
@@ -160,8 +163,8 @@
 									<!-- Attack 1 -->
 									<td>
 										<div>
-											<select ng-if="war.type != 'view'" ng-model="warrior.attack1" ng-change="war.adjustTargets(); warrior.lock1 = true"
-												ng-disabled="warrior.name == 'Pick Warrior'">
+											<select ng-if="war.type != 'view'" ng-model="warrior.attack1" ng-disabled="warrior.name == 'Pick Warrior'"
+												ng-change="war.adjustTargets(); warrior.lock1 = true; warrior.viewed = false">
 												<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
 												<option value="Pick" ng-if="warrior.attack1 != 'Pick'">Pick</option>
 												<option value="Hold" ng-if="warrior.attack1 != 'Hold'">Hold</option>
@@ -170,8 +173,8 @@
 												<option value="Practice" ng-if="warrior.attack1 != 'Practice'">Practice</option>
 												<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
 											</select>
-											<select ng-if="war.type == 'view'" ng-model="warrior.attack1" ng-change="war.adjustTargets(); warrior.lock1 = true"
-												ng-disabled="main.userInfo.name != warrior.name">
+											<select ng-if="war.type == 'view'" ng-model="warrior.attack1" ng-change="war.adjustTargets()"
+												ng-disabled="warrior.lock1 || main.userInfo.name != warrior.name">
 												<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
 												<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
 											</select>
@@ -190,8 +193,8 @@
 									<!-- Attack 2 -->
 									<td>
 										<div>
-											<select ng-model="warrior.attack2" ng-change="war.adjustTargets(); warrior.lock2 = true"
-												ng-disabled="main.userInfo.name != warrior.name || warrior.name == 'Pick Warrior'">
+											<select ng-if="war.type != 'view'" ng-model="warrior.attack2" ng-disabled="warrior.name == 'Pick Warrior'"
+												ng-change="war.adjustTargets(); warrior.lock2 = true; warrior.viewed = false">
 												<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
 												<option value="Pick" ng-if="warrior.attack2 != 'Pick'">Pick</option>
 												<option value="Hold" ng-if="warrior.attack2 != 'Hold'">Hold</option>
@@ -199,6 +202,11 @@
 												<option value="Scout" ng-if="warrior.attack2 != 'Scout'">Scout</option>
 												<option value="Practice" ng-if="warrior.attack2 != 'Practice'">Practice</option>
 												<option ng-repeat="option in war.attackOptions2" ng-if="warrior.attack1 != option" value="{{ option }}">{{ option }}</option>
+											</select>
+											<select ng-if="war.type == 'view'" ng-model="warrior.attack2" ng-change="war.adjustTargets()"
+												ng-disabled="warrior.lock2 || main.userInfo.name != warrior.name">
+												<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
+												<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
 											</select>
 										</div>
 									</td>
@@ -234,7 +242,7 @@
 			<div ng-show="war.showWarriors && war.warriorsReady" class="form-group row col-sm-offset-4 col-sm-4">
 				<div id="warriorList">
 					<button ng-click="war.saveWar()" class="btn btn-success btn-lg btn-block" ng-if="war.type == 'create'">Create War</button>
-					<button ng-click="war.updateWar()" class="btn btn-success btn-lg btn-block" ng-if="war.type != 'create'">Update War</button>
+					<button ng-click="war.updateWar(true)" class="btn btn-success btn-lg btn-block" ng-if="war.type != 'create'">Update War</button>
 				</div>
 			</div>
 		</form>
