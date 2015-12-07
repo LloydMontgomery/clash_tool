@@ -152,12 +152,18 @@
 										</div>
 									</td>
 									<td>
-										<div ng-if="war.type == 'view'">
-											{{ warrior.name }}
-										</div>
 										<div>
-											<span ng-show="warrior.viewed" class="glyphicons glyphicons-eye-open accentBlue"></span>
-											<span ng-hide="warrior.viewed" class="glyphicons glyphicons-eye-open"></span>
+											<select ng-if="war.type != 'view'" ng-model="warrior.name" ng-change="war.adjustUsers()">
+												<option value="{{warrior.name}}" selected>{{warrior.name}}</option>
+												<option ng-repeat="option in war.warData.actUsers" value="{{ option }}">{{ option }}</option>
+											</select>
+											<div ng-if="war.type == 'view'">
+												{{ warrior.name }}
+											</div>
+											<div>
+												<span ng-show="warrior.viewed" class="glyphicons glyphicons-eye-open accentBlue"></span>
+												<span ng-hide="warrior.viewed" class="glyphicons glyphicons-eye-open"></span>
+											</div>
 										</div>
 									</td>
 									<!-- Attack 1 -->
