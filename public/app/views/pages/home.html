@@ -21,7 +21,7 @@
 				<a href="/wars" class="routeButton btn" type="button" ng-if="main.loggedIn">
 					<h4>Wars</h4>
 				</a><br>
-				<a href="/wars/current" id="currentWarButton" class="routeButton btn" type="button" ng-if="main.loggedIn">
+				<a ng-href="/wars/view/{{ main.wars[main.wars.length-1]._id }}" id="currentWarButton" class="routeButton btn" type="button" ng-if="main.loggedIn">
 					<h4>Current<br>War</h4>
 				</a>
 			</div>

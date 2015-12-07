@@ -347,6 +347,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.updateWar = function(print) {
+		// Set the time ahead again
+		vm.warData.start.setTime(vm.warData.start.getTime() + (now.getTimezoneOffset() * 60000));
+
 		// call the userService function to update
 		War.update($routeParams.war_id, vm.warData) 
 			.then(function(data) {
@@ -373,8 +376,10 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.warData.start.setTime(vm.warData.start.getTime() - (now.getTimezoneOffset() * 60000));
 
 				// Set a few other attributes that come back in the wrong format
-				vm.warData.ourScore = vm.warData.ourScore.toString();
-				vm.warData.theirScore = vm.warData.theirScore.toString();
+				if (vm.warData.outcome) {
+					vm.warData.ourScore = vm.warData.ourScore.toString();
+					vm.warData.theirScore = vm.warData.theirScore.toString();
+				}
 
 				// Set Countdown timers
 				vm.battleCountdown = vm.warData.start.getTime() + 169200000;  		// Add 47 Hours
@@ -391,7 +396,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 						for (var i = 0; i < vm.warData.warriors.length; i++) {
 							console.log(vm.warData.warriors[i].name + ' ' + vm.userInfo.name);
 							if (vm.warData.warriors[i].name == vm.userInfo.name) {
-								console.log("SUCCESS");
 								vm.warData.warriors[i].viewed = true;
 								vm.updateWar(false);
 							}
