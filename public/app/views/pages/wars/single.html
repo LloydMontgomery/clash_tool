@@ -183,11 +183,9 @@
 									<!-- Lock 1 -->
 									<td>
 										<div>
-											<div>
-												<span ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1; warrior.viewed = false" 
-													class="glyphicons glyphicons-lock"></span>
-												<span ng-hide="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1; warrior.viewed = false" 
-													class="glyphicons glyphicons-unlock"></span>
+											<div ng-if="war.type != 'view'">
+												<span ng-disabled="war.type == 'view'" ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-lock"></span>
+												<span ng-disabled="war.type == 'view'" ng-hide="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-unlock"></span>
 											</div>
 									</td>
 									<!-- Attack 2 -->
@@ -213,8 +211,10 @@
 									<!-- Lock 2 -->
 									<td>
 										<div>
-											<span ng-show="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-lock"></span>
-											<span ng-hide="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-unlock"></span>
+											<div ng-if="war.type != 'view'">
+												<span ng-show="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-lock"></span>
+												<span ng-hide="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-unlock"></span>
+											</div>
 										</div>
 									</td>
 								</tr>
