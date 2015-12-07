@@ -324,7 +324,27 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.message = 'Please change Destruction of clans';
 				return;
 			}
-	];
+		}
+
+		for (var i = 0; i < vm.warData.warriors.length; i++) {
+			if (vm.warData.warriors[i].name == 'Pick Warrior') {
+				vm.message = 'Please Fill all Warrior Slots';
+				// return;
+			}
+		};
+		warDataCleansed.warriors = vm.warData.warriors;
+
+		console.log(warDataCleansed);
+
+		// call the userService function to update
+		War.create(warDataCleansed)
+			.then(function(data) {
+				vm.processing = false; // clear the form
+				// bind the message from our API to vm.message
+				vm.message = data.data;
+				// $location.path('/wars');
+		});
+	};
 
 	vm.updateWar = function(print) {
 		// call the userService function to update
@@ -385,7 +405,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		vm.loadingPage = false;
 	}
 
-})
+});
 
 // // controller applied to user edit page
 // .controller('warEditController', function($routeParams, $location, War) { 

@@ -128,11 +128,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		vm.loggedIn = false;
 		// reset all user info 
 		vm.userInfo = {}; 
-<<<<<<< HEAD
-		$location.path('/');
-=======
 		$location.path('/login');
->>>>>>> war_entry_frontend
 	};
 
 });
