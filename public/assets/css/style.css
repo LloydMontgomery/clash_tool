@@ -1,4 +1,4 @@
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.nav, .pagination, .carousel, .panel-title, a { cursor: pointer; cursor: hand; }
 
 main { 
 	padding-top: 50px;
@@ -66,14 +66,13 @@ main {
 	width: 80%;
 }
 
-.title
-{
-	margin: 100px 0 50px 0;
-}
-
 a
 {
 	color: black;
+}
+
+.greyedOutText {
+	color: #eaeaea !important;
 }
 
 
@@ -85,6 +84,22 @@ header .navbar {
 	border-radius: 0;
 }
 
+
+/* FOOTER ===================== */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin: 0 0 100px; /* bottom = footer height */
+}
+footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+}
 
 
 

@@ -1,11 +1,11 @@
 angular.module('authService', [])
-
 // ===================================================
 // auth factory to login and get information
 // inject $http for communicating with the API
 // inject $q to return promise objects
 // inject AuthToken to manage tokens
 // =================================================== 
+
 .factory('Auth', function($http, $q, AuthToken) {
 	// create auth factory object
 	var authFactory = {};
@@ -28,8 +28,10 @@ angular.module('authService', [])
 	// check if a user is logged in
 	// checks if there is a local token 
 	authFactory.isLoggedIn = function() {
-		if (AuthToken.getToken())
+		var token = AuthToken.getToken()
+		if (token) {
 			return true;
+		}
 		else
 			return false;
 	};
@@ -85,8 +87,11 @@ angular.module('authService', [])
 	// happens on response errors
 	interceptorFactory.responseError = function(response) {
 		// if our server returns a 403 forbidden response
-		if (response.status == 403) { 
-			// AuthToken.setToken();
+		if (response.status == 403) {
+			// Delete the token if it has expired
+			if (response.data.error.name == 'TokenExpiredError') {
+				AuthToken.setToken();
+			}
 			$location.path('/');
 		}
 		// return the errors from the server as a promise

@@ -1,4 +1,15 @@
-/* Backgroun is the Accent Colour */
-#login-container button {
+/* Background is the Accent Colour */
+#login-container button{
 	background-color: #0680AF;
 }
+
+/* Letters are the Accent Colour */
+footer a, .accentBlue {
+	color: #0680AF;
+}
+
+/* Background is Black */
+footer {
+	background-color: black;
+}
+

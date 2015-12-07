@@ -54,9 +54,11 @@ module.exports = function(app, express) {
 					// create a token
 					var token = jwt.sign({
 						name: user.name,
-			        	id: user._id
+			        	id: user._id,
+			        	admin: user.admin
 			        }, TOKEN_SECRET, 
 			        { expiresIn: 7200 // expires in 2 hours 
+			        // { expiresIn: 10 // expires in 10 seconds (This is for debugging)
 					});
 					// Save this for later
 					req.decoded = jwt.decode(token);
@@ -122,10 +124,20 @@ module.exports = function(app, express) {
 		});
 	});
 
-	apiRouter.route('/wars')
+	apiRouter.route('/partialWars')
 	// get all the wars (accessed at GET http://localhost:8080/api/wars)
 	.get(function(req, res) {
-		War.find(function(err, wars) {
+		War.find({  }, '-ourDest -theirDest -size -warriors', function(err, wars) {
+			if (err) res.send(err);
+			// return the wars
+			res.json(wars);
+		});
+	});
+
+	apiRouter.route('/lastWar')
+	// get all the wars (accessed at GET http://localhost:8080/api/lastWar)
+	.get(function(req, res) {
+		War.findOne( function(err, wars) {
 			if (err) res.send(err);
 			// return the wars
 			res.json(wars);
@@ -145,7 +157,8 @@ module.exports = function(app, express) {
 			// verifies secret and checks exp
 			jwt.verify(token, TOKEN_SECRET, function(err, decoded) { 
 				if (err) {
-					return res.status(403).send({ 
+					return res.status(403).send({
+						error: err,
 						success: false,
 						message: 'Failed to authenticate token.'
 					});
@@ -159,6 +172,7 @@ module.exports = function(app, express) {
 			// If there is no token
 			// Return an HTTP response of 403 (access forbidden) and an error message 
 			return res.status(403).send({
+				error: { name: 'NoTokenProvidedError' },
 				success: false,
 				message: 'No token provided.'
 			});
@@ -173,6 +187,16 @@ module.exports = function(app, express) {
 		res.send(req.decoded);
 	});
 
+	apiRouter.route('/wars')
+	// get all the wars (accessed at GET http://localhost:8080/api/wars)
+	.get(function(req, res) {
+		War.find(function(err, wars) {
+			if (err) res.send(err);
+			// return the wars
+			res.json(wars);
+		});
+	});
+
 	// ======================== ADMIN AUTHENTICATION ======================== //
 
 	// route middleware to verify the token is owned by an admin
@@ -184,6 +208,7 @@ module.exports = function(app, express) {
 				next();
 			} else {
 				return res.status(403).send({
+					error: err,
 					success: false,
 					message: 'Failed to authenticate token.'
 				});
@@ -197,11 +222,6 @@ module.exports = function(app, express) {
 	apiRouter.route('/sign_s3')
 	// (accessed at GET http://localhost:8080/api/sign_s3) 
 	.get(function(req, res){
-		console.log("TESTING");
-		console.log(AWS_ACCESS_KEY);
-		console.log(AWS_SECRET_KEY);
-		console.log(S3_BUCKET_NAME);
-
 		aws.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 		var s3 = new aws.S3();
 		var s3_params = {
@@ -215,6 +235,7 @@ module.exports = function(app, express) {
 			if(err){
 				console.log(err);
 			} else{
+				var date = new Date()
 				var return_data = {
 					signed_request: data,
 					url: 'https://'+S3_BUCKET_NAME+'.s3.amazonaws.com/'+req.query.file_name
@@ -285,25 +306,36 @@ module.exports = function(app, express) {
 	// create a war (accessed at POST http://localhost:8080/api/wars)
 	.post(function(req, res) {
 		// create a new instance of the User model
+		console.log(req.body);
 		var war = new War();
-		// set the users information (comes from the request)
-		war.number = req.body.number;
-		war.exp = req.body.exp;
-		war.ourScore = req.body.ourScore;
-		war.theirScore = req.body.theirScore;
-		war.date = req.body.date;
-		war.ourDest = req.body.ourDest;
-		war.theirDest = req.body.theirDest;
-		war.img = req.body.img;
+
+		// set the war information (comes from the request)
+		// Required information //
+		war.opponent = req.body.opponent;
+		war.start = req.body.start;
+		war.size = req.body.size;
+		war.warriors = req.body.warriors;
+
+		// Optional Information if War is Over//
+		if (!req.body.inProgress) {
+			war.exp = req.body.exp;
+			war.ourScore = req.body.ourScore;
+			war.theirScore = req.body.theirScore;
+			war.ourDest = req.body.ourDest;
+			war.theirDest = req.body.theirDest;
+			war.outcome = req.body.outcome;
+		}
 
 		// save the war and check for errors
-		war.save(function(err) { 
+		war.save(function(err) {
 			if (err) {
 				// duplicate entry
 				if (err.code == 11000)
-					return res.json({ success: false, message: 'A war with that number already exists.' }); 
-				else
+					return res.json({ success: false, message: 'A war with that date already exists.' }); 
+				else {
+					console.log(err);
 					return res.send(err);
+				}
 			}
 			res.json({ 
 				success: true,
@@ -331,18 +363,22 @@ module.exports = function(app, express) {
 		War.findById(req.params.war_id, function(err, war) { 
 			if (err) res.send(err);
 			// update the wars info only if its new
-			if (req.body.number) 
-				war.number = req.body.number;
-			if (req.body.exp) 
-				war.exp = req.body.exp;
-			if (req.body.ourScore)
-				war.ourScore = req.body.ourScore;
-			if (req.body.theirScore)
-				war.theirScore = req.body.theirScore;
-			if (req.body.date)
-				war.date = req.body.date;
+
+			war.opponent = req.body.opponent;
+			war.exp = req.body.exp;
+			war.ourScore = req.body.ourScore;
+			war.theirScore = req.body.theirScore;
+			war.ourDest = req.body.ourDest;
+			war.TheirDest = req.body.TheirDest;
+			war.start = req.body.start;
+			war.size = req.body.size;
+			war.warriors = req.body.warriors;
+
+			if (req.body.outcome)
+				war.outcome = req.body.outcome;
 			if (req.body.img)
 				war.img = req.body.img;
+
 			// save the war
 			war.save(function(err) {
 				if (err) res.send(err);

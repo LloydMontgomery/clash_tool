@@ -16,7 +16,6 @@
 	<table class="table table-bordered table-striped" ng-show="war.wars"> 
 		<thead>
 			<tr>
-				<th>Number</th> 
 				<th>Exp Gained</th>
 				<th>Us</th>
 				<th>Them</th>
@@ -27,15 +26,15 @@
 		</thead>
 		<tbody>
 			<!-- LOOP OVER THE USERS -->
-			<tr ng-repeat="battle in war.wars"> 
-				<td>{{ battle.number }}</td>
+			<tr ng-repeat="battle in war.wars">
 				<td>{{ battle.exp }}</td>
 				<td>{{ battle.ourScore }}</td>
 				<td>{{ battle.theirScore }}</td>
 				<td>{{ battle.date.toString().substr(0,10) }}</td>
 				<td><a ng-href="{{ battle.img }}" target="_blank">Overview</a></td>
 				<td class="col-xm-2">
-					<a ng-href="/wars/{{ battle._id }}" class="btn btn-primary">Edit</a>
+					<a ng-href="/wars/view/{{ battle._id }}" class="btn btn-primary">View</a>
+					<a ng-href="/wars/edit/{{ battle._id }}" class="btn btn-danger">Edit</a>
 				</td>
 			</tr>
 		</tbody>

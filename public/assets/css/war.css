@@ -1,0 +1,103 @@
+/* General War Page CSS */
+#warPage {
+	min-height: 100%;
+	position: absolute;
+}
+
+/* War Stats section */
+#warStats {
+	margin-bottom: 15px;
+}
+
+#dateTime {
+	background-color: transparent;
+}
+
+#warStats > div {
+	padding: 5px;
+	text-align: center;
+}
+
+#warStats > div > div {
+	border-radius: 15px;
+	box-shadow: 0px 0px 10px 5px #dadada;
+	padding: 15px 15px 0 15px;
+	width: 100%;
+}
+
+#warStats > div > div > div > div {
+	border-radius: 5px;
+	height: 30px;
+	margin-bottom: 15px;
+	background: white;
+	padding-top: 2px;
+}
+
+#warStats select {
+	height: 100%;
+	-webkit-appearance: none;
+	background: white;
+	border: none;
+
+	margin: 0 auto;
+
+	font-size: 20px;
+	color: #000;
+}
+
+#warStats input {
+	-webkit-appearance: none;
+	border: none;
+	text-align: center;
+}
+
+hr {
+	height: 2px !important;
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #dadada, rgba(0, 0, 0, 0));
+}
+
+#clanName {
+	height: 100%;
+	background: white;
+	border: none;
+
+	margin: 0 auto;
+	font-size: 15px;
+	color: #000;
+	padding-top: 10px !important;
+}
+
+#extraContent > div > div {
+	height: 40px;
+}
+
+/* Button */
+#warriorList button {
+	background-color: #000;
+	color: #0680AF !important;
+
+	margin: 15px 0 15px 0;
+}
+
+/* Warrior Stats section */
+#warriorStats {
+	margin-bottom: 15px;
+	padding: 5px 20px 5px 20px;
+}
+
+#warriorStats > div {
+	border-radius: 15px;
+	box-shadow: 0px 0px 10px 5px #dadada;
+	padding: 15px 15px 0 15px;
+	width: 100%;
+}
+
+#warriorStats > div > div {
+	margin-bottom: 10px;
+	background: white;
+}
+
+#warPage .alert {
+	text-align: center;
+	margin: 0;
+}

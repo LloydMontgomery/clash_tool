@@ -1,90 +1,91 @@
 <div>
 	<!-- Intro Section -->
 	<section id="intro-section" class="section">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="hidden-xs hidden-md hidden-lg  intro-spacer"></div>
-				<div class="hidden-xs intro-spacer"></div>
-				<a href="http://fav.me/d25xjwq">
-					<img id="gf-logo" src="assets/imgs/spacemonkey_transparant.png" style="width:200px;">
-					<div class="row" style="font-size:10px">
-					©2009-2015 designMS
-					</div>
-				</a>
-				<div id="clan-description" class="row">
+		<div class="col-lg-12" ng-class="main.mainPageSizing">
+			<div class="hidden-xs hidden-md hidden-lg  intro-spacer"></div>
+			<div class="intro-spacer"></div>
+			<a href="http://fav.me/d25xjwq">
+				<img id="gf-logo" src="assets/imgs/spacemonkey_transparant.png" style="width:200px;">
+				<div class="row" style="font-size:10px">
+				©2009-2015 designMS
+				</div>
+			</a>
+			<div id="clan-description">
+				<div ng-show="!main.userInfo.admin">
 					Fight Club was the beginning, now it's moved out of the basement, it's called Project Mayhem. We are the Space Monkeys, and we are the men and women who give their lives to Project Mayhem.
 				</div>
+				<a href="/users" class="routeButton btn" type="button" ng-show="main.loggedIn  && main.userInfo.admin">
+					<h4>Users</h4>
+				</a>
+				<a href="/wars" class="routeButton btn" type="button" ng-show="main.loggedIn  && main.userInfo.admin">
+					<h4>Wars</h4>
+				</a>
 			</div>
+
 		</div>
 	</section>
 
 	<!-- About Section -->
 	<section id="about-section" class="section">
-		<div class="row">
-			<div class="col-lg-12">
-				<h1 class="title">About</h1>
-				<div class="hidden-xs col-md-2 col-lg-3"> <!-- Space Div --> </div>
-				<div class="about-container" class="col-xs-12">
-					<h4> The Clan </h4>
-					Established on November 1st, 2015, Space Monkeys is a brand new fair-play clan dedicated to wars, winning, and improving together. When fully functional, clan wars will consist of town hall levels 8-10 with varying strategies that give the best opportunities for 3 stars. We are not an elite level clan, but we aim for this clan to do so in the near future.
-				</div>
-				<div class="about-container" class="col-xs-12">
-					<h4> The Leaders </h4>
-					The leaders of this clan are experienced war veterans that are dedicated to improving individually as well as a team. We can offer advice at any town hall level and will help in any way that we can. Recently coming from a highly skilled war clan that just met some inactivity, we are ready to lead and win wars ultimately!
-				</div>
+		<div ng-class="main.mainPageSizing">
+			<h1 class="title">About</h1>
+			<div class="hidden-xs col-md-2 col-lg-3"> <!-- Space Div --> </div>
+			<div class="about-container" class="col-xs-12">
+				<h4> The Clan </h4>
+				Established on November 1st, 2015, Space Monkeys is a brand new fair-play clan dedicated to wars, winning, and improving together. When fully functional, clan wars will consist of town hall levels 8-10 with varying strategies that give the best opportunities for 3 stars. We are not an elite level clan, but we aim for this clan to do so in the near future.
+			</div>
+			<div class="about-container" class="col-xs-12">
+				<h4> The Leaders </h4>
+				The leaders of this clan are experienced war veterans that are dedicated to improving individually as well as a team. We can offer advice at any town hall level and will help in any way that we can. Recently coming from a highly skilled war clan that just met some inactivity, we are ready to lead and win wars ultimately!
+			</div>
+			<div class="about-container" class="col-xs-12">
+				<h4> The Leaders </h4>
+				The leaders of this clan are experienced war veterans that are dedicated to improving individually as well as a team. We can offer advice at any town hall level and will help in any way that we can. Recently coming from a highly skilled war clan that just met some inactivity, we are ready to lead and win wars ultimately!
 			</div>
 		</div>
 	</section>
 
 	<!-- Rules Section -->
 	<section id="rules-section" class="section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<h1 class="title">Rules</h1>
-					<div class="hidden-xs col-md-2 col-lg-3"> <!-- Space Div --> </div>
-					<div class="rules-container" class="col-xs-12">
-						<h4> Personal Requirements </h4>
-						Adults Only (18+)
-						<br> Adaptable and Dedicated
-						<br> No Egos
-					</div>
-					<div class="rules-container" class="col-xs-12">
-						<h4> Clan </h4>
-						No Donate Ratio - Donate Before You Request
-						<br> Elder is Earned, Not Given
-						<br> Co-Leader is Owned, Not Earned
-						<br> Don't Ask About Promotions
-					</div>
-					<div class="rules-container" class="col-xs-12">
-						<h4> War </h4>
-						Fair Play War Clan
-						<br> Back-to-Back Wars
-						<br> Both Attacks are Manditory
-						<br> 3-Star Strategies Only
-						<br> Leaders Donate to War CCs
-						<br> Leaders Plan War Strategy
-					</div>
-				</div>
+		<div ng-class="main.mainPageSizing">
+			<h1 class="title">Rules</h1>
+			<div class="hidden-xs col-md-2 col-lg-3"> <!-- Space Div --> </div>
+			<div class="rules-container" class="col-xs-12">
+				<h4> Personal Requirements </h4>
+				Adults Only (18+)
+				<br> Adaptable and Dedicated
+				<br> No Egos
+			</div>
+			<div class="rules-container" class="col-xs-12">
+				<h4> Clan </h4>
+				No Donate Ratio - Donate Before You Request
+				<br> Elder is Earned, Not Given
+				<br> Co-Leader is Owned, Not Earned
+				<br> Don't Ask About Promotions
+			</div>
+			<div class="rules-container" class="col-xs-12">
+				<h4> War </h4>
+				Fair Play War Clan
+				<br> Back-to-Back Wars
+				<br> Both Attacks are Manditory
+				<br> 3-Star Strategies Only
+				<br> Leaders Donate to War CCs
+				<br> Leaders Plan War Strategy
 			</div>
 		</div>
 	</section>
 
 	<!-- Members Section -->
 	<section id="members-section" class="section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<h1 class="title">Members</h1>
-					<div id="member-panel-main-container">
-						<!-- Member Panel -->
-						<div ng-repeat="person in main.users" ng-if="person.inClan == true" class="member-panel-container col-lg-3 col-xs-4">
-							<div class="member-panel">
-								<h4 class="member-name"> {{ person.name }} </h4>
-								{{ person.title }} <br>
-								{{ person.dateJoined.toString().substr(0,10) }}
-							</div>
-						</div>
+		<div ng-class="main.mainPageSizing">
+			<h1 class="title">Members</h1>
+			<div id="member-panel-main-container">
+				<!-- Member Panel -->
+				<div ng-repeat="person in main.users" ng-if="person.inClan == true" class="member-panel-container col-lg-3 col-xs-4">
+					<div class="member-panel">
+						<h4 class="member-name"> {{ person.name }} </h4>
+						{{ person.title }} <br>
+						{{ person.dateJoined.toString().substr(0,10) }}
 					</div>
 				</div>
 			</div>
@@ -93,28 +94,24 @@
 
 	<!-- War History Section -->
 	<section id="history-section" class="section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<h1 class="title">War History</h1>
-					<div id="history-main-container">
-						<div class="history-container col-xs-12">
-							<!-- War Entry -->
-							 <uib-accordion close-others="true">
-								<uib-accordion-group ng-repeat="war in main.wars">
-									<uib-accordion-heading>
-										<span class="pull-left"> {{ war.date.toString().substr(0,10) }} </span>
-										<span class="pull-right"> +{{ war.exp }} Exp </span>
-										<div ng-class="(war.ourScore > war.theirScore) ? 'war-win' :'war-loss'"> 
-											{{ war.ourScore }} - {{ war.theirScore }} 
-										</div>
-									</uib-accordion-heading>
-									<img ng-src="{{war.img}}" style="width:100%">
-								</uib-accordion-group>
-							</uib-accordion>
-							<span class="help-tip"> (Did ya try clicking one?) </span>
-						</div>
-					</div>
+		<div ng-class="main.mainPageSizing">
+			<h1 class="title">War History</h1>
+			<div id="history-main-container">
+				<div class="history-container col-xs-12">
+					<!-- War Entry -->
+					 <uib-accordion close-others="true">
+						<uib-accordion-group ng-repeat="war in main.wars" class="warEntry">
+							<uib-accordion-heading>
+								<div class="warLeft"> {{ war.start.toString().substr(0,10) }} </div>
+								<div class="warRight"> +{{ war.exp }} Exp </div>
+								<div class="warCenter" ng-class="(war.ourScore > war.theirScore) ? 'war-win' : (war.ourScore < war.theirScore) ? 'war-loss' : (war.ourDest > war.theirDest) ? 'war-win' : 'war-loss'"> 
+									{{ war.ourScore }} - {{ war.theirScore }}
+								</div>
+							</uib-accordion-heading>
+							<img ng-src="{{war.img}}" style="width:100%">
+						</uib-accordion-group>
+					</uib-accordion>
+					<span class="help-tip"> (Did ya try clicking one?) </span>
 				</div>
 			</div>
 		</div>
@@ -122,12 +119,12 @@
 
 	<!-- Collaboration Section -->
 	<section id="collaboration-section" class="section">
-		<div class="container">
-			<h1 class="title"> Collaboration </h1>
-			<a type="button" class="btn" href="https://groupme.com/join_group/17586299/qlSTbS" target="_blank">
+		<div ng-class="main.mainPageSizing">
+			<h1 class="title"> Apps </h1>
+			<a type="button" class="userButton btn" href="https://groupme.com/join_group/17586299/qlSTbS" target="_blank">
 				<h4> GroupMe </h4>
 			</a>
-			<a type="button" class="btn" href="https://evernote.com/skitch/" target="_blank">
+			<a type="button" class="userButton btn" href="https://evernote.com/skitch/" target="_blank">
 				<h4> Skitch </h4>
 			</a>
 			<div> (Seriously, click one) </div>

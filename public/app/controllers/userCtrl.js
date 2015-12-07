@@ -45,16 +45,17 @@ angular.module('userCtrl', ['userService'])
 	vm.userData.approved = true;
 	vm.userData.inClan = true;
 	vm.userData.admin = false;
-	vm.userData.title = "Member";
-
-	if (!vm.userData.password){
-		vm.message = data.data.message;
-		return;
-	}
+	vm.userData.title = 'Member';
 
 	// function to create a user
-	vm.saveUser = function() { 
+	vm.saveUser = function() {
 		vm.processing = true;
+
+		if (!vm.userData.password){
+			vm.message = 'Please Enter a Password';
+			vm.processing = false;
+			return;
+		}
 		// clear the message
 		vm.message = '';
 		// use the create function in the userService

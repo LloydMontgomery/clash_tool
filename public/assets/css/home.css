@@ -6,8 +6,12 @@
 
 	text-align: center;
 }
-.section .row {
+.section{
 	margin: 0px !important;
+}
+.title
+{
+	margin: 100px 0 50px 0;
 }
 
 /* Every Other Section Starting with the First One */
@@ -22,17 +26,29 @@
 
 /* Intro Section */
 #intro-section {
-	padding-top: 75px;	
+	/*padding-top: 75px;	*/
 }
 #intro-section #clan-description {
-	margin: 20px;
-}
-#intro-section .btn {
-	border-radius: 20px !important;
-	box-shadow: 0px 0px 10px #dadada;
+	margin-top: 50px;
 }
 #intro-section .intro-spacer {
 	height: 50px;
+}
+.routeButton {
+	height: 100px;
+	width: 150px;
+
+	margin: 3px 10px 20px 10px;
+	padding-top: 15px;
+
+	border: solid lightgrey 2px;
+	border-radius: 50% !important;
+
+	background-color: black;
+}
+.routeButton h4 {
+	margin-top: 25px;
+	color: #0680AF !important;
 }
 
 /* About Section */
@@ -94,10 +110,9 @@
 	font-size: 90%;
 }
 
-/* History Section */
+/* War History Section */
 #history-section {
 }
-
 .war-win  { color: green; }
 .war-loss { color: red; }
 .panel, .panel-heading{
@@ -113,11 +128,22 @@
 	width: 100%;
 	margin: 2px;
 }
+.warCenter {
+	text-align: center;
+}
+.warLeft {
+	width: 90px;
+	float: left;
+}
+.warRight {
+	width: 90px;
+	float: right;
+}
 
 /* Collaboration Section */
 #collaboration-section {
 }
-#collaboration-section a, #collaboration-section button {
+.userButton {
 	height: 100px;
 	width: 150px;
 
@@ -127,11 +153,11 @@
 	border: solid lightgrey 2px;
 	border-radius: 50% !important;
 
-	background: white;
+	background-color: black;
 
-	color: black;
 }
-a h4 {
+.userButton h4 {
 	margin-top: 25px;
+	color: #0680AF !important;
 }
 
