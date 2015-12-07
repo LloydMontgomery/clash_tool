@@ -12,6 +12,22 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	
 	// check to see if a user is logged in on every request
 	$rootScope.$on('$routeChangeStart', function() {
+		console.log('Route Change Trigger');
+
+		vm.route = $location.path();
+
+		var checkRoutePermission = function(route) {
+			if (route == '/' || route == '/login' ){
+				// Do Something
+			} else {
+				if (vm.userInfo.admin == true) {
+					// Do Something
+				}
+				else
+					$location.path('/');
+			}
+			
+		}
 
 		vm.route = $location.path();
 
@@ -112,7 +128,11 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		vm.loggedIn = false;
 		// reset all user info 
 		vm.userInfo = {}; 
+<<<<<<< HEAD
 		$location.path('/');
+=======
+		$location.path('/login');
+>>>>>>> war_entry_frontend
 	};
 
 });
