@@ -134,16 +134,6 @@ module.exports = function(app, express) {
 		});
 	});
 
-	apiRouter.route('/lastWar')
-	// get all the wars (accessed at GET http://localhost:8080/api/lastWar)
-	.get(function(req, res) {
-		War.findOne( function(err, wars) {
-			if (err) res.send(err);
-			// return the wars
-			res.json(wars);
-		});
-	});
-
 
 	// ======================== BASIC AUTHENTICATION ======================== //
 
@@ -195,6 +185,21 @@ module.exports = function(app, express) {
 			// return the wars
 			res.json(wars);
 		});
+	});
+
+	apiRouter.route('/lastWar')
+	// get the last war (accessed at GET http://localhost:8080/api/lastWar)
+	.get(function(req, res) {
+		War.findOne({}, {}, { sort: { 'start' : -1 } }, function(err, wars) {
+			if (err) res.send(err);
+			// return the wars
+			res.json(wars);
+		});
+		// War.findOne( function(err, wars) {
+		// 	if (err) res.send(err);
+		// 	// return the wars
+		// 	res.json(wars);
+		// });
 	});
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
@@ -333,7 +338,7 @@ module.exports = function(app, express) {
 				if (err.code == 11000)
 					return res.json({ success: false, message: 'A war with that date already exists.' }); 
 				else {
-					console.log(err);
+					// console.log(err);
 					return res.send(err);
 				}
 			}

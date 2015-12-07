@@ -50,6 +50,10 @@
 	margin-top: 25px;
 	color: #0680AF !important;
 }
+#currentWarButton {
+	margin-top: -15px;
+	padding-top: 8px;
+}
 
 /* About Section */
 #about-section {

@@ -41,6 +41,12 @@ angular.module('app.routes', ['ngRoute'])
 		controller	: 'warListController',
 		controllerAs: 'war'
 	})
+	// The current war
+	.when('/wars/current', {
+		templateUrl	: 'app/views/pages/wars/single.html',
+		controller	: 'warManipulationController',
+		controllerAs: 'war'
+	})
 	// form to create a new war // same view as edit page 
 	.when('/wars/create', {
 		templateUrl	: 'app/views/pages/wars/single.html',

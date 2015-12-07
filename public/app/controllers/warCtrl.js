@@ -28,7 +28,11 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.warData = {};
 
-	if ($location.path() == '/wars/create')
+	if ($location.path() == '/wars/current') {
+		vm.type = 'view';
+
+	}
+	else if ($location.path() == '/wars/create')
 		vm.type = 'create';
 	else if ($location.path().substr(0, 11) == '/wars/edit/') // Edit page
 		vm.type = 'edit';
@@ -335,9 +339,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 		// call the userService function to update
 		War.create(warDataCleansed)
 			.then(function(data) {
-				vm.processing = false; // clear the form
+				vm.processing = false;
 				// bind the message from our API to vm.message
-				vm.message = data.data;
+				// console.log(data);
 				// $location.path('/wars');
 		});
 	};
@@ -359,6 +363,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// Finish loading the page
 	if (vm.type != 'create') {
+		// war_id = $routeParams.war_id || 
 		War.get($routeParams.war_id)
 			.then(function(data) {
 				vm.warData = data.data;
@@ -387,7 +392,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 						for (var i = 0; i < vm.warData.warriors.length; i++) {
 							console.log(vm.warData.warriors[i].name + ' ' + vm.userInfo.name);
 							if (vm.warData.warriors[i].name == vm.userInfo.name) {
-								console.log("SUCCESS");
 								vm.warData.warriors[i].viewed = true;
 								vm.updateWar(false);
 							}
@@ -401,7 +405,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		vm.loadingPage = false;
 	}
 
-})
+});
 
 // // controller applied to user edit page
 // .controller('warEditController', function($routeParams, $location, War) { 
@@ -471,49 +475,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 // 		}
 // 	};
 // })
-
-// controller applied to user edit page
-.controller('warViewController', function($routeParams, $location, War) { 
-	var vm = this;
-	// variable to hide/show elements of the view // differentiates between create or edit pages 
-	vm.type = 'view';
-
-	vm.loadingPage = true;
-	// get the war data for the user you want to edit // $routeParams is the way we grab data from the URL 
-	War.get($routeParams.war_id)
-		.success(function(data) {
-
-			vm.warData = data;
-			vm.warData.date = new Date(vm.warData.date);
-
-			// console.log(vm.warData);
-			// vm.warData.
-			vm.loadingPage = false;
-
-			now = new Date().getTime();
-			myDate = new Date(2015, 10, 30, 20, 0, 0, 0).getTime();  // Current Date
-			console.log(myDate);
-			console.log(now);
-			console.log(myDate - now);
-
-			vm.timeRemaining = myDate;
-	});
-
-	// function to save the war
-	vm.saveWar = function() { 
-		// vm.processing = true; 
-		vm.message = '';
-
-		// call the userService function to update
-		// War.update($routeParams.war_id, vm.warData) 
-		// 	.success(function(data) {
-		// 		vm.processing = false; // clear the form
-		// 		// bind the message from our API to vm.message
-		// 		// vm.message = data.message;
-		// 		$location.path('/wars');
-		// });
-	};
-});
 
 
 

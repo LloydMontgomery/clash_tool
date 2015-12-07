@@ -12,6 +12,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	
 	// check to see if a user is logged in on every request
 	$rootScope.$on('$routeChangeStart', function() {
+		console.log('Route Change Trigger');
 
 		vm.route = $location.path();
 
@@ -112,7 +113,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		vm.loggedIn = false;
 		// reset all user info 
 		vm.userInfo = {}; 
-		$location.path('/');
+		$location.path('/login');
 	};
 
 });
