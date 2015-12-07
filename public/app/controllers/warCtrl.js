@@ -28,7 +28,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.warData = {};
 
-
+	vm.attackClass = 'col-xs-4';
+	vm.nameClass = 'col-xs-6';
 	if ($location.path() == '/wars/current') {
 		vm.type = 'view';
 	}
@@ -36,8 +37,12 @@ angular.module('warCtrl', ['warService', 'userService'])
 		vm.type = 'create';
 	else if ($location.path().substr(0, 11) == '/wars/edit/') // Edit page
 		vm.type = 'edit';
-	else if ($location.path().substr(0, 11) == '/wars/view/')  // view page
+	else if ($location.path().substr(0, 11) == '/wars/view/') { // view page
 		vm.type = 'view';
+		vm.attackClass = 'col-xs-6';
+		vm.nameClass = 'col-xs-10';
+	}
+
 
 	vm.command = 'Move';
 	vm.commandOptions = [

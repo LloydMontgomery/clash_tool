@@ -80,9 +80,9 @@ hr {
 }
 
 /* Warrior Stats section */
-#warriorStats {
-	margin-bottom: 15px;
-	padding: 5px 20px 5px 20px;
+#warriorStats * {
+	padding: 0;
+	margin: 0;
 }
 
 #warriorStats > div {
@@ -93,8 +93,16 @@ hr {
 }
 
 #warriorStats > div > div {
-	margin-bottom: 10px;
+	/*margin-bottom: 10px;*/
 	background: white;
+}
+
+#warriorStats hr {
+	margin-top: 5px;
+}
+
+#warriorTemplate {
+	margin-bottom: 10px;
 }
 
 #warPage .alert {
