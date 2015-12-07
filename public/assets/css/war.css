@@ -72,7 +72,7 @@ hr {
 }
 
 /* Button */
-#warriorList button {
+#warriorButton button {
 	background-color: #000;
 	color: #0680AF !important;
 
@@ -101,6 +101,10 @@ hr {
 	margin-top: 5px;
 }
 
+#warriorStats select {
+	width: 80%;
+}
+
 #warriorTemplate {
 	margin-bottom: 10px;
 }
@@ -110,6 +114,6 @@ hr {
 	margin: 0;
 }
 
-#tester {
+#warriorButton {
 	height: 30px;
 }

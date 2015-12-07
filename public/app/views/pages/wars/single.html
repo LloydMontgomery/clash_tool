@@ -231,7 +231,7 @@
 			<div ng-click="war.genWarriorList()" ng-if="war.type == 'create'" ng-hide="war.showWarriors" class="form-group col-sm-offset-4 col-sm-4">
 				<button class="btn btn-success btn-lg btn-block">Warrior List</button>
 			</div>
-			<div ng-show="war.showWarriors && war.warriorsReady" class="row col-sm-offset-4 col-sm-4" id="tester">
+			<div ng-show="war.showWarriors && war.warriorsReady" class="row col-sm-offset-4 col-sm-4" id="warriorButton">
 				<button ng-click="war.saveWar()" class="btn btn-success btn-lg btn-block" ng-if="war.type == 'create'">Create War</button>
 				<button ng-click="war.updateWar(true)" class="btn btn-success btn-lg btn-block" ng-if="war.type != 'create'">Update War</button>
 			</div>
