@@ -1,9 +1,14 @@
 /* Background is the Accent Colour */
-#login-container button{
+#login-container button, .warButton:hover {
 	background-color: #0680AF;
 }
 
-/* Letters are the Accent Colour */
+/* Text is Black */
+.warButton:hover {
+	color: black !important;
+}
+
+/* Text is the Accent Colour */
 footer a, .accentBlue {
 	color: #0680AF;
 }

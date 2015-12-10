@@ -72,7 +72,7 @@ hr {
 }
 
 /* Button */
-#warriorButton button {
+.warButton {
 	background-color: #000;
 	color: #0680AF !important;
 
@@ -87,6 +87,8 @@ hr {
 
 #warriorStats {
 	margin-bottom: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 #warriorStats > div {
@@ -123,18 +125,25 @@ hr {
 	height: 30px;
 }
 
-#warriorStats #warriorName {
+#warriorStats .warriorNames {
 	padding: 10px;
 	text-align: center;
 }
 
-/*#warriorStats hr {
-	margin-top: 75px;
-}*/
-
-#warriorStats #attack1 {
-
+#warriorStats .warriorAttacks {
+	padding: 10px;
+	text-align: center;
 }
+
+#warriorStats .warriorLocks {
+	padding: 10px;
+	text-align: center;
+}
+
+#warSubmit {
+	margin: 0;
+}
+
 
 
 

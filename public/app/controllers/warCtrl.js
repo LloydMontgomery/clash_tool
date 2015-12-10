@@ -28,7 +28,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.warData = {};
 
-	vm.attackClass = 'col-xs-4';
+	vm.attackClass = 'col-xs-6';
 	vm.nameClass = 'col-xs-6';
 	if ($location.path() == '/wars/current') {
 		vm.type = 'view';
@@ -96,15 +96,24 @@ angular.module('warCtrl', ['warService', 'userService'])
 		if (timeSinceStart > 169200000) {  // Over 47 hours since war started
 			vm.warStatus = 'War Over';  // Never displayed, but still the context
 			vm.inProgress = false;
+			vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
 			vm.inProgressClass = '';
 		} else if (timeSinceStart > 82800000) {  // Between 23 and 47 hours since beginning
 			console.log("BATTLE DAY");
 			vm.warStatus = 'Battle Day';
 			vm.inProgressClass = 'greyedOutText';
+			if (vm.type == 'view')
+				vm.warStatsSubContainer = 'col-sm-offset-2 col-sm-4 col-xs-12';
+			else
+				vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
 			vm.inProgress = true;
 		} else {  // Between 0 and 23 hours since beginning
 			vm.warStatus = 'Preparation Day';
 			vm.inProgressClass = 'greyedOutText';
+			if (vm.type == 'view')
+				vm.warStatsSubContainer = 'col-sm-offset-2 col-sm-4 col-xs-12';
+			else
+				vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
 			vm.inProgress = true;
 		}
 	};
