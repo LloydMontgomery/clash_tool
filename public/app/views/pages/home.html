@@ -104,7 +104,7 @@
 				<div class="history-container col-xs-12">
 					<!-- War Entry -->
 					 <uib-accordion close-others="true">
-						<uib-accordion-group ng-repeat="war in main.wars" class="warEntry">
+						<uib-accordion-group ng-repeat="war in main.wars" ng-if="war.outcome" class="warEntry">
 							<uib-accordion-heading>
 								<div class="warLeft"> {{ war.start.toString().substr(0,10) }} </div>
 								<div class="warRight"> +{{ war.exp }} Exp </div>
