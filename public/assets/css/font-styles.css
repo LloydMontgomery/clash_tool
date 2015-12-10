@@ -15,7 +15,7 @@
 	src: url('../fonts/QuincyCF-Black-webfont.ttf') format('truetype');
 }
 
-h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, #warriorStats #warriorName
+h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, #warriorStats #warriorName, #warPageTitle
 {
     font-family: "Supercell-Magic";
     color: black;

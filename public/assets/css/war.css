@@ -4,6 +4,10 @@
 	position: absolute;
 }
 
+#warPageTitle {
+	text-align: center;
+}
+
 /* War Stats section */
 #warStats {
 	margin-bottom: 15px;
@@ -143,6 +147,8 @@ hr {
 #warSubmit {
 	margin: 0;
 }
+
+
 
 
 

@@ -16,21 +16,17 @@
 	<table class="table table-bordered table-striped" ng-show="war.wars"> 
 		<thead>
 			<tr>
-				<th>Exp Gained</th>
-				<th>Us</th>
-				<th>Them</th>
+				<th>Opponent</th>
 				<th>Date</th>
 				<th>Photo</th>
-				<th class="col-sm-2"></th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-			<!-- LOOP OVER THE USERS -->
+			<!-- LOOP OVER THE WARS -->
 			<tr ng-repeat="battle in war.wars">
-				<td>{{ battle.exp }}</td>
-				<td>{{ battle.ourScore }}</td>
-				<td>{{ battle.theirScore }}</td>
-				<td>{{ battle.date.toString().substr(0,10) }}</td>
+				<td>{{ battle.opponent }}</td>
+				<td>{{ battle.start.toString().substr(0,10) }}</td>
 				<td><a ng-href="{{ battle.img }}" target="_blank">Overview</a></td>
 				<td class="col-xm-2">
 					<a ng-href="/wars/view/{{ battle._id }}" class="btn btn-primary">View</a>

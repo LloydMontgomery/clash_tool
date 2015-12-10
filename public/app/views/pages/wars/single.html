@@ -1,9 +1,9 @@
 <section>
 	<div class="col-xs-12" id="warPage">
-		<div>
-			<h1 ng-if="war.type == 'create'">New War Log</h1>
-			<h1 ng-if="war.type == 'edit'">Update War Log</h1>
-			<h1 ng-if="war.type == 'view'">View War</h1>
+		<div id="warPageTitle">
+			<h3 ng-if="war.type == 'create'">New War Log</h3>
+			<h3 ng-if="war.type == 'edit'">Update War Log</h3>
+			<h3 ng-if="war.type == 'view'">View War</h3>
 		</div>
 		<hr>
 		<form ng-show="!war.loadingPage">

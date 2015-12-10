@@ -14,7 +14,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		// bind the wars that come back to vm.wars
 		vm.wars = data;
 		vm.wars.sort(function(a, b) {
-			return (a.date < b.date) ? 1 : (a.date > b.date) ? -1 : 0;
+			return (a.start < b.start) ? 1 : (a.start > b.start) ? -1 : 0;
 		});
 	});
 })
