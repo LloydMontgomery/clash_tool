@@ -40,7 +40,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	else if ($location.path().substr(0, 11) == '/wars/view/') { // view page
 		vm.type = 'view';
 		vm.attackClass = 'col-xs-6';
-		vm.nameClass = 'col-xs-10';
+		vm.nameClass = 'col-xs-12';
 	}
 
 

@@ -107,6 +107,7 @@ hr {
 
 #warriorTemplate {
 	margin-bottom: 10px;
+	text-align: center;
 }
 
 #warPage .alert {
@@ -117,3 +118,27 @@ hr {
 #warriorButton {
 	height: 30px;
 }
+
+#warriorStats #warriorName {
+	padding: 10px;
+	text-align: center;
+}
+
+/*#warriorStats hr {
+	margin-top: 75px;
+}*/
+
+#warriorStats #attack1 {
+	
+}
+
+
+
+
+
+
+
+
+
+
+
