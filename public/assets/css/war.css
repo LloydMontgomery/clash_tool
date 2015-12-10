@@ -85,6 +85,10 @@ hr {
 	margin: 0;
 }
 
+#warriorStats {
+	margin-bottom: 10px;
+}
+
 #warriorStats > div {
 	border-radius: 15px;
 	box-shadow: 0px 0px 10px 5px #dadada;
@@ -129,7 +133,7 @@ hr {
 }*/
 
 #warriorStats #attack1 {
-	
+
 }
 
 
