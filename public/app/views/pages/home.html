@@ -85,11 +85,11 @@
 			<h1 class="title">Members</h1>
 			<div id="member-panel-main-container">
 				<!-- Member Panel -->
-				<div ng-repeat="person in main.users" ng-if="person.inClan == true" class="member-panel-container col-lg-3 col-xs-4">
+				<div ng-repeat="person in main.users" ng-if="person.inClan.BOOL == true" class="member-panel-container col-lg-3 col-xs-4">
 					<div class="member-panel">
-						<h4 class="member-name"> {{ person.name }} </h4>
-						{{ person.title }} <br>
-						{{ person.dateJoined.toString().substr(0,10) }}
+						<h4 class="member-name"> {{ person.name.S }} </h4>
+						{{ person.title.S }} <br>
+						{{ person.dateJoined.toDateString().substr(4) }}
 					</div>
 				</div>
 			</div>
@@ -107,9 +107,9 @@
 						<uib-accordion-group ng-repeat="war in main.wars" ng-if="war.outcome" class="warEntry">
 							<uib-accordion-heading>
 								<div class="warLeft"> {{ war.start.toString().substr(0,10) }} </div>
-								<div class="warRight"> +{{ war.exp }} Exp </div>
-								<div class="warCenter" ng-class="(war.ourScore > war.theirScore) ? 'war-win' : (war.ourScore < war.theirScore) ? 'war-loss' : (war.ourDest > war.theirDest) ? 'war-win' : 'war-loss'"> 
-									{{ war.ourScore }} - {{ war.theirScore }}
+								<div class="warRight"> +{{ war.exp.N }} Exp </div>
+								<div class="warCenter" ng-class="war.outcome.S"> 
+									{{ war.ourScore.N }} - {{ war.theirScore.N }}
 								</div>
 							</uib-accordion-heading>
 							<img ng-src="{{war.img}}" style="width:100%">

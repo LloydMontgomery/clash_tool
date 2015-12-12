@@ -56,23 +56,43 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		// Grab all users & wars if routing to main page
 		if ($location.path() == '/') {
 			User.partial().then(function(data) {
-				if (!data.data.success) {
-					// Do Something
-				} else {
+				if (data.data.success) {
+
+					console.log('USERS');
 					console.log(data.data.data);
 					// bind the users that come back to vm.users
-					// vm.users = data;
-					// vm.users.sort(function(a, b) {
-					// 	return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
-					// });
+					vm.users = data.data.data;
+					vm.users.sort(function(a, b) {
+						return (a.dateJoined.N < b.dateJoined.N) ? -1 : (a.dateJoined.N > b.dateJoined.N) ? 1 : 0;
+					});
+
+					for (var i = 0; i < vm.users.length; i++) {
+						vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined.N)); // Convert milliseconds to date object
+					};
+					console.log(data.data.data);
+					
+				} else {
+					// Do Something
 				}
 			});
 			War.partial().then(function(data) {
-				// bind the users that come back to vm.users
-				vm.wars = data.data;
-				vm.wars.sort(function(a, b) {
-					return (a.start < b.start) ? -1 : (a.start > b.start) ? 1 : 0;
-				});
+				if (data.data.success) {
+
+					// bind the wars that come back to vm.wars
+					vm.wars = data.data.data;
+
+					vm.wars.sort(function(a, b) {
+						return (a.start.N < b.start.N) ? -1 : (a.start.N > b.start.N) ? 1 : 0;
+					});
+
+					now = new Date();
+					for (var i = 0; i < vm.wars.length; i++) {
+						vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+					};
+
+				} else {
+					// Do Something
+				}
 			});
 		}
 	});

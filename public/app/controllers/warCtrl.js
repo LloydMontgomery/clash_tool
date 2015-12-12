@@ -9,13 +9,15 @@ angular.module('warCtrl', ['warService', 'userService'])
 	vm.processing = true;
 	// grab all the wars at page load
 	War.all().success(function(data) {
-		// when all the wars come back, remove the processing variable
-		vm.processing = false;
+		
 		// bind the wars that come back to vm.wars
 		vm.wars = data;
 		vm.wars.sort(function(a, b) {
 			return (a.start < b.start) ? 1 : (a.start > b.start) ? -1 : 0;
 		});
+
+		// when all the wars come back, remove the processing variable
+		vm.processing = false;
 	});
 })
 

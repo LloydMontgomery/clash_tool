@@ -204,6 +204,28 @@ module.exports = function(app, express) {
 		});
 	});
 
+	apiRouter.route('/partialWars')
+	// get all the users (accessed at GET http://localhost:8080/api/users)
+	.get(function(req, res) {
+
+		dynamodb.scan({
+			TableName : "Wars",
+			ProjectionExpression: "#1, outcome, ourScore, theirScore, exp",
+			ExpressionAttributeNames: {
+				"#1": "start"
+			},
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				console.log(err); return; 
+			}
+			res.json({
+				success: true,
+				message: 'Successfully returned all Wars',
+				data: data.Items
+			});
+		});
+	});
 
 	// ======================== BASIC AUTHENTICATION ======================== //
 
@@ -439,22 +461,6 @@ module.exports = function(app, express) {
 				});
 			}
 		});
-
-		// // save the war and check for errors
-		// war.save(function(err) {
-		// 	if (err) {
-		// 		// duplicate entry
-		// 		if (err.code == 11000)
-		// 			return res.json({ success: false, message: 'A war with that date already exists.' }); 
-		// 		else {
-		// 			console.log(err);
-		// 			return res.send(err);
-		// 		}
-		// 	}
-		// 	res.json({ 
-		// 		success: true,
-		// 		message: 'War created!' });
-		// })
 	});
 
 
