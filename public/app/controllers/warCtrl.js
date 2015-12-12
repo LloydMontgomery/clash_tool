@@ -87,7 +87,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.checkDate = function() {
-		console.log("Checking Date");
 		vm.battleCountdown = vm.warData.start.getTime() + 169200000;  		// Add 47 Hours
 		vm.preparationCountdown = vm.warData.start.getTime() + 82800000;  	// Add 23 Hours
 
@@ -227,8 +226,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 		vm.showWarriors = true;  // When the UI should show the warriors
 
-		User.all()
+		User.partial()
 			.then(function(data) {
+				console.log("Users All");
 				vm.warData.users = data.data;
 
 				if (vm.type == 'create') {
@@ -248,24 +248,26 @@ angular.module('warCtrl', ['warService', 'userService'])
 						});
 					};
 					// call the warService function to retrieve last war
-					War.last() 
-						.then(function(data) {
-							if (data.data) {
-								if (vm.type != 'create') {
-									for (var i = 0; i < data.data.warriors.length; i++) {
-										vm.warData.warriors[i] = data.data.warriors[i]
-									};
-								} else {
-									for (var i = 0; i < data.data.warriors.length; i++) {
-										vm.warData.warriors[i].name = data.data.warriors[i].name
-									};
-								};
-								
-							}
-							vm.adjustUsers();
-							vm.adjustTargets();
-							vm.warriorsReady = true;
-					});
+					// War.last() 
+					// 	.then(function(data) {
+					// 		if (data.data) {
+					// 			if (vm.type != 'create') {
+					// 				for (var i = 0; i < data.data.warriors.length; i++) {
+					// 					vm.warData.warriors[i] = data.data.warriors[i]
+					// 				};
+					// 			} else {
+					// 				for (var i = 0; i < data.data.warriors.length; i++) {
+					// 					vm.warData.warriors[i].name = data.data.warriors[i].name
+					// 				};
+					// 			};
+					// 		}
+					// 		vm.adjustUsers();
+					// 		vm.adjustTargets();
+					// 		vm.warriorsReady = true;
+					// });
+					vm.adjustUsers();
+					vm.adjustTargets();
+					vm.warriorsReady = true;
 
 				} else {  // vm.type == 'Edit' || vm.type == 'View'
 					vm.adjustUsers();
@@ -295,8 +297,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		// Date/Time needs to be set to UTC time
 		var now = new Date();
-		vm.warData.start.setTime(vm.warData.start.getTime() + (now.getTimezoneOffset() * 60000));
-		warDataCleansed.start = vm.warData.start;
+		warDataCleansed.start = vm.warData.start.getTime() + (now.getTimezoneOffset() * 60000);
 
 		if (vm.inProgress == false) {
 			if (vm.warData.exp == undefined) {

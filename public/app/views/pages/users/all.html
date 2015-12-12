@@ -28,15 +28,16 @@
 		<tbody>
 			<!-- LOOP OVER THE USERS -->
 			<tr ng-repeat="person in user.users"> 
-				<td>{{ person.name }}</td>
-				<td>{{ person.id }}</td>
-				<td>{{ person.title }}</td>
-				<td>{{ person.approved }}</td>
-				<td>{{ person.inClan }}</td>
-				<td>{{ person.admin }}</td>
+				<td>{{ person.name.S }}</td>
+				<td>{{ person.id.S }}</td>
+				<td>{{ person.title.S }}</td>
+				<td>{{ person.approved.BOOL }}</td>
+				<td>{{ person.inClan.BOOL }}</td>
+				<td>{{ person.admin.BOOL }}</td>
 				<td class="col-sm-3">
 					<a ng-href="/users/{{ person._id }}" class="btn btn-primary">Edit</a>
-					<a href="#" ng-click="user.deleteUser(person._id)" class="btn btn-danger">Delete</a>
+					<a ng-click="user.deleteUser(person._id)" class="btn btn-danger"
+						ng-if="main.userInfo.name == 'Zephyro'">Delete</a>
 				</td>
 			</tr>
 		</tbody>

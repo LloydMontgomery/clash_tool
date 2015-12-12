@@ -51,42 +51,69 @@ module.exports = function(app, express) {
 	apiRouter.post('/authenticate', function(req, res) {
 		// find the user
 		// select the name username and password explicitly 
-		User.findOne({
-			name: req.body.name
-		}).select('name username password').exec(function(err, user) {
-			if (err) throw err;
-			    // no user with that username was found
+		console.log('INPUT VALUES');
+		console.log(req.body.name);
 
-			if (!user) {
+		dynamodb.query({
+			TableName : "Users",
+			ProjectionExpression: "#n, password, id, admin",
+			KeyConditionExpression: "#n = :nameVal",
+			ExpressionAttributeNames: {
+				"#n": "name"
+			},
+			ExpressionAttributeValues: {
+				":nameVal": {'S': req.body.name}
+			},
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: data
+				});
+			}
+
+			console.log('OUTPUT VALUES');
+			console.log(data);
+
+			user = new User();
+
+			if (data.Items.Count == 0) {  // Then the username must have been incorrect
+				console.log('HERE');
 				res.json({
 					success: false,
 					message: 'Authentication failed. User not found.'
 				});
-			} else if (user) {
+			} else {
+				console.log(data.Items[0].password.S);
 				// check if password matches
-				var validPassword = user.comparePassword(req.body.password);
+				var validPassword = user.comparePassword(data.Items[0].password.S, req.body.password);
+				console.log(validPassword);
+
 				if (!validPassword) {
-			  		res.json({
-			    		success: false,
-			    		message: 'Authentication failed. Wrong password.'
+					res.json({
+						success: false,
+						message: 'Authentication failed. Wrong password.'
 					});
 				} else {
 					// if user is found and password is right
 					// create a token
 					var token = jwt.sign({
-						name: user.name,
-			        	id: user._id,
-			        	admin: user.admin
-			        }, TOKEN_SECRET, 
-			        { expiresIn: 7200 // expires in 2 hours 
-			        // { expiresIn: 10 // expires in 10 seconds (This is for debugging)
+						name: data.Items[0].name.S,
+						id: data.Items[0].id.S,
+						admin: data.Items[0].admin.BOOL
+					}, TOKEN_SECRET,
+					{ expiresIn: 7200 // expires in 2 hours 
+					// { expiresIn: 10 // expires in 10 seconds (This is for debugging)
 					});
 					// Save this for later
 					req.decoded = jwt.decode(token);
-			        // return the information including token as JSON
+					// return the information including token as JSON
 					res.json({
 						success: true,
-						message: 'Enjoy your token!', token: token
+						message: 'Enjoy your token!', 
+						token: token
 					});
 				}
 			}
@@ -97,6 +124,8 @@ module.exports = function(app, express) {
 	apiRouter.route('/users')
 	// create a user (accessed at POST http://localhost:8080/api/users)
 	.post(function(req, res) {
+
+		userModel = new User();
 
 		var user = {
 			TableName: 'Users',
@@ -111,48 +140,41 @@ module.exports = function(app, express) {
 		user.Item.id = req.body.id;
 		now = new Date();
 		user.Item.dateJoined = now.getTime();
-		user.Item.password = req.body.password;
-		bcrypt.hash(user.Item.password, null, null, function(err, hash) { 
-			if (err) return next(err);
-			// change the password to the hashed version
-			user.Item.password = hash;
-			finish();
-		});
 
-		finish = function() {
-			user.Item.admin = false;  // Default to false
-			if (req.body.admin)
-				user.Item.admin = req.body.admin;
+		user.Item.password = userModel.hashPassword(req.body.password);
+		
+		user.Item.admin = false;  // Default to false
+		if (req.body.admin)
+			user.Item.admin = req.body.admin;
 
-			user.Item.title = "Member";  // Default to "Member"
-			if (req.body.title)
-				user.Item.title = req.body.title;
+		user.Item.title = "Member";  // Default to "Member"
+		if (req.body.title)
+			user.Item.title = req.body.title;
 
-			if (req.headers.referer.indexOf("/users") > -1) {
-				user.Item.approved = true;
-				user.Item.inClan = true;
-			} else {
-				user.Item.approved = false;
-				user.Item.inClan = false;
-			}
-
-			console.log(user.Item);
-
-			dynamodbDoc.put(user, function(err, data) {
-				if (err) {
-					console.error("Unable to add user. Error JSON:", JSON.stringify(err, null, 2));
-					return res.json({ 
-						success: false, 
-						message: err.message
-					}); 
-				} else {
-					res.json({ 
-						success: true,
-						message: 'User created!' 
-					});
-				}
-			});
+		if (req.headers.referer.indexOf("/users") > -1) {
+			user.Item.approved = true;
+			user.Item.inClan = true;
+		} else {
+			user.Item.approved = false;
+			user.Item.inClan = false;
 		}
+
+		console.log(user.Item);
+
+		dynamodbDoc.put(user, function(err, data) {
+			if (err) {
+				console.error("Unable to add user. Error JSON:", JSON.stringify(err, null, 2));
+				return res.json({ 
+					success: false, 
+					message: err.message
+				}); 
+			} else {
+				res.json({ 
+					success: true,
+					message: 'User created!' 
+				});
+			}
+		});
 	});
 
 	apiRouter.route('/partialUsers')
@@ -176,19 +198,9 @@ module.exports = function(app, express) {
 			}
 			res.json({
 				success: true,
-			    message: 'Successfully returned all Users',
+				message: 'Successfully returned all Users',
 				data: data.Items
 			});
-		});
-	});
-
-	apiRouter.route('/partialWars')
-	// get all the wars (accessed at GET http://localhost:8080/api/wars)
-	.get(function(req, res) {
-		War.find({  }, '-ourDest -theirDest -size -warriors', function(err, wars) {
-			if (err) res.send(err);
-			// return the wars
-			res.json(wars);
 		});
 	});
 
@@ -238,6 +250,7 @@ module.exports = function(app, express) {
 	apiRouter.route('/wars')
 	// get all the wars (accessed at GET http://localhost:8080/api/wars)
 	.get(function(req, res) {
+		console.log("ALL WARS");
 		War.find(function(err, wars) {
 			if (err) res.send(err);
 			// return the wars
@@ -248,38 +261,54 @@ module.exports = function(app, express) {
 	apiRouter.route('/lastWar')
 	// get the last war (accessed at GET http://localhost:8080/api/lastWar)
 	.get(function(req, res) {
+		console.log("LAST WAR");
 		War.findOne({}, {}, { sort: { 'start' : -1 } }, function(err, wars) {
 			if (err) res.send(err);
 			// return the wars
 			res.json(wars);
 		});
-		// War.findOne( function(err, wars) {
-		// 	if (err) res.send(err);
-		// 	// return the wars
-		// 	res.json(wars);
-		// });
 	});
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
 
 	// route middleware to verify the token is owned by an admin
 	apiRouter.use(function(req, res, next) {
-		// use our user model to find the user we want
-		User.findById(req.decoded.id, function(err, user) { 
 
-			if (user.admin == true) {
-				next();
-			} else {
-				return res.status(403).send({
-					error: err,
-					success: false,
-					message: 'Failed to authenticate token.'
-				});
-			}
-		});
+		if (req.decoded.admin) {
+			next();
+		} else {
+			return res.status(403).send({
+				error: err,
+				success: false,
+				message: 'Failed to authenticate token.'
+			});
+		}
 	});
 
 	// ============================= ADMIN APIS ============================= //
+
+	apiRouter.route('/users')
+	// get all the users (accessed at GET http://localhost:8080/api/users)
+	.get(function(req, res) {
+
+		// dynamodb.scan({
+		// 	TableName : "Users",
+		// 	ProjectionExpression: "#n, admin, approved, dateJoined, id, inClan, title",
+		// 	ExpressionAttributeNames: {
+		// 		"#n": "name"
+		// 	},
+		// 	Limit : 1000
+		// }, function(err, data) {
+		// 	if (err) { 
+		// 		console.log(err); return; 
+		// 	}
+		// 	res.json({
+		// 		success: true,
+		// 	    message: 'Successfully returned all Users',
+		// 		data: data.Items
+		// 	});
+		// });
+	});
 
 	// AMAZON S3 ROUTE // 
 	apiRouter.route('/sign_s3')
@@ -368,43 +397,65 @@ module.exports = function(app, express) {
 	apiRouter.route('/wars')
 	// create a war (accessed at POST http://localhost:8080/api/wars)
 	.post(function(req, res) {
-		// create a new instance of the User model
+
+		var war = {
+			TableName: 'Wars',
+			Item: {},
+			Expected: {
+				"start" : { "Exists" : false },
+			}
+		};
+
 		console.log(req.body);
-		var war = new War();
 
 		// set the war information (comes from the request)
 		// Required information //
-		war.opponent = req.body.opponent;
-		war.start = req.body.start;
-		war.size = req.body.size;
-		war.warriors = req.body.warriors;
+		war.Item.opponent = req.body.opponent;
+		war.Item.start = req.body.start;
+		war.Item.size = req.body.size;
+		war.Item.warriors = req.body.warriors;
 
 		// Optional Information if War is Over//
 		if (!req.body.inProgress) {
-			war.exp = req.body.exp;
-			war.ourScore = req.body.ourScore;
-			war.theirScore = req.body.theirScore;
-			war.ourDest = req.body.ourDest;
-			war.theirDest = req.body.theirDest;
-			war.outcome = req.body.outcome;
+			war.Item.exp = req.body.exp;
+			war.Item.ourScore = req.body.ourScore;
+			war.Item.theirScore = req.body.theirScore;
+			war.Item.ourDest = req.body.ourDest;
+			war.Item.theirDest = req.body.theirDest;
+			war.Item.outcome = req.body.outcome;
 		}
 
-		// save the war and check for errors
-		war.save(function(err) {
+		dynamodbDoc.put(war, function(err, data) {
 			if (err) {
-				// duplicate entry
-				if (err.code == 11000)
-					return res.json({ success: false, message: 'A war with that date already exists.' }); 
-				else {
-					console.log(err);
-					return res.send(err);
-				}
+				console.error("Unable to add War. Error JSON:", JSON.stringify(err, null, 2));
+				return res.json({ 
+					success: false, 
+					message: err.message
+				}); 
+			} else {
+				res.json({ 
+					success: true,
+					message: 'War created!' 
+				});
 			}
-			res.json({ 
-				success: true,
-				message: 'War created!' });
-		})
-	})
+		});
+
+		// // save the war and check for errors
+		// war.save(function(err) {
+		// 	if (err) {
+		// 		// duplicate entry
+		// 		if (err.code == 11000)
+		// 			return res.json({ success: false, message: 'A war with that date already exists.' }); 
+		// 		else {
+		// 			console.log(err);
+		// 			return res.send(err);
+		// 		}
+		// 	}
+		// 	res.json({ 
+		// 		success: true,
+		// 		message: 'War created!' });
+		// })
+	});
 
 
 	// SPECIFIC WARS //
