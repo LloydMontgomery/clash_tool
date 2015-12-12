@@ -2,7 +2,8 @@ var express	= require('express'),			// Express simplifies Node
 	User 	= require('../models/user'),	// User Schema
 	War 	= require('../models/war'),		// War Schema
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
-	aws 	= require('aws-sdk');			// This is for uploading to S3
+	aws 	= require('aws-sdk'),			// This is for uploading to S3
+	bcrypt	= require('bcrypt-nodejs');
 
 // Need to try/catch the config setup
 var config = {}; // This is to prevent errors later
@@ -18,6 +19,26 @@ var AWS_ACCESS_KEY 	= config.AWS_ACCESS_KEY_ID 		|| process.env.AWS_ACCESS_KEY_I
 	S3_BUCKET_NAME 	= config.S3_BUCKET_NAME			|| process.env.S3_BUCKET_NAME,
 	TOKEN_SECRET 	= config.TOKEN_SECRET 			|| process.env.TOKEN_SECRET,
 	PORT			= config.PORT					|| process.env.PORT;
+
+var AWS = require("aws-sdk");
+
+// Need to try/catch the config setup
+var config = {}; // This is to prevent errors later
+try {
+	config = require('../../config');
+} catch (e) {
+	console.log("Running on Heroku, use Config Vars");
+}
+
+AWS.config.update({
+	"accessKeyId": AWS_ACCESS_KEY,
+	"secretAccessKey": AWS_SECRET_KEY,
+	"region": "us-west-2"
+});
+
+var dynamodb = new AWS.DynamoDB();
+
+var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
 module.exports = function(app, express) {
 
@@ -76,51 +97,88 @@ module.exports = function(app, express) {
 	apiRouter.route('/users')
 	// create a user (accessed at POST http://localhost:8080/api/users)
 	.post(function(req, res) {
-		// create a new instance of the User model
-		var user = new User();
-		// set the users information (comes from the request)
-		user.name = req.body.name;
-		user.id = req.body.id;
-		user.password = req.body.password;
-		user.dateJoined = new Date();
 
-		user.admin = false;  // Default to false
-		if (req.body.admin)
-			user.admin = req.body.admin;
-
-		user.title = "Member";  // Default to "Member"
-		if (req.body.title)
-			user.title = req.body.title;
-
-		if (req.headers.referer.indexOf("/users") > -1) {
-			user.approved = true;
-			user.inClan = true;
-		} else {
-			user.approved = false;
-			user.inClan = false;
-		}
-
-		// save the user and check for errors
-		user.save(function(err) { 
-			if (err) {
-				// duplicate entry
-				if (err.code == 11000)
-					return res.json({ success: false, message: 'A user with that name already exists.' }); 
-				else
-					return res.send(err);
+		var user = {
+			TableName: 'Users',
+			Item: {},
+			Expected: {
+				"name" : { "Exists" : false},
 			}
-			res.json({ 
-				success: true,
-				message: 'User created!' });
-		})
-	})
+		};
 
+		// set the users information (comes from the request)
+		user.Item.name = req.body.name;
+		user.Item.id = req.body.id;
+		now = new Date();
+		user.Item.dateJoined = now.getTime();
+		user.Item.password = req.body.password;
+		bcrypt.hash(user.Item.password, null, null, function(err, hash) { 
+			if (err) return next(err);
+			// change the password to the hashed version
+			user.Item.password = hash;
+			finish();
+		});
+
+		finish = function() {
+			user.Item.admin = false;  // Default to false
+			if (req.body.admin)
+				user.Item.admin = req.body.admin;
+
+			user.Item.title = "Member";  // Default to "Member"
+			if (req.body.title)
+				user.Item.title = req.body.title;
+
+			if (req.headers.referer.indexOf("/users") > -1) {
+				user.Item.approved = true;
+				user.Item.inClan = true;
+			} else {
+				user.Item.approved = false;
+				user.Item.inClan = false;
+			}
+
+			console.log(user.Item);
+
+			dynamodbDoc.put(user, function(err, data) {
+				if (err) {
+					console.error("Unable to add user. Error JSON:", JSON.stringify(err, null, 2));
+					return res.json({ 
+						success: false, 
+						message: err.message
+					}); 
+				} else {
+					res.json({ 
+						success: true,
+						message: 'User created!' 
+					});
+				}
+			});
+		}
+	});
+
+	apiRouter.route('/partialUsers')
 	// get all the users (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
-		User.find(function(err, users) {
-			if (err) res.send(err);
-			// return the users
-			res.json(users);
+
+		dynamodb.scan({
+			TableName : "Users",
+			ProjectionExpression: "#n, title, dateJoined, inClan",
+			FilterExpression: "inClan = :jut",
+			ExpressionAttributeNames: {
+				"#n": "name"
+			},
+			ExpressionAttributeValues: {
+				":jut": {'BOOL': true},
+			},
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				console.log(err); return; 
+			}
+			res.json({
+				success: true,
+			    message: 'Successfully returned all Users',
+				data: data.Items
+			});
 		});
 	});
 

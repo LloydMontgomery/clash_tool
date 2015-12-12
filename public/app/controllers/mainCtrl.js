@@ -12,7 +12,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	
 	// check to see if a user is logged in on every request
 	$rootScope.$on('$routeChangeStart', function() {
-		console.log('Route Change Trigger');
 
 		vm.route = $location.path();
 
@@ -56,12 +55,17 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 
 		// Grab all users & wars if routing to main page
 		if ($location.path() == '/') {
-			User.all().success(function(data) {
-				// bind the users that come back to vm.users
-				vm.users = data;
-				vm.users.sort(function(a, b) {
-					return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
-				});
+			User.partial().then(function(data) {
+				if (!data.data.success) {
+					// Do Something
+				} else {
+					console.log(data.data.data);
+					// bind the users that come back to vm.users
+					// vm.users = data;
+					// vm.users.sort(function(a, b) {
+					// 	return (a.date < b.date) ? -1 : (a.date > b.date) ? 1 : 0;
+					// });
+				}
 			});
 			War.partial().then(function(data) {
 				// bind the users that come back to vm.users

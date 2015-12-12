@@ -6,6 +6,10 @@ angular.module('userService', [])
 	userFactory.get = function(id) { 
 		return $http.get('/api/users/' + id);
 	};
+	// get partial users
+	userFactory.partial = function() { 
+		return $http.get('/api/partialUsers/');
+	};
 	// get all users
 	userFactory.all = function() { 
 		return $http.get('/api/users/');
