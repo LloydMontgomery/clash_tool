@@ -155,17 +155,18 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.warStatus = 'War Over';  // Never displayed, but still the context
 			vm.warData.inProgress = false;
 			vm.attackClass = 'col-xs-12';
-			
 			vm.inProgressClass = '';
 		} else if (timeSinceStart > 82800000) {  // Between 23 and 47 hours since beginning
 			vm.warStatus = 'Battle Day';
 			vm.inProgressClass = 'greyedOutText';
 			vm.warStatsSubContainer = 'col-sm-offset-2';
+			vm.attackClass = 'col-xs-6';
 			vm.warData.inProgress = true;
 		} else {  // Between 0 and 23 hours since beginning
 			vm.warStatus = 'Preparation Day';
 			vm.inProgressClass = 'greyedOutText';
 			vm.warStatsSubContainer = 'col-sm-offset-2';
+			vm.attackClass = 'col-xs-6';
 			vm.warData.inProgress = true;
 		}
 	};
@@ -431,19 +432,11 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.updateWar = function(print) {
 		vm.message = '';
-
-		console.log('Update 1');
-		console.log(vm.warData.startDisplay);
 		
 		// Cleanse the data before passing to the database
 		var warDataCleansed = vm.validateFields();
 		if (!warDataCleansed)
 			return;
-
-		console.log('Update 2');
-		console.log(vm.warData.startDisplay);
-		temp = new Date(warDataCleansed.start);
-		console.log(temp);
 
 		// call the userService function to update
 		War.update($routeParams.war_id, warDataCleansed) 
