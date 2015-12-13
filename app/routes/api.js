@@ -221,19 +221,6 @@ module.exports = function(app, express) {
 				});
 			}
 
-			// data.createdAt = Number(data.createdAt.S);
-			// data.start = Number(data.start.N);
-			// data.size = Number(data.size.N);
-			// data.opponent = data.opponent.S;
-			// if (data.outcome) {
-			// 	data.exp = Number(data.exp.N);
-			// 	data.ourScore = data.ourScore.N;
-			// 	data.theirScore = data.theirScore.N;
-			// 	data.ourDest = Number(data.ourDest.N);
-			// 	data.theirDest = Number(data.theirDest.N);
-			// 	data.outcome = data.outcome.S;
-			// }
-
 			res.json({
 				success: true,
 				message: 'Successfully returned all Wars',
@@ -505,6 +492,13 @@ module.exports = function(app, express) {
 	// Delete the user with this id
 	// (accessed at DELETE http://localhost:8080/api/users/:user_id)
 	.delete(function(req, res) {
+		console.log(req.decoded.name);
+		if (req.decoded.name != 'Zephyro') {  // Little Fail-Safe for now.. Must be ME
+			return res.json({ 
+					success: false,
+					message: 'You do not have permission to do this.'
+			}); 
+		}
 		dynamodbDoc.delete({
 			TableName: 'Users',
 			Key:{
@@ -652,8 +646,6 @@ module.exports = function(app, express) {
 	// update the war with this id
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
-
-		console.log(req.body);
 
 		if (req.body.inProgress) {  // Then we only want to set a limit number of values
 			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';

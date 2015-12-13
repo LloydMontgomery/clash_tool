@@ -53,11 +53,15 @@
 	-webkit-appearance: none;
 	border: none;
 	text-align: center;
+	color: black;
 }
 
 hr {
 	height: 2px !important;
 	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #dadada, rgba(0, 0, 0, 0));
+}
+hr.accentBlue {
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #0680AF, rgba(0, 0, 0, 0));
 }
 
 #clanName {
@@ -118,6 +122,7 @@ hr {
 #warriorTemplate {
 	margin-bottom: 10px;
 	text-align: center;
+	font-size: 20px;
 }
 
 #warPage .alert {
@@ -149,8 +154,8 @@ hr {
 	padding-right: 18px;
 }
 
-#warSubmit {
-	margin: 0;
+optgroup {
+	color: pink;
 }
 
 

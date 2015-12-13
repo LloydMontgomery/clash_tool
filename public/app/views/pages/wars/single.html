@@ -18,13 +18,13 @@
 										ng-options="option.value as option.display for option in war.sizeOptions">
 								</select>
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<div>
 									<input id="dateTime" ng-change="war.checkDate()" type="datetime-local" ng-model="war.warData.startDisplay" class="unstyled">
 								</div>
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<div ng-hide="war.warData.inProgress">
 									<input type="number" ng-model="war.warData.exp" class="form-control" placeholder="Exp Gained">
@@ -39,11 +39,11 @@
 							<div >
 								{{ war.warData.size }} vs {{ war.warData.size }}
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								{{ war.warStatus }}
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<timer ng-if="war.warStatus == 'Battle Day'" ng-attr-end-time="war.battleCountdown" 
 									max-time-unit="'hour'" interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
@@ -64,14 +64,14 @@
 							<div id="clanName">
 								Space Monkeys
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<select ng-disabled="war.warData.inProgress" ng-init="war.setMaxStars()" ng-model="war.warData.ourScore" ng-class="war.inProgressClass">
 									<option value="" disabled selected>Stars</option>
 									<option ng-repeat="option in war.maxStars" value="{{option}}">{{ option }}</option>
 								</select>
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<div>
 									<input ng-disabled="war.warData.inProgress" ng-model="war.warData.ourDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
@@ -83,7 +83,7 @@
 							<div >
 								Space Monkeys
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<div ng-if="war.warData.inProgress">
 									VS
@@ -92,7 +92,7 @@
 									{{ war.warData.ourScore }}
 								</div>
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<div ng-if="war.warData.inProgress">
 									{{ war.warData.opponent }}
@@ -111,14 +111,14 @@
 							<div>
 								<input ng-model="war.warData.opponent" type="text" class="form-control" placeholder="Opponent Name">
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<select ng-disabled="war.warData.inProgress" ng-model="war.warData.theirScore" ng-class="war.inProgressClass">
 									<option value="" disabled selected>Stars</option>
 									<option ng-repeat="option in war.maxStars" value="{{ option }}">{{ option }}</option>
 								</select>
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								<div>
 									<input ng-disabled="war.warData.inProgress" ng-model="war.warData.theirDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
@@ -130,11 +130,11 @@
 							<div >
 								{{ war.warData.opponent }}
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								{{ war.warData.theirScore }}
 							</div>
-							<hr>
+							<hr class="accentBlue">
 							<div>
 								{{ war.warData.theirDest }}
 							</div>
@@ -153,23 +153,24 @@
 					<div ng-repeat="warrior in war.warData.warriors" id="warriorTemplate" class="row excludeAnimation">
 						<div class="col-sm-6 col-xs-12 warriorNames">
 							<!-- Warrior Name and View Icon -->
-							<div ng-class="war.nameClass">
+							<!-- <div ng-class="war.nameClass"> -->
+							<div class="col-xs-12">
 								<span ng-if="war.type == 'view'" ng-show="warrior.viewed" class="pull-left glyphicons glyphicons-eye-open accentBlue"></span>
 								<span ng-if="war.type == 'view'" ng-hide="warrior.viewed" class="pull-left glyphicons glyphicons-eye-open"></span>
 								<select ng-if="war.type != 'view'" ng-model="warrior.name" ng-change="war.adjustUsers()">
 									<option value="{{warrior.name}}" selected>{{warrior.name}}</option>
 									<option ng-repeat="option in war.warData.actUsers" value="{{ option }}">{{ option }}</option>
 								</select>
-								<div ng-if="war.type == 'view'">
+								<div ng-if="war.type == 'view'" ng-class="((main.userInfo.name == warrior.name) ? 'accentBlue' : '')">
 									{{ warrior.name }}
 								</div>
 							</div>
 							<!-- Move Warrior option -->
-							<div ng-if="war.type != 'view'" class="col-xs-6">
+							<!-- <div ng-if="war.type != 'view'" class="col-xs-6">
 								<select ng-model="war.command" ng-change="war.moveWarrior(warrior.name, war.command)"
 									ng-disabled="warrior.name == 'Pick Warrior'" ng-options="option for option in war.commandOptions">
 								</select>
-							</div>
+							</div> -->
 						</div>
 						<div class="col-sm-6 col-xs-12 warriorAttacks">
 							<!-- Attack 1 -->
@@ -205,7 +206,7 @@
 							<div class="attacks" ng-class="war.attackClass">
 								<div ng-if="war.warData.inProgress">
 									<select ng-if="war.type != 'view'" ng-model="warrior.attack2" ng-disabled="warrior.name == 'Pick Warrior'"
-										ng-change="war.adjustTargets(); warrior.lock2 = true; warrior.viewed = false">
+										ng-change="warrior.lock2 = true; warrior.viewed = false">
 										<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
 										<option value="Pick" ng-if="warrior.attack2 != 'Pick'">Pick</option>
 										<option value="Hold" ng-if="warrior.attack2 != 'Hold'">Hold</option>
@@ -217,7 +218,7 @@
 									<select ng-model="warrior.attack2" ng-change="war.adjustTargets()"
 										ng-if="war.type == 'view' && main.userInfo.name == warrior.name && !warrior.lock2">
 										<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
-										<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
+										<option ng-repeat="option in war.attackOptions2" ng-if="warrior.attack1 != option" value="{{ option }}">{{ option }}</option>
 									</select>
 									<div ng-if="war.type == 'view' && main.userInfo.name != warrior.name || warrior.lock2">
 										{{ warrior.attack2 }}
@@ -241,8 +242,8 @@
 								<span ng-hide="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-unlock"></span>
 							</div>
 						</div>
-						<div class="col-xs-12">
-							<hr>
+						<div ng-if="!$last" class="col-xs-12">
+							<hr class="accentBlue">
 						</div>
 					</div>
 				</div>
@@ -260,11 +261,13 @@
 				</div>
 			</div>
 			<!-- Button to Show Warriors -->
-			<div ng-click="war.genWarriorList()" ng-if="war.type == 'create'" ng-hide="war.showWarriors" class="col-sm-offset-4 col-sm-4 col-xs-12">
+			<div ng-click="war.genWarriorList()" ng-if="war.type == 'create'" 
+				ng-hide="war.showWarriors" class="row col-sm-offset-2 col-sm-6 col-xs-12">
 				<button class="btn btn-lg btn-block warButton">Warrior List</button>
 			</div>
 			<!-- Button to Submit War or Update War -->
-			<div ng-show="war.showWarriors && war.warriorsReady" id="warSubmit" class="row col-sm-offset-4 col-sm-4 col-xs-12">
+			<div ng-show="war.showWarriors && war.warriorsReady" 
+				class="row col-sm-offset-3 col-sm-6 col-xs-12">
 				<button ng-click="war.saveWar()" class="btn btn-lg btn-block warButton" ng-if="war.type == 'create'">Create War</button>
 				<button ng-click="war.updateWar(true)" class="btn btn-lg btn-block warButton" ng-if="war.type != 'create'">Update War</button>
 			</div>

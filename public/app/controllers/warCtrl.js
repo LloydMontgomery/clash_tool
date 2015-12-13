@@ -394,7 +394,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		for (var i = 0; i < vm.warData.warriors.length; i++) {
 			if (vm.warData.warriors[i].name == 'Pick Warrior') {
 				vm.message = 'Please Fill all Warrior Slots';
-				// return false;
+				return false;
 			}
 		};
 		warDataCleansed.warriors = vm.warData.warriors;
@@ -419,8 +419,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 			.then(function(data) {
 				vm.processing = false; // clear the form
 				// bind the message from our API to vm.message
-				vm.message = data.data;
-				// $location.path('/wars');
+				vm.message = data.data.message;
+				$location.path('/wars');
 		});
 	};
 

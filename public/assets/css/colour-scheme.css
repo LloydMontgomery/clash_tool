@@ -1,16 +1,16 @@
 /* Background is the Accent Colour */
-#login-container button, .warButton:hover {
+#login-container button, .warButton:hover, #userPage .btn:hover {
 	background-color: #0680AF;
 }
 
 /* Text is Black */
-.warButton:hover {
+.warButton:hover, #userPage .btn:hover {
 	color: black !important;
 }
 
 /* Text is the Accent Colour */
 footer a, .accentBlue {
-	color: #0680AF;
+	color: #0680AF !important;
 }
 
 /* Background is Black */
