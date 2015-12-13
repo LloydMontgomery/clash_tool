@@ -51,8 +51,6 @@ module.exports = function(app, express) {
 	apiRouter.post('/authenticate', function(req, res) {
 		// find the user
 		// select the name username and password explicitly 
-		console.log('INPUT VALUES');
-		console.log(req.body.name);
 
 		dynamodb.query({
 			TableName : "Users",
@@ -74,22 +72,16 @@ module.exports = function(app, express) {
 				});
 			}
 
-			console.log('OUTPUT VALUES');
-			console.log(data);
-
 			user = new User();
 
-			if (data.Items.Count == 0) {  // Then the username must have been incorrect
-				console.log('HERE');
-				res.json({
+			if (data.Count == 0) {  // Then the username must have been incorrect
+				return res.json({
 					success: false,
 					message: 'Authentication failed. User not found.'
 				});
 			} else {
-				console.log(data.Items[0].password.S);
 				// check if password matches
 				var validPassword = user.comparePassword(data.Items[0].password.S, req.body.password);
-				console.log(validPassword);
 
 				if (!validPassword) {
 					res.json({
@@ -159,8 +151,6 @@ module.exports = function(app, express) {
 			user.Item.inClan = false;
 		}
 
-		console.log(user.Item);
-
 		dynamodbDoc.put(user, function(err, data) {
 			if (err) {
 				console.error("Unable to add user. Error JSON:", JSON.stringify(err, null, 2));
@@ -194,7 +184,11 @@ module.exports = function(app, express) {
 			Limit : 1000
 		}, function(err, data) {
 			if (err) { 
-				console.log(err); return; 
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: data.Items
+				});
 			}
 			res.json({
 				success: true,
@@ -210,14 +204,17 @@ module.exports = function(app, express) {
 
 		dynamodb.scan({
 			TableName : "Wars",
-			ProjectionExpression: "#1, outcome, ourScore, theirScore, exp",
+			ProjectionExpression: "#1, createdAt, outcome, ourScore, theirScore, exp",
 			ExpressionAttributeNames: {
 				"#1": "start"
 			},
 			Limit : 1000
 		}, function(err, data) {
 			if (err) { 
-				console.log(err); return; 
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later',
+				});
 			}
 			res.json({
 				success: true,
@@ -277,7 +274,10 @@ module.exports = function(app, express) {
 			Limit : 1000
 		}, function(err, data) {
 			if (err) { 
-				console.log(err); return; 
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.'
+				});
 			}
 			res.json({
 				success: true,
@@ -461,6 +461,8 @@ module.exports = function(app, express) {
 
 		// set the war information (comes from the request)
 		// Required information //
+		now = new Date();
+		war.Item.createdAt = now.getTime().toString();
 		war.Item.opponent = req.body.opponent;
 		war.Item.start = req.body.start;
 		war.Item.size = req.body.size;
@@ -497,79 +499,159 @@ module.exports = function(app, express) {
 	apiRouter.route('/wars/:war_id')
 	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
 	.get(function(req, res) {
-		console.log(req.params.war_id);
 		dynamodb.query({
 			TableName : 'Wars',
-			KeyConditionExpression: '#1 = :startTime',
+			KeyConditionExpression: '#1 = :createdAt',
 			ExpressionAttributeNames: {
-				'#1': 'start'
+				'#1': 'createdAt'
 			},
 			ExpressionAttributeValues: {
-				':startTime': { 'N': req.params.war_id }
+				':createdAt': { 'S': req.params.war_id }
 			},
 			Limit : 1000
 		}, function(err, data) {
 			if (err) { 
-				res.json({
+				console.log(err.message);
+				return res.json({
 					success: false,
 					message: 'Database Error. Try again later.',
 					data: err
 				});
 			}
 
-			// Convert all the values to non-object values
-			data.Items[0].start = data.Items[0].start.N;
-			data.Items[0].size = data.Items[0].size.N;
-			data.Items[0].opponent = data.Items[0].opponent.S;
-			if (data.Items[0].outcome) {
-				data.Items[0].exp = data.Items[0].exp.N;
-				data.Items[0].ourScore = data.Items[0].ourScore.N;
-				data.Items[0].theirScore = data.Items[0].theirScore.N;
-				data.Items[0].ourDest = data.Items[0].ourDest.N;
-				data.Items[0].theirDest = data.Items[0].theirDest.N;
-				data.Items[0].outcome = data.Items[0].outcome.S;
-			}
+			console.log(err);
+			if (data.Count == 0) {  // Then the username must have been incorrect
+				return res.json({
+					success: false,
+					message: 'Query Failed. War not found.'
+				});
+			} else {
 
-			res.json({
-				success: true,
-				message: 'Successfully returned all Wars',
-				data: data.Items[0]
-			});
+				// Get the only item we want out of the array
+				data = data.Items[0];
+
+				// Convert all the values to non-object values
+				data.createdAt = Number(data.createdAt.S);
+				data.start = Number(data.start.N);
+				data.size = Number(data.size.N);
+				data.opponent = data.opponent.S;
+				if (data.outcome) {
+					data.exp = Number(data.exp.N);
+					data.ourScore = data.ourScore.N;
+					data.theirScore = data.theirScore.N;
+					data.ourDest = Number(data.ourDest.N);
+					data.theirDest = Number(data.theirDest.N);
+					data.outcome = data.outcome.S;
+				}
+				// console.log(data.warriors);
+
+				// Correct warrior data array
+				data.warriors = data.warriors.L
+				for (var i = 0; i < data.warriors.length; i++) {
+					// Strip L
+					data.warriors[i] = data.warriors[i].M;
+
+					// Convert all the values to non-object values
+					data.warriors[i].attack1 = data.warriors[i].attack1.S;
+					data.warriors[i].attack2 = data.warriors[i].attack2.S;
+					data.warriors[i].stars1 = data.warriors[i].stars1.N;
+					data.warriors[i].stars2 = data.warriors[i].stars2.N;
+					data.warriors[i].name = data.warriors[i].name.S;
+					data.warriors[i].viewed = data.warriors[i].viewed.BOOL;
+					data.warriors[i].lock1 = data.warriors[i].lock1.BOOL;
+					data.warriors[i].lock2 = data.warriors[i].lock2.BOOL;
+
+				};
+
+				res.json({
+					success: true,
+					message: 'Successfully returned all Wars',
+					data: data
+				});
+			}
 		});
 	})
 
 	// update the war with this id
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
-		// use our war model to find the war we want
-		War.findById(req.params.war_id, function(err, war) { 
-			if (err) res.send(err);
-			// update the wars info only if its new
 
-			war.opponent = req.body.opponent;
-			war.exp = req.body.exp;
-			war.ourScore = req.body.ourScore;
-			war.theirScore = req.body.theirScore;
-			war.ourDest = req.body.ourDest;
-			war.TheirDest = req.body.TheirDest;
-			war.start = req.body.start;
-			war.size = req.body.size;
-			war.warriors = req.body.warriors;
+		// update the wars info only if its new
 
-			if (req.body.outcome)
-				war.outcome = req.body.outcome;
-			if (req.body.img)
-				war.img = req.body.img;
+		// war.opponent = req.body.opponent;
+		// war.exp = req.body.exp;
+		// war.ourScore = req.body.ourScore;
+		// war.theirScore = req.body.theirScore;
+		// war.ourDest = req.body.ourDest;
+		// war.TheirDest = req.body.TheirDest;
+		// war.start = req.body.start;
+		// war.size = req.body.size;
+		// war.warriors = req.body.warriors;
 
-			// save the war
-			war.save(function(err) {
-				if (err) res.send(err);
-				// return a message
-				res.json({ message: 'War updated!' });
-			});
+		// if (req.body.outcome)
+		// 	war.outcome = req.body.outcome;
+		// if (req.body.img)
+		// 	war.img = req.body.img;
+
+
+		updateExpression = 'set #s = :s1, opponent = :o, size = :s2';
+
+		dynamodbDoc.update({
+			TableName: 'Wars',
+			Key:{
+				'createdAt': req.body.createdAt
+			},
+			UpdateExpression: updateExpression,
+			ExpressionAttributeNames: {
+				'#s': 'start'
+			},
+			ExpressionAttributeValues:{
+				':s1' : req.body.start,
+				':o'  : req.body.opponent,
+				':s2' : req.body.size
+			}
+		}, function(err, data) {
+			if (err) {
+				res.json({
+					success: false,
+					message: err.message
+				});
+			} else {
+				res.json({
+					success: true,
+					message: 'Successfully Updated War'
+				});
+			}
 		});
-	});
 
+		// // use our war model to find the war we want
+		// War.findById(req.params.war_id, function(err, war) { 
+		// 	if (err) res.send(err);
+		// 	// update the wars info only if its new
+
+		// 	war.opponent = req.body.opponent;
+		// 	war.exp = req.body.exp;
+		// 	war.ourScore = req.body.ourScore;
+		// 	war.theirScore = req.body.theirScore;
+		// 	war.ourDest = req.body.ourDest;
+		// 	war.TheirDest = req.body.TheirDest;
+		// 	war.start = req.body.start;
+		// 	war.size = req.body.size;
+		// 	war.warriors = req.body.warriors;
+
+		// 	if (req.body.outcome)
+		// 		war.outcome = req.body.outcome;
+		// 	if (req.body.img)
+		// 		war.img = req.body.img;
+
+		// 	// save the war
+		// 	war.save(function(err) {
+		// 		if (err) res.send(err);
+		// 		// return a message
+		// 		res.json({ message: 'War updated!' });
+		// 	});
+		// });
+	});
 
 	return apiRouter;
 

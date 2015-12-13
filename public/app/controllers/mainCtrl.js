@@ -58,8 +58,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			User.partial().then(function(data) {
 				if (data.data.success) {
 
-					console.log('USERS');
-					console.log(data.data.data);
 					// bind the users that come back to vm.users
 					vm.users = data.data.data;
 					vm.users.sort(function(a, b) {
@@ -69,7 +67,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					for (var i = 0; i < vm.users.length; i++) {
 						vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined.N)); // Convert milliseconds to date object
 					};
-					console.log(data.data.data);
 					
 				} else {
 					// Do Something

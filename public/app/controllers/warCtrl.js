@@ -12,12 +12,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 		
 		// bind the wars that come back to vm.wars
 		vm.wars = data.data.data;
-		console.log(vm.wars);
 		vm.wars.sort(function(a, b) {
 			return (a.start.N < b.start.N) ? 1 : (a.start.N > b.start.N) ? -1 : 0;
 		});
-		console.log(vm.wars);
-
 
 		now = new Date();
 		for (var i = 0; i < vm.wars.length; i++) {
@@ -33,7 +30,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	}
 
 	vm.editWar = function(start) {
-		$location.path('/wars/edit/' + Number(start).toString());
+		$location.path('/wars/edit/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
 	}
 })
 
@@ -89,7 +86,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// Date and Time picker for war start
 	var now = new Date();
-	vm.warData.start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
@@ -99,12 +96,13 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.warData.ourScore = Number(vm.warData.size*3);
 
 		// If warriors are displaying, we need to adjust
-
 		if (vm.warriorsReady)
 			vm.adjustWarriorList();
 	};
 
 	vm.checkDate = function() {
+		vm.warData.start = vm.warData.startDisplay.getTime();
+
 		vm.battleCountdown = vm.warData.start + 169200000;  		// Add 47 Hours
 		vm.preparationCountdown = vm.warData.start + 82800000;  	// Add 23 Hours
 
@@ -314,7 +312,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		// Date/Time needs to be set to UTC time
 		var now = new Date();
-		warDataCleansed.start = vm.warData.start.getTime() + (now.getTimezoneOffset() * 60000);
+		warDataCleansed.start = vm.warData.start + (now.getTimezoneOffset() * 60000);
 
 		if (vm.inProgress == false) {
 			if (vm.warData.exp == undefined) {
@@ -380,7 +378,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.updateWar = function(print) {
 		// Set the time ahead again
-		vm.warData.start.setTime(vm.warData.start.getTime() + (now.getTimezoneOffset() * 60000));
+		vm.warData.start = (vm.warData.start + (now.getTimezoneOffset() * 60000));
 
 		// call the userService function to update
 		War.update($routeParams.war_id, vm.warData) 
@@ -401,21 +399,18 @@ angular.module('warCtrl', ['warService', 'userService'])
 		War.get($routeParams.war_id)
 			.then(function(data) {
 				vm.warData = data.data.data;
-				console.log(vm.warData);
 
 				// Set Date-Time to be in the proper format
 				// vm.warData.start = new Date(vm.warData.start);  // Convert the date string to a date object
 				var now = new Date();
-				vm.warData.start = (Number(vm.warData.start) - (now.getTimezoneOffset() * 60000));
-				console.log(vm.warData.start);
+				vm.warData.start = (vm.warData.start - (now.getTimezoneOffset() * 60000));
+				vm.warData.startDisplay = new Date(vm.warData.start);
 				// Set Countdown timers
 				vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours
 				vm.preparationCountdown = vm.warData.start + 82800000;  // Add 23 Hours
 
 				vm.checkDate();
 				vm.loadingPage = false;
-
-				// console.log(vm.warData.warriors);
 
 				if (vm.type == 'view') {
 					Auth.getUser().then(function(data) {
