@@ -96,6 +96,10 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			});
 		}
 	});
+	
+	vm.currentWar = function(start) {
+		$location.path('/wars/view/' + Number(start).toString());
+	}
 
 	// function to handle login form
 	vm.processAuth = function() {

@@ -17,7 +17,7 @@
 		<thead>
 			<tr>
 				<th>Opponent</th>
-				<th>Date</th>
+				<th>Start</th>
 				<th>Photo</th>
 				<th></th>
 			</tr>
@@ -25,12 +25,12 @@
 		<tbody>
 			<!-- LOOP OVER THE WARS -->
 			<tr ng-repeat="battle in war.wars">
-				<td>{{ battle.opponent }}</td>
-				<td>{{ battle.start.toString().substr(0,10) }}</td>
+				<td>{{ battle.opponent.S }}</td>
+				<td>{{ battle.start.toDateString().substr(4) }}</td>
 				<td><a ng-href="{{ battle.img }}" target="_blank">Overview</a></td>
 				<td class="col-xm-2">
-					<a ng-href="/wars/view/{{ battle._id }}" class="btn btn-primary">View</a>
-					<a ng-href="/wars/edit/{{ battle._id }}" class="btn btn-danger">Edit</a>
+					<a ng-click="war.viewWar(battle.start)" class="btn btn-primary">View</a>
+					<a ng-click="war.editWar(battle.start)" class="btn btn-danger">Edit</a>
 				</td>
 			</tr>
 		</tbody>

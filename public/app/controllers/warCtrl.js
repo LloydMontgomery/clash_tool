@@ -2,23 +2,39 @@
 angular.module('warCtrl', ['warService', 'userService'])
 // user controller for the main page
 // inject the War factory 
-.controller('warListController', function(War) {
+.controller('warListController', function(War, $location) {
 	var vm = this;
 
 	// set a processing variable to show loading things
 	vm.processing = true;
 	// grab all the wars at page load
-	War.all().success(function(data) {
+	War.all().then(function(data) {
 		
 		// bind the wars that come back to vm.wars
-		vm.wars = data;
+		vm.wars = data.data.data;
+		console.log(vm.wars);
 		vm.wars.sort(function(a, b) {
-			return (a.start < b.start) ? 1 : (a.start > b.start) ? -1 : 0;
+			return (a.start.N < b.start.N) ? 1 : (a.start.N > b.start.N) ? -1 : 0;
 		});
+		console.log(vm.wars);
+
+
+		now = new Date();
+		for (var i = 0; i < vm.wars.length; i++) {
+			vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+		};
 
 		// when all the wars come back, remove the processing variable
 		vm.processing = false;
 	});
+
+	vm.viewWar = function(start) {
+		$location.path('/wars/view/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+	}
+
+	vm.editWar = function(start) {
+		$location.path('/wars/edit/' + Number(start).toString());
+	}
 })
 
 // controller applied to War creation page
@@ -89,11 +105,11 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.checkDate = function() {
-		vm.battleCountdown = vm.warData.start.getTime() + 169200000;  		// Add 47 Hours
-		vm.preparationCountdown = vm.warData.start.getTime() + 82800000;  	// Add 23 Hours
+		vm.battleCountdown = vm.warData.start + 169200000;  		// Add 47 Hours
+		vm.preparationCountdown = vm.warData.start + 82800000;  	// Add 23 Hours
 
 		now = new Date();
-		var timeSinceStart = (now.getTime() - vm.warData.start.getTime())
+		var timeSinceStart = (now.getTime() - vm.warData.start)
 		if (timeSinceStart > 169200000) {  // Over 47 hours since war started
 			vm.warStatus = 'War Over';  // Never displayed, but still the context
 			vm.inProgress = false;
@@ -230,7 +246,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		User.partial()
 			.then(function(data) {
-				console.log("Users All");
 				vm.warData.users = data.data;
 
 				if (vm.type == 'create') {
@@ -385,27 +400,22 @@ angular.module('warCtrl', ['warService', 'userService'])
 	if (vm.type != 'create') {
 		War.get($routeParams.war_id)
 			.then(function(data) {
-				vm.warData = data.data;
+				vm.warData = data.data.data;
+				console.log(vm.warData);
 
 				// Set Date-Time to be in the proper format
-				vm.warData.start = new Date(vm.warData.start);  // Convert the date string to a date object
+				// vm.warData.start = new Date(vm.warData.start);  // Convert the date string to a date object
 				var now = new Date();
-				vm.warData.start.setTime(vm.warData.start.getTime() - (now.getTimezoneOffset() * 60000));
-
-				// Set a few other attributes that come back in the wrong format
-				if (vm.warData.outcome) {
-					vm.warData.ourScore = vm.warData.ourScore.toString();
-					vm.warData.theirScore = vm.warData.theirScore.toString();
-				}
-
+				vm.warData.start = (Number(vm.warData.start) - (now.getTimezoneOffset() * 60000));
+				console.log(vm.warData.start);
 				// Set Countdown timers
-				vm.battleCountdown = vm.warData.start.getTime() + 169200000;  		// Add 47 Hours
-				vm.preparationCountdown = vm.warData.start.getTime() + 82800000;  	// Add 23 Hours
+				vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours
+				vm.preparationCountdown = vm.warData.start + 82800000;  // Add 23 Hours
 
 				vm.checkDate();
 				vm.loadingPage = false;
 
-				console.log(vm.warData.warriors);
+				// console.log(vm.warData.warriors);
 
 				if (vm.type == 'view') {
 					Auth.getUser().then(function(data) {

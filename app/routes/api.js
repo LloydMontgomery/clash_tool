@@ -272,24 +272,53 @@ module.exports = function(app, express) {
 	apiRouter.route('/wars')
 	// get all the wars (accessed at GET http://localhost:8080/api/wars)
 	.get(function(req, res) {
-		console.log("ALL WARS");
-		War.find(function(err, wars) {
-			if (err) res.send(err);
-			// return the wars
-			res.json(wars);
+		dynamodb.scan({
+			TableName : "Wars",
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				console.log(err); return; 
+			}
+			res.json({
+				success: true,
+				message: 'Successfully returned all Wars',
+				data: data.Items
+			});
 		});
 	});
 
-	apiRouter.route('/lastWar')
-	// get the last war (accessed at GET http://localhost:8080/api/lastWar)
-	.get(function(req, res) {
-		console.log("LAST WAR");
-		War.findOne({}, {}, { sort: { 'start' : -1 } }, function(err, wars) {
-			if (err) res.send(err);
-			// return the wars
-			res.json(wars);
-		});
-	});
+	// apiRouter.route('/lastWar')
+	// // get the last war (accessed at GET http://localhost:8080/api/lastWar)
+	// .get(function(req, res) {
+
+	// 	dynamodb.query({
+	// 		TableName : 'Wars',
+	// 		KeyConditionExpression: '#1 ',
+	// 		ExpressionAttributeNames: {
+	// 			'#1': 'start'
+	// 		},
+	// 		ExpressionAttributeValues: {
+	// 			':nameVal': ''
+	// 		},
+	// 		Limit : 1000
+	// 	}, function(err, data) {
+	// 		if (err) { 
+	// 			console.log(err); return; 
+	// 		}
+	// 		res.json({
+	// 			success: true,
+	// 			message: 'Successfully returned all Wars',
+	// 			data: data.Items
+	// 		});
+	// 	});
+
+	// 	// console.log("LAST WAR");
+	// 	// War.findOne({}, {}, { sort: { 'start' : -1 } }, function(err, wars) {
+	// 	// 	if (err) res.send(err);
+	// 	// 	// return the wars
+	// 	// 	res.json(wars);
+	// 	// });
+	// });
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
 
@@ -468,11 +497,44 @@ module.exports = function(app, express) {
 	apiRouter.route('/wars/:war_id')
 	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
 	.get(function(req, res) {
-		War.findById(req.params.war_id, function(err, war) { 
-			if (err) res.send(err);
-			// return that user
+		console.log(req.params.war_id);
+		dynamodb.query({
+			TableName : 'Wars',
+			KeyConditionExpression: '#1 = :startTime',
+			ExpressionAttributeNames: {
+				'#1': 'start'
+			},
+			ExpressionAttributeValues: {
+				':startTime': { 'N': req.params.war_id }
+			},
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: err
+				});
+			}
 
-			res.json(war);
+			// Convert all the values to non-object values
+			data.Items[0].start = data.Items[0].start.N;
+			data.Items[0].size = data.Items[0].size.N;
+			data.Items[0].opponent = data.Items[0].opponent.S;
+			if (data.Items[0].outcome) {
+				data.Items[0].exp = data.Items[0].exp.N;
+				data.Items[0].ourScore = data.Items[0].ourScore.N;
+				data.Items[0].theirScore = data.Items[0].theirScore.N;
+				data.Items[0].ourDest = data.Items[0].ourDest.N;
+				data.Items[0].theirDest = data.Items[0].theirDest.N;
+				data.Items[0].outcome = data.Items[0].outcome.S;
+			}
+
+			res.json({
+				success: true,
+				message: 'Successfully returned all Wars',
+				data: data.Items[0]
+			});
 		});
 	})
 
