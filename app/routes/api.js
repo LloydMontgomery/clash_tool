@@ -72,10 +72,18 @@ module.exports = function(app, express) {
 				});
 			}
 
+			console.log(data.Items[0]);
+			if (!data.Items[0].inClan.BOOL) {
+				return res.json({
+					success: false,
+					message: 'Waiting on Admin to Approve'
+				});
+			}
+
 			if (data.Count == 0) {  // Then the username must have been incorrect
 				return res.json({
 					success: false,
-					message: 'Authentication failed. User not found.'
+					message: 'Authentication failed.'
 				});
 			} else {
 
@@ -85,7 +93,7 @@ module.exports = function(app, express) {
 				if (!validPassword) {
 					res.json({
 						success: false,
-						message: 'Authentication failed. Wrong password.'
+						message: 'Authentication failed.'
 					});
 				} else {
 

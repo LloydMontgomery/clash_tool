@@ -113,13 +113,14 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					else {
 						vm.loginData.password = '';  // Clear password
 						vm.loginData.passwordConfirm = '';  // Clear password
-						vm.error = 'ID or password incorrect';
+						vm.error = data.data.message;
 					}
 			});
 		}
 
 		// clear the error
 		vm.error = '';
+		vm.message = '';
 		if (!vm.isRegistering) {  // Then user is trying to log in
 			login();
 		} else if (vm.loginData.id && vm.loginData.passwordConfirm) {
@@ -132,12 +133,15 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					.then(function(data) {
 						vm.processing = false;
 						if (data.data.success) {
-							login();
-						} else {
+							vm.message = 'Registration Complete: Waiting on Admin to Approve';
+							vm.loginData.password = '';  // Clear password
+							vm.loginData.passwordConfirm = '';  // Clear password
 							vm.processing = false;
+						} else {
 							vm.loginData.password = '';  // Clear password
 							vm.loginData.passwordConfirm = '';  // Clear password
 							vm.error = data.data.message;
+							vm.processing = false;
 						}	
 				});
 			}

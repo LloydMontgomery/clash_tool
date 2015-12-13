@@ -29,6 +29,10 @@
 			<div class="alert alert-danger" ng-show="auth.error">
 				{{ auth.error }}
 			</div>
+			<!-- ERROR MESSAGE -->
+			<div class="alert alert-success" ng-show="auth.message">
+				{{ auth.message }}
+			</div>
 			<!-- LOGIN BUTTON -->
 			<button type="submit" class="btn btn-block btn-primary">
 				<span ng-if="!auth.processing && !auth.isRegistering">Login</span>
