@@ -15,13 +15,13 @@
 				<div ng-show="!main.userInfo.admin">
 					Fight Club was the beginning, now it's moved out of the basement, it's called Project Mayhem. We are the Space Monkeys, and we are the men and women who give their lives to Project Mayhem.
 				</div>
-				<a href="/users" class="routeButton btn" type="button" ng-if="main.loggedIn  && main.userInfo.admin">
+				<a href="/users" class="routeButton btn" type="button" ng-if="main.loggedIn  && main.userInfo.inClan && main.userInfo.admin">
 					<h4>Users</h4>
 				</a>
-				<a href="/wars" class="routeButton btn" type="button" ng-if="main.loggedIn">
+				<a href="/wars" class="routeButton btn" type="button" ng-if="main.loggedIn && main.userInfo.inClan">
 					<h4>Wars</h4>
 				</a><br>
-				<a ng-click="main.currentWar(main.wars[main.wars.length-1].start)" id="currentWarButton" class="routeButton btn" type="button" ng-if="main.loggedIn">
+				<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt.S }}" id="currentWarButton" class="routeButton btn" type="button" ng-if="main.loggedIn && main.userInfo.inClan">
 					<h4>Current<br>War</h4>
 				</a>
 			</div>

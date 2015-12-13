@@ -54,7 +54,7 @@ module.exports = function(app, express) {
 
 		dynamodb.query({
 			TableName : "Users",
-			ProjectionExpression: "#n, password, id, admin",
+			ProjectionExpression: "#n, password, id, inClan, admin",
 			KeyConditionExpression: "#n = :nameVal",
 			ExpressionAttributeNames: {
 				"#n": "name"
@@ -65,14 +65,12 @@ module.exports = function(app, express) {
 			Limit : 1000
 		}, function(err, data) {
 			if (err) { 
-				res.json({
+				return res.json({
 					success: false,
 					message: 'Database Error. Try again later.',
 					data: data
 				});
 			}
-
-			user = new User();
 
 			if (data.Count == 0) {  // Then the username must have been incorrect
 				return res.json({
@@ -80,8 +78,9 @@ module.exports = function(app, express) {
 					message: 'Authentication failed. User not found.'
 				});
 			} else {
+				console.log(data.Items[0]);
 				// check if password matches
-				var validPassword = user.comparePassword(data.Items[0].password.S, req.body.password);
+				var validPassword = bcrypt.compareSync(req.body.password, data.Items[0].password.S);
 
 				if (!validPassword) {
 					res.json({
@@ -89,11 +88,12 @@ module.exports = function(app, express) {
 						message: 'Authentication failed. Wrong password.'
 					});
 				} else {
+					console.log(data.Items[0]);
 					// if user is found and password is right
 					// create a token
 					var token = jwt.sign({
 						name: data.Items[0].name.S,
-						id: data.Items[0].id.S,
+						inClan: data.Items[0].inClan.BOOL,
 						admin: data.Items[0].admin.BOOL
 					}, TOKEN_SECRET,
 					{ expiresIn: 7200 // expires in 2 hours 
@@ -133,7 +133,7 @@ module.exports = function(app, express) {
 		now = new Date();
 		user.Item.dateJoined = now.getTime();
 
-		user.Item.password = userModel.hashPassword(req.body.password);
+		user.Item.password = bcrypt.hashSync(req.body.password);
 		
 		user.Item.admin = false;  // Default to false
 		if (req.body.admin)
@@ -143,13 +143,10 @@ module.exports = function(app, express) {
 		if (req.body.title)
 			user.Item.title = req.body.title;
 
-		if (req.headers.referer.indexOf("/users") > -1) {
-			user.Item.approved = true;
+		if (req.headers.referer.indexOf("/users") > -1)
 			user.Item.inClan = true;
-		} else {
-			user.Item.approved = false;
+		else
 			user.Item.inClan = false;
-		}
 
 		dynamodbDoc.put(user, function(err, data) {
 			if (err) {
@@ -204,7 +201,7 @@ module.exports = function(app, express) {
 
 		dynamodb.scan({
 			TableName : "Wars",
-			ProjectionExpression: "#1, createdAt, outcome, ourScore, theirScore, exp",
+			ProjectionExpression: "createdAt, #1, outcome, ourScore, theirScore, exp",
 			ExpressionAttributeNames: {
 				"#1": "start"
 			},
@@ -244,6 +241,7 @@ module.exports = function(app, express) {
 				} else {
 					// if everything is good, save to request for use in other routes 
 					req.decoded = decoded;
+					console.log(req.decoded);
 					next();
 				}
 			});
@@ -342,23 +340,28 @@ module.exports = function(app, express) {
 	// get all the users (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
 
-		// dynamodb.scan({
-		// 	TableName : "Users",
-		// 	ProjectionExpression: "#n, admin, approved, dateJoined, id, inClan, title",
-		// 	ExpressionAttributeNames: {
-		// 		"#n": "name"
-		// 	},
-		// 	Limit : 1000
-		// }, function(err, data) {
-		// 	if (err) { 
-		// 		console.log(err); return; 
-		// 	}
-		// 	res.json({
-		// 		success: true,
-		// 	    message: 'Successfully returned all Users',
-		// 		data: data.Items
-		// 	});
-		// });
+		dynamodb.scan({
+			TableName : "Users",
+			ProjectionExpression: "#n, admin, dateJoined, id, inClan, title",
+			ExpressionAttributeNames: {
+				"#n": "name"
+			},
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				return res.json({
+					success: false,
+				    message: 'Database Error. Try again later'
+				});
+			}
+			console.log('API OUTPUT');
+			console.log(data.Items);
+			res.json({
+				success: true,
+			    message: 'Successfully returned all Users',
+				data: data.Items
+			});
+		});
 	});
 
 	// AMAZON S3 ROUTE // 

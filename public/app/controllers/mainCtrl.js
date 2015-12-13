@@ -49,6 +49,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		if (vm.loggedIn) {
 			Auth.getUser().then(function(data) {
 				vm.userInfo = data.data;
+				console.log(vm.userInfo);
 				checkRoutePermission($location.path());
 			});
 		}
