@@ -140,6 +140,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 	}
 
 	vm.checkDate = function() {
+		if (!vm.warData.startDisplay)
+			return;
 		vm.warData.start = vm.warData.startDisplay.getTime();
 
 		vm.battleCountdown = vm.warData.start + 169200000;  		// Add 47 Hours
@@ -147,27 +149,23 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		now = new Date();
 		var timeSinceStart = (now.getTime() - vm.warData.start)
+
+		vm.warStatsSubContainer = '';  // Default to this
 		if (timeSinceStart > 169200000) {  // Over 47 hours since war started
 			vm.warStatus = 'War Over';  // Never displayed, but still the context
 			vm.warData.inProgress = false;
 			vm.attackClass = 'col-xs-12';
-			vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
+			
 			vm.inProgressClass = '';
 		} else if (timeSinceStart > 82800000) {  // Between 23 and 47 hours since beginning
 			vm.warStatus = 'Battle Day';
 			vm.inProgressClass = 'greyedOutText';
-			if (vm.type == 'view')
-				vm.warStatsSubContainer = 'col-sm-offset-2 col-sm-4 col-xs-12';
-			else
-				vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
+			vm.warStatsSubContainer = 'col-sm-offset-2';
 			vm.warData.inProgress = true;
 		} else {  // Between 0 and 23 hours since beginning
 			vm.warStatus = 'Preparation Day';
 			vm.inProgressClass = 'greyedOutText';
-			if (vm.type == 'view')
-				vm.warStatsSubContainer = 'col-sm-offset-2 col-sm-4 col-xs-12';
-			else
-				vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
+			vm.warStatsSubContainer = 'col-sm-offset-2';
 			vm.warData.inProgress = true;
 		}
 	};
@@ -391,13 +389,20 @@ angular.module('warCtrl', ['warService', 'userService'])
 			}
 		}
 
+		warDataCleansed.warriors = [];
 		for (var i = 0; i < vm.warData.warriors.length; i++) {
+			warDataCleansed.warriors.push(vm.warData.warriors[i]);
+			delete warDataCleansed.warriors[i]['s1Opt1'];
+			delete warDataCleansed.warriors[i]['s1Opt2'];
+			delete warDataCleansed.warriors[i]['s1Opt3'];
+			delete warDataCleansed.warriors[i]['s2Opt1'];
+			delete warDataCleansed.warriors[i]['s2Opt2'];
+			delete warDataCleansed.warriors[i]['s2Opt3'];
 			if (vm.warData.warriors[i].name == 'Pick Warrior') {
 				vm.message = 'Please Fill all Warrior Slots';
 				return false;
 			}
 		};
-		warDataCleansed.warriors = vm.warData.warriors;
 
 		return warDataCleansed;
 	}

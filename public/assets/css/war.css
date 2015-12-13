@@ -16,6 +16,7 @@
 
 #dateTime {
 	background-color: transparent;
+	font-size: 15px;
 }
 
 #warStats > div {
@@ -48,11 +49,18 @@
 	color: #000;
 }
 
+.unstyled::-webkit-inner-spin-button,
+.unstyled::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
 #warStats input {
 	-webkit-appearance: none;
 	border: none;
 	text-align: center;
 	color: black;
+	width: 100%;
 }
 
 hr {
@@ -69,10 +77,14 @@ hr.accentBlue {
 	border: none;
 
 	margin: 0 auto;
-	font-size: 15px;
+	font-size: 18px;
 	color: #000;
 	padding-top: 10px !important;
 }
+
+/*#warStats #opponentInput {
+	width: 100%;
+}*/
 
 #extraContent > div > div {
 	height: 40px;
