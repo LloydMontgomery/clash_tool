@@ -11,6 +11,7 @@
 /* War Stats section */
 #warStats {
 	margin-bottom: 15px;
+	font-size: 18px;
 }
 
 #dateTime {
@@ -44,8 +45,6 @@
 	border: none;
 
 	margin: 0 auto;
-
-	font-size: 20px;
 	color: #000;
 }
 
@@ -122,7 +121,7 @@ hr.accentBlue {
 #warriorTemplate {
 	margin-bottom: 10px;
 	text-align: center;
-	font-size: 20px;
+	font-size: 15px;
 }
 
 #warPage .alert {
