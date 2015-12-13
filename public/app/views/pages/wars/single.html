@@ -174,23 +174,30 @@
 						<div class="col-sm-6 col-xs-12 warriorAttacks">
 							<!-- Attack 1 -->
 							<div class="attacks" ng-class="war.attackClass">
-								<select ng-if="war.type != 'view'" ng-model="warrior.attack1" ng-disabled="warrior.name == 'Pick Warrior'"
-									ng-change="war.adjustTargets(); warrior.lock1 = true; warrior.viewed = false">
-									<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
-									<option value="Pick" ng-if="warrior.attack1 != 'Pick'">Pick</option>
-									<option value="Hold" ng-if="warrior.attack1 != 'Hold'">Hold</option>
-									<option value="Ask" ng-if="warrior.attack1 != 'Ask'">Ask</option>
-									<option value="Scout" ng-if="warrior.attack1 != 'Scout'">Scout</option>
-									<option value="Practice" ng-if="warrior.attack1 != 'Practice'">Practice</option>
-									<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
-								</select>
-								<select ng-model="warrior.attack1" ng-change="war.adjustTargets()"
-									ng-if="war.type == 'view' && main.userInfo.name == warrior.name && !warrior.lock1">
-									<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
-									<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
-								</select>
-								<div ng-if="war.type == 'view' && (main.userInfo.name != warrior.name || warrior.lock1)">
-									{{ warrior.attack1 }}
+								<div ng-if="war.warData.inProgress">
+									<select ng-if="war.type != 'view'" ng-model="warrior.attack1" ng-disabled="warrior.name == 'Pick Warrior'"
+										ng-change="war.adjustTargets(); warrior.lock1 = true; warrior.viewed = false">
+										<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
+										<option value="Pick" ng-if="warrior.attack1 != 'Pick'">Pick</option>
+										<option value="Hold" ng-if="warrior.attack1 != 'Hold'">Hold</option>
+										<option value="Ask" ng-if="warrior.attack1 != 'Ask'">Ask</option>
+										<option value="Scout" ng-if="warrior.attack1 != 'Scout'">Scout</option>
+										<option value="Practice" ng-if="warrior.attack1 != 'Practice'">Practice</option>
+										<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
+									</select>
+									<select ng-model="warrior.attack1" ng-change="war.adjustTargets()"
+										ng-if="war.type == 'view' && main.userInfo.name == warrior.name && !warrior.lock1">
+										<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
+										<option ng-repeat="option in war.attackOptions" value="{{ option }}">{{ option }}</option>
+									</select>
+									<div ng-if="war.type == 'view' && (main.userInfo.name != warrior.name || warrior.lock1)">
+										{{ warrior.attack1 }}
+									</div>
+								</div>
+								<div ng-if="!war.warData.inProgress">
+									<span class="glyphicons glyphicons-star x2"></span>
+									<span class="glyphicons glyphicons-star x2"></span>
+									<span class="glyphicons glyphicons-star x2"></span>
 								</div>
 							</div>
 							<!-- Attack 2 -->

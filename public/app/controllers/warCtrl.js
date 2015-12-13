@@ -87,6 +87,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	// Date and Time picker for war start
 	var now = new Date();
 	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+	vm.warData.start = vm.warData.startDisplay.getTime();
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
@@ -114,7 +115,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
 			vm.inProgressClass = '';
 		} else if (timeSinceStart > 82800000) {  // Between 23 and 47 hours since beginning
-			console.log("BATTLE DAY");
 			vm.warStatus = 'Battle Day';
 			vm.inProgressClass = 'greyedOutText';
 			if (vm.type == 'view')
@@ -301,6 +301,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		var warDataCleansed = {};
 
+		warDataCleansed.createdAt = vm.warData.createdAt;
 		warDataCleansed.opponent = vm.warData.opponent;
 		warDataCleansed.size = vm.warData.size;
 		warDataCleansed.inProgress = vm.warData.inProgress;
@@ -386,14 +387,22 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.updateWar = function(print) {
 		vm.message = '';
+
+		console.log('Update 1');
+		console.log(vm.warData.startDisplay);
 		
 		// Cleanse the data before passing to the database
 		var warDataCleansed = vm.validateFields();
 		if (!warDataCleansed)
 			return;
 
+		console.log('Update 2');
+		console.log(vm.warData.startDisplay);
+		temp = new Date(warDataCleansed.start);
+		console.log(temp);
+
 		// call the userService function to update
-		War.update($routeParams.war_id, vm.warData) 
+		War.update($routeParams.war_id, warDataCleansed) 
 			.then(function(data) {
 				vm.processing = false; // clear the form
 				// bind the message from our API to vm.message
@@ -415,10 +424,20 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.warData = data.data.data;
 
 				// Set Date-Time to be in the proper format
-				// vm.warData.start = new Date(vm.warData.start);  // Convert the date string to a date object
 				var now = new Date();
+
+				// temp2 = new Date(1450039080000);
+				// console.log(temp2);
+
+				// temp = new Date(vm.warData.start);
+				// console.log(temp);
+
 				vm.warData.start = (vm.warData.start - (now.getTimezoneOffset() * 60000));
 				vm.warData.startDisplay = new Date(vm.warData.start);
+
+				console.log('Initialization');
+				console.log(vm.warData.startDisplay);
+				
 				// Set Countdown timers
 				vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours
 				vm.preparationCountdown = vm.warData.start + 82800000;  // Add 23 Hours

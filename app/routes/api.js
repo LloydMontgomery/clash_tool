@@ -632,6 +632,8 @@ module.exports = function(app, express) {
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
 
+		console.log(req.body);
+
 		if (req.body.inProgress) {  // Then we only want to set a limit number of values
 			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';
 			expressionAttributeValues = {
