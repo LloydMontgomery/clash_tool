@@ -78,7 +78,7 @@ module.exports = function(app, express) {
 					message: 'Authentication failed. User not found.'
 				});
 			} else {
-				console.log(data.Items[0]);
+
 				// check if password matches
 				var validPassword = bcrypt.compareSync(req.body.password, data.Items[0].password.S);
 
@@ -88,7 +88,7 @@ module.exports = function(app, express) {
 						message: 'Authentication failed. Wrong password.'
 					});
 				} else {
-					console.log(data.Items[0]);
+
 					// if user is found and password is right
 					// create a token
 					var token = jwt.sign({
@@ -241,7 +241,6 @@ module.exports = function(app, express) {
 				} else {
 					// if everything is good, save to request for use in other routes 
 					req.decoded = decoded;
-					console.log(req.decoded);
 					next();
 				}
 			});
@@ -354,8 +353,6 @@ module.exports = function(app, express) {
 				    message: 'Database Error. Try again later'
 				});
 			}
-			console.log('API OUTPUT');
-			console.log(data.Items);
 			res.json({
 				success: true,
 			    message: 'Successfully returned all Users',
@@ -379,7 +376,7 @@ module.exports = function(app, express) {
 		};
 		s3.getSignedUrl('putObject', s3_params, function(err, data){
 			if(err){
-				console.log(err);
+				console.log(err); return;
 			} else{
 				var date = new Date()
 				var return_data = {
@@ -396,11 +393,52 @@ module.exports = function(app, express) {
 	apiRouter.route('/users/:user_id')
 	// (accessed at GET http://localhost:8080/api/users/:user_id) 
 	.get(function(req, res) {
-		User.findById(req.params.user_id, function(err, user) { 
-			if (err) res.send(err);
-			// return that user
-			res.json(user);
+	
+		dynamodb.query({
+			TableName : 'Users',
+			ProjectionExpression: "#1, id, inClan, admin, dateJoined, title",
+			KeyConditionExpression: '#1 = :val',
+			ExpressionAttributeNames: {
+				'#1': 'name'
+			},
+			ExpressionAttributeValues: {
+				':val': { 'S': req.params.user_id }
+			},
+			Limit : 1000
+		}, function(err, data) {
+
+			if (err) { 
+				console.log(err.message);
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: err
+				});
+			}
+
+			if (data.Count == 0) {  // Then the username must have been incorrect
+				return res.json({
+					success: false,
+					message: 'Query Failed. User not found.'
+				});
+			} else {
+				// Convert Data before sending it back to client
+				data = data.Items[0];
+				data.name = data.name.S;
+				data.id = data.id.S;
+				data.inClan = data.inClan.BOOL;
+				data.admin = data.admin.BOOL;
+				data.dateJoined = data.dateJoined.N;
+				data.title = data.title.S;
+
+				res.json({
+					success: true,
+					message: 'Successfully returned user',
+					data: data
+				});
+			}
 		});
+
 	})
 
 	// update the user with this id
@@ -459,8 +497,6 @@ module.exports = function(app, express) {
 				"start" : { "Exists" : false },
 			}
 		};
-
-		console.log(req.body);
 
 		// set the war information (comes from the request)
 		// Required information //
@@ -522,7 +558,6 @@ module.exports = function(app, express) {
 				});
 			}
 
-			console.log(err);
 			if (data.Count == 0) {  // Then the username must have been incorrect
 				return res.json({
 					success: false,
@@ -546,7 +581,6 @@ module.exports = function(app, express) {
 					data.theirDest = Number(data.theirDest.N);
 					data.outcome = data.outcome.S;
 				}
-				// console.log(data.warriors);
 
 				// Correct warrior data array
 				data.warriors = data.warriors.L
@@ -557,8 +591,8 @@ module.exports = function(app, express) {
 					// Convert all the values to non-object values
 					data.warriors[i].attack1 = data.warriors[i].attack1.S;
 					data.warriors[i].attack2 = data.warriors[i].attack2.S;
-					data.warriors[i].stars1 = data.warriors[i].stars1.N;
-					data.warriors[i].stars2 = data.warriors[i].stars2.N;
+					data.warriors[i].stars1 = data.warriors[i].stars1.S;
+					data.warriors[i].stars2 = data.warriors[i].stars2.S;
 					data.warriors[i].name = data.warriors[i].name.S;
 					data.warriors[i].viewed = data.warriors[i].viewed.BOOL;
 					data.warriors[i].lock1 = data.warriors[i].lock1.BOOL;
@@ -581,41 +615,58 @@ module.exports = function(app, express) {
 
 		// update the wars info only if its new
 
-		// war.opponent = req.body.opponent;
 		// war.exp = req.body.exp;
 		// war.ourScore = req.body.ourScore;
 		// war.theirScore = req.body.theirScore;
 		// war.ourDest = req.body.ourDest;
 		// war.TheirDest = req.body.TheirDest;
-		// war.start = req.body.start;
-		// war.size = req.body.size;
-		// war.warriors = req.body.warriors;
 
 		// if (req.body.outcome)
 		// 	war.outcome = req.body.outcome;
 		// if (req.body.img)
 		// 	war.img = req.body.img;
 
+		// console.log(req.body);
 
-		updateExpression = 'set #s = :s1, opponent = :o, size = :s2';
+		if (req.body.inProgress) {  // Then we only want to set a limit number of values
+			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';
+			expressionAttributeValues = {
+				':val1' : req.body.start,
+				':val2' : req.body.opponent,
+				':val3' : req.body.size,
+				':val4' : req.body.warriors
+			}
+		} else {
+			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4,\
+								exp = :val5, ourScore = :val6, theirScore = :val7,\
+								ourDest = :val8, theirDest = :val9';
+			expressionAttributeValues = {
+				':val1' : req.body.start,
+				':val2' : req.body.opponent,
+				':val3' : req.body.size,
+				':val4' : req.body.warriors,
+				':val5' : req.body.exp,
+				':val6' : req.body.ourScore,
+				':val7' : req.body.theirScore,
+				':val8' : req.body.ourDest,
+				':val9' : req.body.theirDest
+			}				
+		}
 
 		dynamodbDoc.update({
 			TableName: 'Wars',
 			Key:{
-				'createdAt': req.body.createdAt
+				'createdAt': req.body.createdAt.toString()
 			},
 			UpdateExpression: updateExpression,
 			ExpressionAttributeNames: {
 				'#s': 'start'
 			},
-			ExpressionAttributeValues:{
-				':s1' : req.body.start,
-				':o'  : req.body.opponent,
-				':s2' : req.body.size
-			}
+			ExpressionAttributeValues: expressionAttributeValues
 		}, function(err, data) {
 			if (err) {
-				res.json({
+				console.log(err);
+				return res.json({
 					success: false,
 					message: err.message
 				});

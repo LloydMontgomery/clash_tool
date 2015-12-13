@@ -18,7 +18,7 @@
 							</div>
 							<hr>
 							<div>
-								<select ng-disabled="war.inProgress" ng-init="war.setMaxStars()" ng-model="war.warData.ourScore" ng-class="war.inProgressClass">
+								<select ng-disabled="war.warData.inProgress" ng-init="war.setMaxStars()" ng-model="war.warData.ourScore" ng-class="war.inProgressClass">
 									<option value="" disabled selected>Stars</option>
 									<option ng-repeat="option in war.maxStars" value="{{option}}">{{ option }}</option>
 								</select>
@@ -26,7 +26,7 @@
 							<hr>
 							<div>
 								<div>
-									<input ng-disabled="war.inProgress" ng-model="war.warData.ourDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
+									<input ng-disabled="war.warData.inProgress" ng-model="war.warData.ourDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
 								</div>
 							</div>
 						</div>
@@ -37,19 +37,19 @@
 							</div>
 							<hr>
 							<div>
-								<div ng-if="war.inProgress">
+								<div ng-if="war.warData.inProgress">
 									VS
 								</div>
-								<div ng-if="!war.inProgress">
+								<div ng-if="!war.warData.inProgress">
 									{{ war.warData.ourScore }}
 								</div>
 							</div>
 							<hr>
 							<div>
-								<div ng-if="war.inProgress">
+								<div ng-if="war.warData.inProgress">
 									{{ war.warData.opponent }}
 								</div>
-								<div ng-if="!war.inProgress">
+								<div ng-if="!war.warData.inProgress">
 									{{ war.warData.ourDest }}
 								</div>
 							</div>
@@ -73,10 +73,10 @@
 							</div>
 							<hr>
 							<div>
-								<div ng-hide="war.inProgress">
+								<div ng-hide="war.warData.inProgress">
 									<input type="number" ng-model="war.warData.exp" class="form-control" placeholder="Exp Gained">
 								</div>
-								<div ng-show="war.inProgress">
+								<div ng-show="war.warData.inProgress">
 									{{ war.warStatus }}
 								</div>
 							</div>
@@ -104,7 +104,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-4 col-xs-12" ng-if="war.type != 'view' || !war.inProgress">
+				<div class="col-sm-4 col-xs-12" ng-if="war.type != 'view' || !war.warData.inProgress">
 					<div class ="col-xs-12">
 						<!-- Content for Create and Edit Page -->
 						<div ng-if="war.type != 'view'">
@@ -113,7 +113,7 @@
 							</div>
 							<hr>
 							<div>
-								<select ng-disabled="war.inProgress" ng-model="war.warData.theirScore" ng-class="war.inProgressClass">
+								<select ng-disabled="war.warData.inProgress" ng-model="war.warData.theirScore" ng-class="war.inProgressClass">
 									<option value="" disabled selected>Stars</option>
 									<option ng-repeat="option in war.maxStars" value="{{ option }}">{{ option }}</option>
 								</select>
@@ -121,7 +121,7 @@
 							<hr>
 							<div>
 								<div>
-									<input ng-disabled="war.inProgress" ng-model="war.warData.theirDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
+									<input ng-disabled="war.warData.inProgress" ng-model="war.warData.theirDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
 								</div>
 							</div>
 						</div>

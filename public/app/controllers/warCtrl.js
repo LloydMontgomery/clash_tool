@@ -110,7 +110,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		var timeSinceStart = (now.getTime() - vm.warData.start)
 		if (timeSinceStart > 169200000) {  // Over 47 hours since war started
 			vm.warStatus = 'War Over';  // Never displayed, but still the context
-			vm.inProgress = false;
+			vm.warData.inProgress = false;
 			vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
 			vm.inProgressClass = '';
 		} else if (timeSinceStart > 82800000) {  // Between 23 and 47 hours since beginning
@@ -121,7 +121,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.warStatsSubContainer = 'col-sm-offset-2 col-sm-4 col-xs-12';
 			else
 				vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
-			vm.inProgress = true;
+			vm.warData.inProgress = true;
 		} else {  // Between 0 and 23 hours since beginning
 			vm.warStatus = 'Preparation Day';
 			vm.inProgressClass = 'greyedOutText';
@@ -129,7 +129,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.warStatsSubContainer = 'col-sm-offset-2 col-sm-4 col-xs-12';
 			else
 				vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
-			vm.inProgress = true;
+			vm.warData.inProgress = true;
 		}
 	};
 
@@ -180,8 +180,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 					attack2: 'Ask',
 					lock1: false,
 					lock2: false,
-					stars1: 0,
-					stars2: 0,
+					stars1: '0',
+					stars2: '0',
 					viewed: false
 				});
 			};
@@ -257,8 +257,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 							attack2: 'Ask',
 							lock1: false,
 							lock2: false,
-							stars1: 0,
-							stars2: 0,
+							stars1: '0',
+							stars2: '0',
 							viewed: false
 						});
 					};
@@ -293,47 +293,42 @@ angular.module('warCtrl', ['warService', 'userService'])
 		});
 	};
 
-	// function to save the war
-	vm.saveWar = function() { 
-		vm.processing = true;
-		vm.message = '';
-		
-		// Cleanse the data before passing to the database
-		var warDataCleansed = {};
-
+	vm.validateFields = function() {
 		if (vm.warData.opponent == '') {
 			vm.message = 'Please set Opponent name';
-			return;
+			return false;
 		}
+
+		var warDataCleansed = {};
 
 		warDataCleansed.opponent = vm.warData.opponent;
 		warDataCleansed.size = vm.warData.size;
-		warDataCleansed.inProgress = vm.inProgress;
+		warDataCleansed.inProgress = vm.warData.inProgress;
 
 		// Date/Time needs to be set to UTC time
 		var now = new Date();
 		warDataCleansed.start = vm.warData.start + (now.getTimezoneOffset() * 60000);
 
-		if (vm.inProgress == false) {
+		if (vm.warData.inProgress == false) {
 			if (vm.warData.exp == undefined) {
 				vm.message = 'Please set Exp Gained';
-				return;
+				return false;
 			}
 			if (vm.warData.ourScore == undefined) {
 				vm.message = 'Please set Stars for SpaceMonkeys';
-				return;
+				return false;
 			}
 			if (vm.warData.theirScore == undefined) {
 				vm.message = 'Please set Stars for ' + warDataCleansed.opponent;
-				return;
+				return false;
 			}
 			if (vm.warData.ourDest == undefined) {
 				vm.message = 'Please set Destruction for Space Monkeys';
-				return;
+				return false;
 			}
 			if (vm.warData.theirDest == undefined) {
 				vm.message = 'Please set Destruction for ' + warDataCleansed.opponent;
-				return;
+				return false;
 			}
 
 			warDataCleansed.exp = vm.warData.exp;
@@ -352,17 +347,30 @@ angular.module('warCtrl', ['warService', 'userService'])
 				warDataCleansed.outcome = 'war-loss';
 			else {
 				vm.message = 'Please change Destruction of clans';
-				return;
+				return false;
 			}
 		}
 
 		for (var i = 0; i < vm.warData.warriors.length; i++) {
 			if (vm.warData.warriors[i].name == 'Pick Warrior') {
 				vm.message = 'Please Fill all Warrior Slots';
-				// return;
+				// return false;
 			}
 		};
 		warDataCleansed.warriors = vm.warData.warriors;
+
+		return warDataCleansed;
+	}
+
+	// function to save the war
+	vm.saveWar = function() { 
+		vm.processing = true;
+		vm.message = '';
+		
+		// Cleanse the data before passing to the database
+		var warDataCleansed = vm.validateFields();
+		if (!warDataCleansed)
+			return;
 
 		console.log(warDataCleansed);
 
@@ -377,16 +385,22 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.updateWar = function(print) {
-		// Set the time ahead again
-		vm.warData.start = (vm.warData.start + (now.getTimezoneOffset() * 60000));
+		vm.message = '';
+		
+		// Cleanse the data before passing to the database
+		var warDataCleansed = vm.validateFields();
+		if (!warDataCleansed)
+			return;
 
 		// call the userService function to update
 		War.update($routeParams.war_id, vm.warData) 
 			.then(function(data) {
 				vm.processing = false; // clear the form
 				// bind the message from our API to vm.message
-				if (print)
+				if (print) {
 					vm.message = data.data.message;
+					// setTimeout(alert("HIIII"), 2000);
+				}
 		});
 	};
 
@@ -416,7 +430,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 					Auth.getUser().then(function(data) {
 						vm.userInfo = data.data;
 						for (var i = 0; i < vm.warData.warriors.length; i++) {
-							console.log(vm.warData.warriors[i].name + ' ' + vm.userInfo.name);
 							if (vm.warData.warriors[i].name == vm.userInfo.name) {
 								vm.warData.warriors[i].viewed = true;
 								vm.updateWar(false);

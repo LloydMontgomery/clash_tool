@@ -84,10 +84,17 @@ angular.module('userCtrl', ['userService'])
 	var vm = this;
 	// variable to hide/show elements of the view // differentiates between create or edit pages 
 	vm.type = 'edit';
+	vm.processing = true;
 	// get the user data for the user you want to edit // $routeParams is the way we grab data from the URL 
 	User.get($routeParams.user_id)
-		.success(function(data) {
-			vm.userData = data;
+		.then(function(data) {
+			if (data.data.success) {
+				console.log(data.data.data);
+				vm.userData = data.data.data;
+				vm.processing = false;
+			} else {
+				vm.message = data.data.message;
+			}
 	});
 	// function to save the user
 	vm.saveUser = function() { 
