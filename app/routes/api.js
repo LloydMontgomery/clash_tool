@@ -208,7 +208,7 @@ module.exports = function(app, express) {
 
 		dynamodb.scan({
 			TableName : "Wars",
-			ProjectionExpression: "createdAt, #1, outcome, ourScore, theirScore, exp",
+			ProjectionExpression: "createdAt, #1, outcome, ourScore, theirScore, exp, img",
 			ExpressionAttributeNames: {
 				"#1": "start"
 			},
@@ -615,6 +615,8 @@ module.exports = function(app, express) {
 					data.theirDest = Number(data.theirDest.N);
 					data.outcome = data.outcome.S;
 				}
+				if (data.img)
+					data.img = data.img.S;
 
 				// Correct warrior data array
 				data.warriors = data.warriors.L
@@ -647,6 +649,16 @@ module.exports = function(app, express) {
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
 
+		// Remove these Pesky attributes
+		for (var i = 0; i < req.body.warriors.length; i++) {
+			delete req.body.warriors[i]['s1Opt1'];
+			delete req.body.warriors[i]['s1Opt2'];
+			delete req.body.warriors[i]['s1Opt3'];
+			delete req.body.warriors[i]['s2Opt1'];
+			delete req.body.warriors[i]['s2Opt2'];
+			delete req.body.warriors[i]['s2Opt3'];
+		};
+
 		if (req.body.inProgress) {  // Then we only want to set a limit number of values
 			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';
 			expressionAttributeValues = {
@@ -673,7 +685,7 @@ module.exports = function(app, express) {
 			}
 		}
 		if (req.body.img) {  // If there is an img to write, add it to the database
-			updateExpression = updateExpression + 'img = :val11';
+			updateExpression = updateExpression + ', img = :val11';
 			expressionAttributeValues[':val11'] = req.body.img;
 		};
 
@@ -695,6 +707,7 @@ module.exports = function(app, express) {
 					message: err.message
 				});
 			} else {
+
 				res.json({
 					success: true,
 					message: 'Successfully Updated War'

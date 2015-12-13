@@ -369,6 +369,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.message = 'Please set Destruction for ' + warDataCleansed.opponent;
 				return false;
 			}
+			if (vm.warData.img) {
+				warDataCleansed.img = vm.warData.img;
+			}
 
 			warDataCleansed.exp = vm.warData.exp;
 			warDataCleansed.ourDest = vm.warData.ourDest;
@@ -393,12 +396,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 		warDataCleansed.warriors = [];
 		for (var i = 0; i < vm.warData.warriors.length; i++) {
 			warDataCleansed.warriors.push(vm.warData.warriors[i]);
-			delete warDataCleansed.warriors[i]['s1Opt1'];
-			delete warDataCleansed.warriors[i]['s1Opt2'];
-			delete warDataCleansed.warriors[i]['s1Opt3'];
-			delete warDataCleansed.warriors[i]['s2Opt1'];
-			delete warDataCleansed.warriors[i]['s2Opt2'];
-			delete warDataCleansed.warriors[i]['s2Opt3'];
 			if (vm.warData.warriors[i].name == 'Pick Warrior') {
 				vm.message = 'Please Fill all Warrior Slots';
 				return false;
@@ -445,10 +442,51 @@ angular.module('warCtrl', ['warService', 'userService'])
 				// bind the message from our API to vm.message
 				if (print) {
 					vm.message = data.data.message;
-					// setTimeout(alert("HIIII"), 2000);
+					$location.path('/wars');
 				}
 		});
 	};
+
+	vm.uploadImg = function () {
+		vm.upload_file = function(file, signed_request, url){
+			var xhr = new XMLHttpRequest();
+			xhr.open("PUT", signed_request);
+			xhr.setRequestHeader('x-amz-acl', 'public-read');
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					vm.warData.img = url
+					// call the userService function to update
+					vm.warData.file = null;
+					vm.processingImg = false;
+					vm.updateWar(false);
+				} else {
+					vm.processingImg = false;
+					vm.updateWar(false);
+				}
+			};
+			xhr.onerror = function() {
+				alert("Could not upload file.");
+				processingImg = false;
+				vm.updateWar(false);
+			};
+			xhr.send(file);
+		}
+
+		if (vm.warData.file) {
+			vm.processingImg = true;
+			War.upload(vm.warData.file)
+				.then(function(data) {
+					vm.processing = false;
+					if (data.status == 200) {
+						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
+					} else {
+						vm.processingImg = false;
+						vm.updateWar(false);
+						vm.message = 'Could not get signed URL.';
+					}
+			});
+		}
+	}
 
 	vm.reloadPage = function () {
 		$route.reload();
@@ -507,29 +545,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 // 			// Set a few parameters that come back in the wrong format
 // 			vm.warData.start = new Date(vm.warData.start);
 // 	});
-
-// 	vm.upload_file = function(file, signed_request, url){
-// 		var xhr = new XMLHttpRequest();
-// 		xhr.open("PUT", signed_request);
-// 		xhr.setRequestHeader('x-amz-acl', 'public-read');
-// 		xhr.onload = function() {
-// 			if (xhr.status === 200) {
-// 				vm.warData.img = url
-// 				// call the userService function to update
-// 				War.update($routeParams.war_id, vm.warData) 
-// 					.success(function(data) {
-// 						vm.processing = false; // clear the form
-// 						// bind the message from our API to vm.message
-// 						vm.message = data.message;
-// 						$location.path('/wars');
-// 				});
-// 			}
-// 		};
-// 		xhr.onerror = function() {
-// 			alert("Could not upload file.");
-// 		};
-// 		xhr.send(file);
-// 	}
 
 // 	// function to save the war
 // 	vm.saveWar = function() { 

@@ -1,10 +1,10 @@
 /* Background is the Accent Colour */
-#login-container button, .warButton:hover, #userPage .btn:hover {
+#login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover {
 	background-color: #0680AF;
 }
 
 /* Text is Black */
-.warButton:hover, #userPage .btn:hover {
+.warButton:hover, #userPage .btn:hover, .imgButton:hover {
 	color: black !important;
 }
 

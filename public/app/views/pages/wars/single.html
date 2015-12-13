@@ -110,7 +110,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-4 col-xs-12" ng-if="war.type != 'view' && !war.warData.inProgress">
+				<div class="col-sm-4 col-xs-12" ng-if="!war.warData.inProgress">
 					<div class ="col-xs-12">
 						<!-- Content for Create and Edit Page -->
 						<div ng-if="war.type != 'view'">
@@ -145,6 +145,26 @@
 								{{ war.warData.theirDest }}
 							</div>
 						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Image Upload Div -->
+			<div ng-show="war.showWarriors" id="imgUpload" class="col-xs-12">
+				<div class="col-xs-12">
+					<div ng-if="!war.warData.inProgress && war.type == 'edit'" id="imgContainer">
+						<div ng-if="war.warData.img">
+							<img ng-src="{{war.warData.img}}">
+						</div>
+						<input type="file" fileread="war.warData.file"/>
+						<button ng-if="war.warData.file" ng-click="war.uploadImg()" class="btn btn-lg btn-block imgButton excludeAnimation">
+						<span ng-hide="war.processingImg"> Upload Image </span>
+						<span ng-show="war.processingImg">
+							<span class="glyphicon glyphicon-repeat spinner"></span> 
+						</span>
+						</button>
+					</div>
+					<div ng-if="!war.warData.inProgress && war.type == 'view'" id="imgContainer">
+						<img ng-src="{{war.warData.img.S}}">
 					</div>
 				</div>
 			</div>
@@ -254,10 +274,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- Image Upload Div -->
-			<div ng-show="war.showWarriors" id="warriorStats" class="col-xs-12">
-				
-			</div>
 			<!-- Message Div -->
 			<div class="row show-hide-message" ng-show="war.message">
 				<div class="col-sm-4 col-sm-offset-4 col-xs-12">
@@ -266,7 +282,6 @@
 					</div>
 				</div>
 			</div>
-			
 			<!-- Form Buttons -->
 			<div class="col-sm-offset-2 col-sm-6 col-xs-12">
 				<!-- Button to Show Warriors -->
