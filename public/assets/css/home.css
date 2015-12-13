@@ -1,7 +1,10 @@
 /* General Page CSS */
-.section {
-	min-height: 100vh;
+section {
+	min-height: 100vh !important;
 	width: 100vw;
+}
+
+.section {
 	padding-bottom: 20px;
 
 	text-align: center;
