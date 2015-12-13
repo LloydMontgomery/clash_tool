@@ -220,7 +220,7 @@
 										<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
 										<option ng-repeat="option in war.attackOptions2" ng-if="warrior.attack1 != option" value="{{ option }}">{{ option }}</option>
 									</select>
-									<div ng-if="war.type == 'view' && main.userInfo.name != warrior.name || warrior.lock2">
+									<div ng-if="war.type == 'view' && (main.userInfo.name != warrior.name || warrior.lock2)">
 										{{ warrior.attack2 }}
 									</div>
 								</div>
@@ -260,21 +260,24 @@
 					</div>
 				</div>
 			</div>
-			<!-- Button to Show Warriors -->
-			<div ng-click="war.genWarriorList()" ng-if="war.type == 'create'" 
-				ng-hide="war.showWarriors" class="row col-sm-offset-2 col-sm-6 col-xs-12">
-				<button class="btn btn-lg btn-block warButton">Warrior List</button>
-			</div>
-			<!-- Button to Submit War or Update War -->
-			<div ng-show="war.showWarriors && war.warriorsReady" 
-				class="row col-sm-offset-3 col-sm-6 col-xs-12">
-				<button ng-click="war.saveWar()" class="btn btn-lg btn-block warButton" ng-if="war.type == 'create'">Create War</button>
-				<button ng-click="war.updateWar(true)" class="btn btn-lg btn-block warButton" ng-if="war.type != 'create'">Update War</button>
+			
+			<!-- Form Buttons -->
+			<div class="col-sm-offset-2 col-sm-6 col-xs-12">
+				<!-- Button to Show Warriors -->
+				<div ng-click="war.genWarriorList()" ng-if="war.type == 'create'" ng-hide="war.showWarriors">
+					<button class="btn btn-lg btn-block warButton">Warrior List</button>
+				</div>
+				<!-- Button to Submit War or Update War -->
+				<div ng-show="war.showWarriors && war.warriorsReady">
+					<button ng-click="war.saveWar()" class="btn btn-lg btn-block warButton" ng-if="war.type == 'create'">Create War</button>
+					<button ng-click="war.updateWar(true)" class="btn btn-lg btn-block warButton" ng-if="war.type != 'create'">Update War</button>
+				</div>
 			</div>
 		</form>
 		<div ng-show="war.loadingPage" class="jumbotron text-center" ng-show="war.processing"> 
 			<span class="glyphicon glyphicon-repeat spinner"></span>
 			<p>Loading War...</p>
+		</div>
 		</div>
 	</div>
 </section>
