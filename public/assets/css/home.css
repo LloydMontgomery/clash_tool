@@ -35,24 +35,24 @@
 	height: 50px;
 }
 .routeButton {
-	height: 100px;
-	width: 150px;
+	height: 75px;
+	width: 125px;
 
 	margin: 3px 10px 20px 10px;
-	padding-top: 15px;
+	padding-top: -10px;
 
 	border: solid lightgrey 2px;
 	border-radius: 50% !important;
 
 	background-color: black;
 }
-.routeButton h4 {
-	margin-top: 25px;
+.routeButton h5 {
+	margin-top: 22px;
 	color: #0680AF !important;
 }
 #currentWarButton {
 	margin-top: -15px;
-	padding-top: 8px;
+	padding-top: 0;
 }
 
 /* About Section */
