@@ -34,7 +34,7 @@
 				<td>{{ person.admin.BOOL }}</td>
 				<td class="col-sm-3">
 					<a ng-href="/users/{{ person.name.S }}" class="btn btn-primary">Edit</a>
-					<a ng-click="user.deleteUser(person._id)" class="btn btn-danger"
+					<a ng-click="user.deleteUser(person.name.S)" class="btn btn-danger"
 						ng-if="main.userInfo.name == 'Zephyro'">Delete</a>
 				</td>
 			</tr>

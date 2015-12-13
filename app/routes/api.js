@@ -444,45 +444,64 @@ module.exports = function(app, express) {
 	// update the user with this id
 	// (accessed at PUT http://localhost:8080/api/users/:user_id) 
 	.put(function(req, res) {
-		// use our user model to find the user we want
-		User.findById(req.params.user_id, function(err, user) { 
-			if (err) res.send(err);
-			// update the users info only if its new
-			if (req.body.name) 
-				user.name = req.body.name;
-			if (req.body.username) 
-				user.id = req.body.id;
-			if (req.body.password)
-				user.password = req.body.password;
-			if (req.body.title)
-				user.title = req.body.title;
-			if (req.body.approved != null)
-				user.approved = req.body.approved;
-			if (req.body.inClan != null)
-				user.inClan = req.body.inClan;
-			if (req.body.admin != null)
-				user.admin = req.body.admin;
 
-			// save the user
-			user.save(function(err) {
-				if (err) res.send(err);
-				// return a message
+		updateExpression = 'set id = :val1, title = :val2, inClan = :val3, admin = :val4';
+		expressionAttributeValues = {
+			':val1' : req.body.id,
+			':val2' : req.body.title,
+			':val3' : req.body.inClan,
+			':val4' : req.body.admin
+		}
+
+		if (req.body.password) {  // Then we need to change the password
+			updateExpression = updateExpression + ', password = :val5';
+			expressionAttributeValues[':val5'] = bcrypt.hashSync(req.body.password);
+		}
+
+		dynamodbDoc.update({
+			TableName: 'Users',
+			Key:{
+				'name': req.body.name
+			},
+			UpdateExpression: updateExpression,
+			ExpressionAttributeValues: expressionAttributeValues
+		}, function(err, data) {
+			if (err) {
+				console.log(err);
+				return res.json({
+					success: false,
+					message: err.message
+				});
+			} else {
 				res.json({
 					success: true,
-					message: 'User updated!'
+					message: 'Successfully Updated User'
 				});
-			});
+			}
 		});
 	})
 
 	// Delete the user with this id
 	// (accessed at DELETE http://localhost:8080/api/users/:user_id)
 	.delete(function(req, res) {
-		User.remove({
-			_id: req.params.user_id
-		}, function(err, user) {
-			if (err) return res.send(err);
-			res.json({ message: 'Successfully deleted' });
+		dynamodbDoc.delete({
+			TableName: 'Users',
+			Key:{
+				'name': req.params.user_id
+			}
+		}, function(err, data) {
+			if (err) {
+				console.error('Unable to delete User. Error JSON:', JSON.stringify(err, null, 2));
+				return res.json({ 
+					success: false,
+					message: err.message
+				}); 
+			} else {
+				res.json({ 
+					success: true,
+					message: 'User Deleted' 
+				});
+			}
 		});
 	});
 
@@ -613,21 +632,6 @@ module.exports = function(app, express) {
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
 
-		// update the wars info only if its new
-
-		// war.exp = req.body.exp;
-		// war.ourScore = req.body.ourScore;
-		// war.theirScore = req.body.theirScore;
-		// war.ourDest = req.body.ourDest;
-		// war.TheirDest = req.body.TheirDest;
-
-		// if (req.body.outcome)
-		// 	war.outcome = req.body.outcome;
-		// if (req.body.img)
-		// 	war.img = req.body.img;
-
-		// console.log(req.body);
-
 		if (req.body.inProgress) {  // Then we only want to set a limit number of values
 			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';
 			expressionAttributeValues = {
@@ -639,7 +643,7 @@ module.exports = function(app, express) {
 		} else {
 			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4,\
 								exp = :val5, ourScore = :val6, theirScore = :val7,\
-								ourDest = :val8, theirDest = :val9';
+								ourDest = :val8, theirDest = :val9, outcome = :val10';
 			expressionAttributeValues = {
 				':val1' : req.body.start,
 				':val2' : req.body.opponent,
@@ -649,9 +653,14 @@ module.exports = function(app, express) {
 				':val6' : req.body.ourScore,
 				':val7' : req.body.theirScore,
 				':val8' : req.body.ourDest,
-				':val9' : req.body.theirDest
-			}				
+				':val9' : req.body.theirDest,
+				':val10': req.body.outcome
+			}
 		}
+		if (req.body.img) {  // If there is an img to write, add it to the database
+			updateExpression = updateExpression + 'img = :val11';
+			expressionAttributeValues[':val11'] = req.body.img;
+		};
 
 		dynamodbDoc.update({
 			TableName: 'Wars',
@@ -678,33 +687,6 @@ module.exports = function(app, express) {
 			}
 		});
 
-		// // use our war model to find the war we want
-		// War.findById(req.params.war_id, function(err, war) { 
-		// 	if (err) res.send(err);
-		// 	// update the wars info only if its new
-
-		// 	war.opponent = req.body.opponent;
-		// 	war.exp = req.body.exp;
-		// 	war.ourScore = req.body.ourScore;
-		// 	war.theirScore = req.body.theirScore;
-		// 	war.ourDest = req.body.ourDest;
-		// 	war.TheirDest = req.body.TheirDest;
-		// 	war.start = req.body.start;
-		// 	war.size = req.body.size;
-		// 	war.warriors = req.body.warriors;
-
-		// 	if (req.body.outcome)
-		// 		war.outcome = req.body.outcome;
-		// 	if (req.body.img)
-		// 		war.img = req.body.img;
-
-		// 	// save the war
-		// 	war.save(function(err) {
-		// 		if (err) res.send(err);
-		// 		// return a message
-		// 		res.json({ message: 'War updated!' });
-		// 	});
-		// });
 	});
 
 	return apiRouter;
