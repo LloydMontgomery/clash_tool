@@ -61,11 +61,11 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					// bind the users that come back to vm.users
 					vm.users = data.data.data;
 					vm.users.sort(function(a, b) {
-						return (a.dateJoined.N < b.dateJoined.N) ? -1 : (a.dateJoined.N > b.dateJoined.N) ? 1 : 0;
+						return (a.dateJoined < b.dateJoined) ? -1 : (a.dateJoined > b.dateJoined) ? 1 : 0;
 					});
 
 					for (var i = 0; i < vm.users.length; i++) {
-						vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined.N)); // Convert milliseconds to date object
+						vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined)); // Convert milliseconds to date object
 					};
 					
 				} else {

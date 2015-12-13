@@ -144,6 +144,11 @@ hr {
 	text-align: center;
 }
 
+#warriorStats .glyphicons-refresh {
+	padding-top: 18px;
+	padding-right: 18px;
+}
+
 #warSubmit {
 	margin: 0;
 }

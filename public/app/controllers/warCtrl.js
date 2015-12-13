@@ -101,6 +101,44 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.adjustWarriorList();
 	};
 
+	vm.setStars = function(auto, warrior, stars, option) {
+		if (auto || vm.type == 'edit') {
+			if (stars == 1) {  // Then this is stars1
+				if (option == '0') {  // User has selected the first star
+					warrior.stars1 = '0'
+					warrior.s1Opt1 = warrior.s1Opt2 = warrior.s1Opt3 = 'glyphicons-star-empty';
+				} else if (option == '1') {
+					warrior.stars1 = '1'
+					warrior.s1Opt1 = 'glyphicons-star';
+					warrior.s1Opt2 = warrior.s1Opt3 = 'glyphicons-star-empty';
+				} else if (option == '2') {
+					warrior.stars1 = '2'
+					warrior.s1Opt1 = warrior.s1Opt2 = 'glyphicons-star';
+					warrior.s1Opt3 = 'glyphicons-star-empty';
+				} else {  // option == '3'
+					warrior.stars1 = '3'
+					warrior.s1Opt1 = warrior.s1Opt2 = warrior.s1Opt3 = 'glyphicons-star';
+				}
+			} else {  // This is stars2
+				if (option == '0') {  // User has selected the first star
+					warrior.stars2 = '0'
+					warrior.s2Opt1 = warrior.s2Opt2 = warrior.s2Opt3 = 'glyphicons-star-empty';
+				} else if (option == '1') {
+					warrior.stars2 = '1'
+					warrior.s2Opt1 = 'glyphicons-star';
+					warrior.s2Opt2 = warrior.s2Opt3 = 'glyphicons-star-empty';
+				} else if (option == '2') {
+					warrior.stars2 = '2'
+					warrior.s2Opt1 = warrior.s2Opt2 = 'glyphicons-star';
+					warrior.s2Opt3 = 'glyphicons-star-empty';
+				} else {  // option == '3'
+					warrior.stars2 = '3'
+					warrior.s2Opt1 = warrior.s2Opt2 = warrior.s2Opt3 = 'glyphicons-star';
+				}
+			}
+		}
+	}
+
 	vm.checkDate = function() {
 		vm.warData.start = vm.warData.startDisplay.getTime();
 
@@ -112,6 +150,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		if (timeSinceStart > 169200000) {  // Over 47 hours since war started
 			vm.warStatus = 'War Over';  // Never displayed, but still the context
 			vm.warData.inProgress = false;
+			vm.attackClass = 'col-xs-12';
 			vm.warStatsSubContainer = 'col-sm-4 col-xs-12';
 			vm.inProgressClass = '';
 		} else if (timeSinceStart > 82800000) {  // Between 23 and 47 hours since beginning
@@ -244,7 +283,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		User.partial()
 			.then(function(data) {
-				vm.warData.users = data.data;
+				vm.warData.users = data.data.data;
 
 				if (vm.type == 'create') {
 
@@ -426,17 +465,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 				// Set Date-Time to be in the proper format
 				var now = new Date();
 
-				// temp2 = new Date(1450039080000);
-				// console.log(temp2);
-
-				// temp = new Date(vm.warData.start);
-				// console.log(temp);
-
 				vm.warData.start = (vm.warData.start - (now.getTimezoneOffset() * 60000));
 				vm.warData.startDisplay = new Date(vm.warData.start);
-
-				console.log('Initialization');
-				console.log(vm.warData.startDisplay);
 				
 				// Set Countdown timers
 				vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours

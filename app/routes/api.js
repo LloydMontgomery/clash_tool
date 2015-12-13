@@ -187,6 +187,13 @@ module.exports = function(app, express) {
 					data: data.Items
 				});
 			}
+			for (var i = 0; i < data.Items.length; i++) {
+				data.Items[i].name = data.Items[i].name.S;
+				data.Items[i].title = data.Items[i].title.S;
+				data.Items[i].inClan = data.Items[i].inClan.BOOL;
+				data.Items[i].dateJoined = data.Items[i].dateJoined.N;
+			};
+
 			res.json({
 				success: true,
 				message: 'Successfully returned all Users',
@@ -213,6 +220,20 @@ module.exports = function(app, express) {
 					message: 'Database Error. Try again later',
 				});
 			}
+
+			// data.createdAt = Number(data.createdAt.S);
+			// data.start = Number(data.start.N);
+			// data.size = Number(data.size.N);
+			// data.opponent = data.opponent.S;
+			// if (data.outcome) {
+			// 	data.exp = Number(data.exp.N);
+			// 	data.ourScore = data.ourScore.N;
+			// 	data.theirScore = data.theirScore.N;
+			// 	data.ourDest = Number(data.ourDest.N);
+			// 	data.theirDest = Number(data.theirDest.N);
+			// 	data.outcome = data.outcome.S;
+			// }
+
 			res.json({
 				success: true,
 				message: 'Successfully returned all Wars',
