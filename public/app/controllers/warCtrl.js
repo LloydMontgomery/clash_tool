@@ -289,51 +289,57 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		User.partial()
 			.then(function(data) {
-				vm.warData.users = data.data.data;
 
-				if (vm.type == 'create') {
+				if (data.data.success) {
+					vm.warData.users = data.data.data;
 
-					// Generate the warrior list templates
-					vm.warData.warriors = [];
-					for (var i = 0; i < vm.warData.size; i++) {
-						vm.warData.warriors.push({
-							name: 'Pick Warrior',
-							attack1: 'Pick',
-							attack2: 'Ask',
-							lock1: false,
-							lock2: false,
-							stars1: '0',
-							stars2: '0',
-							viewed: false
-						});
-					};
-					// call the warService function to retrieve last war
-					// War.last() 
-					// 	.then(function(data) {
-					// 		if (data.data) {
-					// 			if (vm.type != 'create') {
-					// 				for (var i = 0; i < data.data.warriors.length; i++) {
-					// 					vm.warData.warriors[i] = data.data.warriors[i]
-					// 				};
-					// 			} else {
-					// 				for (var i = 0; i < data.data.warriors.length; i++) {
-					// 					vm.warData.warriors[i].name = data.data.warriors[i].name
-					// 				};
-					// 			};
-					// 		}
-					// 		vm.adjustUsers();
-					// 		vm.adjustTargets();
-					// 		vm.warriorsReady = true;
-					// });
-					vm.adjustUsers();
-					vm.adjustTargets();
-					vm.warriorsReady = true;
+					if (vm.type == 'create') {
 
-				} else {  // vm.type == 'Edit' || vm.type == 'View'
-					vm.adjustUsers();
-					vm.adjustTargets();
-					vm.warriorsReady = true;
+						// Generate the warrior list templates
+						vm.warData.warriors = [];
+						for (var i = 0; i < vm.warData.size; i++) {
+							vm.warData.warriors.push({
+								name: 'Pick Warrior',
+								attack1: 'Pick',
+								attack2: 'Ask',
+								lock1: false,
+								lock2: false,
+								stars1: '0',
+								stars2: '0',
+								viewed: false
+							});
+						};
+						// call the warService function to retrieve last war
+						// War.last() 
+						// 	.then(function(data) {
+						// 		if (data.data) {
+						// 			if (vm.type != 'create') {
+						// 				for (var i = 0; i < data.data.warriors.length; i++) {
+						// 					vm.warData.warriors[i] = data.data.warriors[i]
+						// 				};
+						// 			} else {
+						// 				for (var i = 0; i < data.data.warriors.length; i++) {
+						// 					vm.warData.warriors[i].name = data.data.warriors[i].name
+						// 				};
+						// 			};
+						// 		}
+						// 		vm.adjustUsers();
+						// 		vm.adjustTargets();
+						// 		vm.warriorsReady = true;
+						// });
+						vm.adjustUsers();
+						vm.adjustTargets();
+						vm.warriorsReady = true;
+
+					} else {  // vm.type == 'Edit' || vm.type == 'View'
+						vm.adjustUsers();
+						vm.adjustTargets();
+						vm.warriorsReady = true;
+					}
+				} else {
+					// Database Error, decide what to do here
 				}
+				
 
 		});
 	};

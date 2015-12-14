@@ -195,6 +195,14 @@ module.exports = function(app, express) {
 					data: data.Items
 				});
 			}
+
+			if (data.Count == 0) {  // Then the query came back empty
+				return res.json({
+					success: false,
+					message: 'Query Failed.'
+				});
+			}
+
 			for (var i = 0; i < data.Items.length; i++) {
 				data.Items[i].name = data.Items[i].name.S;
 				data.Items[i].title = data.Items[i].title.S;
