@@ -109,7 +109,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.setStars = function(auto, warrior, stars, option) {
-		if (auto || vm.type == 'edit') {
+		if (auto || vm.type != 'view') {
 			if (stars == 1) {  // Then this is stars1
 				if (option == '0') {  // User has selected the first star
 					warrior.stars1 = '0'
