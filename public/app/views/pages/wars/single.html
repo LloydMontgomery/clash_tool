@@ -149,7 +149,8 @@
 				</div>
 			</div>
 			<!-- Image Upload Div -->
-			<div ng-show="!war.warData.inProgress" ng-show="war.showWarriors" id="imgUpload" class="col-sm-offset-3 col-sm-6 col-xs-12">
+			<div ng-show="(war.type == 'view' && war.warData.img) || (war.type != 'view' && !war.warData.inProgress)" 
+				ng-show="war.showWarriors" id="imgUpload" class="col-sm-offset-3 col-sm-6 col-xs-12">
 				<div class="col-xs-12">
 					<div ng-if="war.type == 'edit'" id="imgContainer">
 						<div ng-show="war.warData.img">
@@ -163,7 +164,7 @@
 							</span>
 						</button>
 					</div>
-					<div ng-if="war.type == 'view'" id="imgContainer">
+					<div ng-if="war.type == 'view' && war.warData.img" id="imgContainer">
 						<img ng-src="{{war.warData.img}}">
 					</div>
 				</div>
