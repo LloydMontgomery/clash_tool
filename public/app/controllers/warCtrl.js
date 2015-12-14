@@ -18,7 +18,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		now = new Date();
 		for (var i = 0; i < vm.wars.length; i++) {
-			vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+			// vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+			vm.wars[i].start = new Date(Number(vm.wars[i].start.N)); // Convert milliseconds to date object
 		};
 
 		// when all the wars come back, remove the processing variable
@@ -26,11 +27,13 @@ angular.module('warCtrl', ['warService', 'userService'])
 	});
 
 	vm.viewWar = function(start) {
-		$location.path('/wars/view/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		// $location.path('/wars/view/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		$location.path('/wars/view/' + Number(start));
 	}
 
 	vm.editWar = function(start) {
-		$location.path('/wars/edit/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		// $location.path('/wars/edit/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		$location.path('/wars/edit/' + Number(start));
 	}
 })
 
@@ -86,10 +89,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// Date and Time picker for war start
 	var now = new Date();
-	vm.now = now;
-	vm.nowMilli = now.getTime();
-	vm.backToNow = new Date(vm.nowMilli);
-	vm.offset = now.getTimezoneOffset();
 
 	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 	vm.warData.start = vm.warData.startDisplay.getTime();
@@ -352,9 +351,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		warDataCleansed.size = vm.warData.size;
 		warDataCleansed.inProgress = vm.warData.inProgress;
 
-		// Date/Time needs to be set to UTC time
-		var now = new Date();
-		warDataCleansed.start = vm.warData.start + (now.getTimezoneOffset() * 60000);
+		warDataCleansed.start = vm.warData.start;
 
 		if (vm.warData.inProgress == false) {
 			if (vm.warData.exp == undefined) {
@@ -506,12 +503,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 			.then(function(data) {
 				vm.warData = data.data.data;
 
-				// Set Date-Time to be in the proper format
-				vm.warData.testTime = new Date(1450066140000);
-				// vm.warData.testTime = vm.warData.testTime.toString();
-				var now = new Date();
-
-				vm.warData.start = (vm.warData.start - (now.getTimezoneOffset() * 60000));
 				vm.warData.startDisplay = new Date(vm.warData.start);
 				
 				// Set Countdown timers
