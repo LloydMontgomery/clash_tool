@@ -16,7 +16,7 @@
 				<input type="text" class="form-control" ng-model="user.userData.id" required>
 			</div>
 		</div>
-		<div ng-if="main.userInfo.name == 'Zephyro'" class="form-group">
+		<div ng-if="main.userInfo.name == user.userData.name || main.userInfo.name == 'Zephyro'" class="form-group">
 			<label class="col-sm-2 control-label">Password</label>
 			<div class="col-sm-6">
 				<input type="password" class="form-control" ng-model="user.userData.password">
