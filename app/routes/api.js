@@ -72,20 +72,19 @@ module.exports = function(app, express) {
 				});
 			}
 
-			console.log(data.Items[0]);
-			if (!data.Items[0].inClan.BOOL) {
-				return res.json({
-					success: false,
-					message: 'Waiting on Admin to Approve'
-				});
-			}
-
 			if (data.Count == 0) {  // Then the username must have been incorrect
 				return res.json({
 					success: false,
 					message: 'Authentication failed.'
 				});
 			} else {
+
+				if (!data.Items[0].inClan.BOOL) {
+					return res.json({
+						success: false,
+						message: 'Waiting on Admin to Approve'
+					});
+				}
 
 				// check if password matches
 				var validPassword = bcrypt.compareSync(req.body.password, data.Items[0].password.S);
@@ -104,7 +103,8 @@ module.exports = function(app, express) {
 						inClan: data.Items[0].inClan.BOOL,
 						admin: data.Items[0].admin.BOOL
 					}, TOKEN_SECRET,
-					{ expiresIn: 7200 // expires in 2 hours 
+					{ expiresIn: 172800 // expires in 2 days 
+					// { expiresIn: 720 // expires in 2 hours 
 					// { expiresIn: 10 // expires in 10 seconds (This is for debugging)
 					});
 					// Save this for later

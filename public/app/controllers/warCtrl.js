@@ -86,8 +86,16 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// Date and Time picker for war start
 	var now = new Date();
+	vm.now = now;
+	vm.nowMilli = now.getTime();
+	vm.backToNow = new Date(vm.nowMilli);
+	vm.offset = now.getTimezoneOffset();
+
 	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 	vm.warData.start = vm.warData.startDisplay.getTime();
+
+
+	console.log(vm.warData.startDisplay);
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
@@ -499,6 +507,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.warData = data.data.data;
 
 				// Set Date-Time to be in the proper format
+				vm.warData.testTime = new Date(1450066140000);
+				// vm.warData.testTime = vm.warData.testTime.toString();
 				var now = new Date();
 
 				vm.warData.start = (vm.warData.start - (now.getTimezoneOffset() * 60000));

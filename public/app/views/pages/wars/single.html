@@ -5,6 +5,14 @@
 			<h3 ng-if="war.type == 'edit'">Update War Log</h3>
 			<h3 ng-if="war.type == 'view'">View War</h3>
 		</div>
+		TESTING PURPOSES:
+		<br> Database Time (UTC): {{ war.warData.testTime }} 
+		<br> Database Time (UTC) To String: {{ war.warData.testTime.toString() }} 
+		<br> Local Time: {{ war.now }} 
+		<br> Local Time toString: {{ war.now.toString() }} 
+		<br> Local Time Milli: {{ war.nowMilli }} 
+		<br> Local Time BackToNow: {{ war.backToNow }} 
+		<br> UTC Offest: {{ war.offset }} 
 		<hr>
 		<form ng-show="!war.loadingPage">
 			<!-- War Stats -->
