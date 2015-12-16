@@ -29,9 +29,8 @@ angular.module('authService', [])
 	// checks if there is a local token 
 	authFactory.isLoggedIn = function() {
 		var token = AuthToken.getToken()
-		if (token) {
+		if (token)
 			return true;
-		}
 		else
 			return false;
 	};
@@ -62,8 +61,14 @@ angular.module('authService', [])
 	// if a token is passed, set the token
 	// if there is no token, clear it from local storage 
 	authTokenFactory.setToken = function(token) {
-		if (token)
-			$window.localStorage.setItem('token', token);
+		if (token) {
+			try {
+				$window.localStorage.setItem('token', token);
+			}
+			catch(err) {
+				alert('Sorry, this website currently does not currently support Private Mode in Safari');
+			}
+		}
 		else
 			$window.localStorage.removeItem('token');
 	};
@@ -82,16 +87,15 @@ angular.module('authService', [])
 		// if the token exists, add it to the header as x-access-token
 		if (token) 
 			config.headers['x-access-token'] = token;
-		return config; 
+		return config;
 	};
 	// happens on response errors
 	interceptorFactory.responseError = function(response) {
 		// if our server returns a 403 forbidden response
 		if (response.status == 403) {
 			// Delete the token if it has expired
-			if (response.data.error.name == 'TokenExpiredError') {
+			if (response.data.error.name == 'TokenExpiredError')
 				AuthToken.setToken();
-			}
 			$location.path('/');
 		}
 		// return the errors from the server as a promise
