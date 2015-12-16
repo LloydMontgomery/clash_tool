@@ -29,6 +29,10 @@
 			<div class="alert alert-danger" ng-show="auth.error">
 				{{ auth.error }}
 			</div>
+			<!-- ERROR MESSAGE -->
+			<div class="alert alert-success" ng-show="auth.message">
+				{{ auth.message }}
+			</div>
 			<!-- LOGIN BUTTON -->
 			<button type="submit" class="btn btn-block btn-primary">
 				<span ng-if="!auth.processing && !auth.isRegistering">Login</span>
@@ -38,7 +42,7 @@
 				</span>
 			</button>
 			<div slide-toggle="#id">
-				<div id="register" slide-toggle="#pconfirm" ng-click="auth.isRegistering = !auth.isRegistering"> 
+				<div ng-click="auth.isRegistering = !auth.isRegistering" id="register" slide-toggle="#pconfirm"> 
 					<a ng-show="!auth.isRegistering"> Join the Clan </a>
 					<a ng-show="auth.isRegistering"> Back to Login </a>
 				</div>

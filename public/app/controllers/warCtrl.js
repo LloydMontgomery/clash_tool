@@ -18,7 +18,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		now = new Date();
 		for (var i = 0; i < vm.wars.length; i++) {
-			vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+			// vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+			vm.wars[i].start = new Date(Number(vm.wars[i].start.N)); // Convert milliseconds to date object
 		};
 
 		// when all the wars come back, remove the processing variable
@@ -26,11 +27,13 @@ angular.module('warCtrl', ['warService', 'userService'])
 	});
 
 	vm.viewWar = function(start) {
-		$location.path('/wars/view/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		// $location.path('/wars/view/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		$location.path('/wars/view/' + Number(start));
 	}
 
 	vm.editWar = function(start) {
-		$location.path('/wars/edit/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		// $location.path('/wars/edit/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
+		$location.path('/wars/edit/' + Number(start));
 	}
 })
 
@@ -86,8 +89,12 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// Date and Time picker for war start
 	var now = new Date();
+
 	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 	vm.warData.start = vm.warData.startDisplay.getTime();
+
+
+	console.log(vm.warData.startDisplay);
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
@@ -102,7 +109,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.setStars = function(auto, warrior, stars, option) {
-		if (auto || vm.type == 'edit') {
+		if (auto || vm.type != 'view') {
 			if (stars == 1) {  // Then this is stars1
 				if (option == '0') {  // User has selected the first star
 					warrior.stars1 = '0'
@@ -282,51 +289,57 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		User.partial()
 			.then(function(data) {
-				vm.warData.users = data.data.data;
 
-				if (vm.type == 'create') {
+				if (data.data.success) {
+					vm.warData.users = data.data.data;
 
-					// Generate the warrior list templates
-					vm.warData.warriors = [];
-					for (var i = 0; i < vm.warData.size; i++) {
-						vm.warData.warriors.push({
-							name: 'Pick Warrior',
-							attack1: 'Pick',
-							attack2: 'Ask',
-							lock1: false,
-							lock2: false,
-							stars1: '0',
-							stars2: '0',
-							viewed: false
-						});
-					};
-					// call the warService function to retrieve last war
-					// War.last() 
-					// 	.then(function(data) {
-					// 		if (data.data) {
-					// 			if (vm.type != 'create') {
-					// 				for (var i = 0; i < data.data.warriors.length; i++) {
-					// 					vm.warData.warriors[i] = data.data.warriors[i]
-					// 				};
-					// 			} else {
-					// 				for (var i = 0; i < data.data.warriors.length; i++) {
-					// 					vm.warData.warriors[i].name = data.data.warriors[i].name
-					// 				};
-					// 			};
-					// 		}
-					// 		vm.adjustUsers();
-					// 		vm.adjustTargets();
-					// 		vm.warriorsReady = true;
-					// });
-					vm.adjustUsers();
-					vm.adjustTargets();
-					vm.warriorsReady = true;
+					if (vm.type == 'create') {
 
-				} else {  // vm.type == 'Edit' || vm.type == 'View'
-					vm.adjustUsers();
-					vm.adjustTargets();
-					vm.warriorsReady = true;
+						// Generate the warrior list templates
+						vm.warData.warriors = [];
+						for (var i = 0; i < vm.warData.size; i++) {
+							vm.warData.warriors.push({
+								name: 'Pick Warrior',
+								attack1: 'Pick',
+								attack2: 'Ask',
+								lock1: false,
+								lock2: false,
+								stars1: '0',
+								stars2: '0',
+								viewed: false
+							});
+						};
+						// call the warService function to retrieve last war
+						// War.last() 
+						// 	.then(function(data) {
+						// 		if (data.data) {
+						// 			if (vm.type != 'create') {
+						// 				for (var i = 0; i < data.data.warriors.length; i++) {
+						// 					vm.warData.warriors[i] = data.data.warriors[i]
+						// 				};
+						// 			} else {
+						// 				for (var i = 0; i < data.data.warriors.length; i++) {
+						// 					vm.warData.warriors[i].name = data.data.warriors[i].name
+						// 				};
+						// 			};
+						// 		}
+						// 		vm.adjustUsers();
+						// 		vm.adjustTargets();
+						// 		vm.warriorsReady = true;
+						// });
+						vm.adjustUsers();
+						vm.adjustTargets();
+						vm.warriorsReady = true;
+
+					} else {  // vm.type == 'Edit' || vm.type == 'View'
+						vm.adjustUsers();
+						vm.adjustTargets();
+						vm.warriorsReady = true;
+					}
+				} else {
+					// Database Error, decide what to do here
 				}
+				
 
 		});
 	};
@@ -344,9 +357,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		warDataCleansed.size = vm.warData.size;
 		warDataCleansed.inProgress = vm.warData.inProgress;
 
-		// Date/Time needs to be set to UTC time
-		var now = new Date();
-		warDataCleansed.start = vm.warData.start + (now.getTimezoneOffset() * 60000);
+		warDataCleansed.start = vm.warData.start;
 
 		if (vm.warData.inProgress == false) {
 			if (vm.warData.exp == undefined) {
@@ -498,10 +509,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 			.then(function(data) {
 				vm.warData = data.data.data;
 
-				// Set Date-Time to be in the proper format
-				var now = new Date();
-
-				vm.warData.start = (vm.warData.start - (now.getTimezoneOffset() * 60000));
 				vm.warData.startDisplay = new Date(vm.warData.start);
 				
 				// Set Countdown timers

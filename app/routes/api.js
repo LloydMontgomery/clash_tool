@@ -75,9 +75,16 @@ module.exports = function(app, express) {
 			if (data.Count == 0) {  // Then the username must have been incorrect
 				return res.json({
 					success: false,
-					message: 'Authentication failed. User not found.'
+					message: 'Authentication failed.'
 				});
 			} else {
+
+				if (!data.Items[0].inClan.BOOL) {
+					return res.json({
+						success: false,
+						message: 'Waiting on Admin to Approve'
+					});
+				}
 
 				// check if password matches
 				var validPassword = bcrypt.compareSync(req.body.password, data.Items[0].password.S);
@@ -85,7 +92,7 @@ module.exports = function(app, express) {
 				if (!validPassword) {
 					res.json({
 						success: false,
-						message: 'Authentication failed. Wrong password.'
+						message: 'Authentication failed.'
 					});
 				} else {
 
@@ -96,7 +103,8 @@ module.exports = function(app, express) {
 						inClan: data.Items[0].inClan.BOOL,
 						admin: data.Items[0].admin.BOOL
 					}, TOKEN_SECRET,
-					{ expiresIn: 7200 // expires in 2 hours 
+					{ expiresIn: 172800 // expires in 2 days 
+					// { expiresIn: 720 // expires in 2 hours 
 					// { expiresIn: 10 // expires in 10 seconds (This is for debugging)
 					});
 					// Save this for later
@@ -187,6 +195,14 @@ module.exports = function(app, express) {
 					data: data.Items
 				});
 			}
+
+			if (data.Count == 0) {  // Then the query came back empty
+				return res.json({
+					success: false,
+					message: 'Query Failed.'
+				});
+			}
+
 			for (var i = 0; i < data.Items.length; i++) {
 				data.Items[i].name = data.Items[i].name.S;
 				data.Items[i].title = data.Items[i].title.S;
