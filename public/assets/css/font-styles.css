@@ -18,11 +18,11 @@
 h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
 #warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton
 {
-    font-family: "Supercell-Magic";
+    font-family: "Supercell-Magic" !important;
     color: black;
 }
 
-#clan-description, .rules-container, .member-panel, .panel-group, .help-tip, #band a, #band button, #warriorStats .attacks
+#clan-description, #about-section, #rules-section, .member-panel, .panel-group, .help-tip, #band a, #band button, #warriorStats .attacks
 {
-	font-family: "QuincyCF-Black";
+	font-family: "QuincyCF-Black" !important;
 }

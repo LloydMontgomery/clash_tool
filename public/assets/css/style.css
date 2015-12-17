@@ -49,11 +49,6 @@ main {
 
 
 
-.help-tip
-{
-	margin-top: 20px;
-}
-
 #navigation-buttons .btn
 {
 	margin: 5px 0px 5px 0px;
@@ -66,24 +61,9 @@ main {
 	width: 80%;
 }
 
-a
-{
-	color: black;
-}
-
 .greyedOutText {
 	color: #eaeaea !important;
 }
-
-
-/* HEADER ===================== */
-
-
-
-/* FOOTER ===================== */
-
-
-
 
 
 

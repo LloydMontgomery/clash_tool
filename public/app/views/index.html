@@ -48,7 +48,7 @@
 
 <body ng-app="ClashTool" ng-controller="mainController as main">
 	<!-- NAVIGATION -->
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
@@ -58,49 +58,28 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Brand</a>
+				<a class="navbar-brand" href="/">Space Monkeys</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
+					<li><a id="navHome" href="/">Home</a></li>
+					<li ng-if="main.loggedIn" class="excludeAnimation"><a href="/users" id="navUsers">Users</a></li>
+					<li ng-if="main.loggedIn" class="excludeAnimation"><a href="/wars" id="navWars">Wars</a></li>
 					<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><a href="#">Action</a></li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else here</a></li>
-						<li role="separator" class="divider"></li>
-						<li><a href="#">Separated link</a></li>
-					</ul>
+						<a id="navProfile" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Account <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Profile</a></li>
+							<li role="separator" class="divider"></li>
+							<li ng-show="!main.loggedIn"><a href="/login">Login</a></li>
+							<li ng-show="main.loggedIn"><a ng-click="main.doLogout()">Sign Out</a></li>
+						</ul>
 					</li>
 				</ul>
 			</div><!-- /.navbar-collapse -->
 		</div><!-- /.container-fluid -->
 	</nav>
-	<!-- <nav class="navbar navbar-fixed-top" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<a href="/" class="navbar-brand">
-					Space Monkeys
-				</a>
-			</div>
-			<div id="navbar-links" class="pull-right">
-				<span ng-show="main.loggedIn">
-					<a ng-click="main.doLogout()">Logout</a>
-				</span>
-				<span ng-show="!main.loggedIn && main.route != '/login'">
-					<a href="/login">Login</a>
-				</span>
-				<span ng-show="!main.loggedIn && main.route == '/login'">
-					<a href="/">Main Page</a>
-				</span>
-			</div>
-		</div>
-	</nav> -->
 
 	<main> 
 		<!-- ANGULAR VIEWS --> 

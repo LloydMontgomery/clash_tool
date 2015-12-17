@@ -9,39 +9,39 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
+
+	var setActive = function(active) {
+
+		if (vm.loggedIn) {
+			document.getElementById('navUsers').className = '';
+			document.getElementById('navWars').className = '';
+		}
+		document.getElementById('navHome').className = '';
+		document.getElementById('navProfile').className = '';
+		document.getElementById(active).className = 'active';
+	}
+
+	var checkRoutePermission = function(route) {
+		if (route == '/')  // home
+			setActive('navHome');
+		else if (route == '/login')
+			setActive('navProfile');
+		else {
+			if (vm.userInfo && vm.userInfo.admin == true) {  // Then they have permissions to go to other pages
+				if (route == '/users')
+					setActive('navUsers');
+				else if (route == '/wars')
+					setActive('navWars');
+			}
+			else {
+				setActive('navHome');
+				$location.path('/');
+			}
+		}
+	}
 	
 	// check to see if a user is logged in on every request
-	$rootScope.$on('$routeChangeStart', function() {
-
-		vm.route = $location.path();
-
-		var checkRoutePermission = function(route) {
-			if (route == '/' || route == '/login' ){
-				// Do Something
-			} else {
-				if (vm.userInfo.admin == true) {
-					// Do Something
-				}
-				else
-					$location.path('/');
-			}
-			
-		}
-
-		vm.route = $location.path();
-
-		var checkRoutePermission = function(route) {
-			if (route == '/' || route == '/login' ){
-				// Do Something
-			} else {
-				if (vm.userInfo.admin == true) {
-					// Do Something
-				}
-				else
-					$location.path('/');
-			}
-			
-		}
+	var routeChange = function() {
 
 		vm.loggedIn = Auth.isLoggedIn();
 
@@ -51,6 +51,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				vm.userInfo = data.data;
 				checkRoutePermission($location.path());
 			});
+		} else {
+			checkRoutePermission($location.path());
 		}
 
 		// Grab all users & wars if routing to main page
@@ -92,6 +94,10 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				}
 			});
 		}
+	};
+
+	$rootScope.$on('$routeChangeStart', function () {
+		routeChange();
 	});
 	
 	vm.currentWar = function(start) {

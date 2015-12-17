@@ -1,20 +1,20 @@
 /* Background is the Accent Colour */
-#login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover {
-	background-color: #0680AF;
-}
-
-/* Text is Black */
-.warButton:hover, #userPage .btn:hover, .imgButton:hover {
-	color: black !important;
-}
-
-/* Text is the Accent Colour */
-footer a, .accentBlue {
-	color: #0680AF !important;
+#login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover, .active {
+	background-color: #0680AF !important;
 }
 
 /* Background is Black */
 footer {
-	background-color: black;
+	background-color: black !important;
+}
+
+/* Text is Black */
+.warButton:hover, #userPage .btn:hover, .imgButton:hover, .active {
+	color: black !important;
+}
+
+/* Text is the Accent Colour */
+footer a, .accentBlue, nav a {
+	color: #0680AF !important;
 }
 
