@@ -66,7 +66,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/" data-toggle="collapse" data-target=".navbar-collapse.in" id="navHome">Home</a></li>
 					<li ng-show="main.userInfo.admin" class="excludeAnimation"><a href="/users" data-toggle="collapse" data-target=".navbar-collapse.in" id="navUsers">Users</a></li>
-					<li class="excludeAnimation"><a href="/wars" data-toggle="collapse" data-target=".navbar-collapse.in" id="navWars">Wars</a></li>
+					<li ng-show="main.loggedIn" class="excludeAnimation"><a href="/wars" data-toggle="collapse" data-target=".navbar-collapse.in" id="navWars">Wars</a></li>
 					<li class="dropdown">
 						<a id="navProfile" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Account <span class="caret"></span></a>
 						<ul class="dropdown-menu">
