@@ -1,6 +1,11 @@
 /* Background is the Accent Colour */
-#login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover, .active {
+#login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover, .active, .icon-bar {
 	background-color: #0680AF !important;
+}
+
+/* Border colour is the Accent Colour */
+#navButton {
+	border-color: #0680AF !important;
 }
 
 /* Background is Black */
