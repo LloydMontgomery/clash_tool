@@ -2,7 +2,7 @@
 	<div class="page-header"> 
 		<h1>
 			Wars
-			<a href="/wars/create" class="btn btn-default"> 
+			<a href="/wars/create" ng-if="main.userInfo.admin" class="btn btn-default"> 
 				<span class="glyphicon glyphicon-plus"></span> 
 				New War Log
 			</a> 
@@ -30,7 +30,7 @@
 				<td><a ng-href="{{ battle.img.S }}" target="_blank">Overview</a></td>
 				<td class="col-xm-2">
 					<a ng-href="/wars/view/{{ battle.createdAt.S }}" class="btn btn-primary">View</a>
-					<a ng-href="/wars/edit/{{ battle.createdAt.S }}" class="btn btn-danger">Edit</a>
+					<a ng-href="/wars/edit/{{ battle.createdAt.S }}" ng-if="main.userInfo.admin" class="btn btn-danger">Edit</a>
 				</td>
 			</tr>
 		</tbody>

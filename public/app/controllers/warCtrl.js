@@ -93,9 +93,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 	vm.warData.start = vm.warData.startDisplay.getTime();
 
-
-	console.log(vm.warData.startDisplay);
-
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {

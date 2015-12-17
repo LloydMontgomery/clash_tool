@@ -62,18 +62,18 @@
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a id="navHome" href="/">Home</a></li>
-					<li ng-if="main.loggedIn" class="excludeAnimation"><a href="/users" id="navUsers">Users</a></li>
-					<li ng-if="main.loggedIn" class="excludeAnimation"><a href="/wars" id="navWars">Wars</a></li>
+					<li><a href="/" data-toggle="collapse" data-target=".navbar-collapse.in" id="navHome">Home</a></li>
+					<li ng-show="main.userInfo.admin" class="excludeAnimation"><a href="/users" data-toggle="collapse" data-target=".navbar-collapse.in" id="navUsers">Users</a></li>
+					<li class="excludeAnimation"><a href="/wars" data-toggle="collapse" data-target=".navbar-collapse.in" id="navWars">Wars</a></li>
 					<li class="dropdown">
 						<a id="navProfile" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Account <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">Profile</a></li>
+							<li><a href="#">Profile (Coming Soon!)</a></li>
 							<li role="separator" class="divider"></li>
-							<li ng-show="!main.loggedIn"><a href="/login">Login</a></li>
-							<li ng-show="main.loggedIn"><a ng-click="main.doLogout()">Sign Out</a></li>
+							<li ng-show="!main.loggedIn"><a href="/login" data-toggle="collapse" data-target=".navbar-collapse.in">Login</a></li>
+							<li ng-show="main.loggedIn"><a ng-click="main.doLogout()" data-toggle="collapse" data-target=".navbar-collapse.in">Sign Out</a></li>
 						</ul>
 					</li>
 				</ul>

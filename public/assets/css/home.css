@@ -19,6 +19,7 @@ section {
 
 #intro-section #gf-logo {
 	margin-top: 40px;
+	min-height: 150px;
 	max-height: 300px;
 	height: 40vh;
 }

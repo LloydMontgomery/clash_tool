@@ -26,12 +26,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			setActive('navHome');
 		else if (route == '/login')
 			setActive('navProfile');
+		else if (route == '/wars')
+			setActive('navWars');
 		else {
 			if (vm.userInfo && vm.userInfo.admin == true) {  // Then they have permissions to go to other pages
 				if (route == '/users')
 					setActive('navUsers');
-				else if (route == '/wars')
-					setActive('navWars');
 			}
 			else {
 				setActive('navHome');
