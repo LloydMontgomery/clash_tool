@@ -26,7 +26,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			setActive('navHome');
 		else if (route == '/login')
 			setActive('navProfile');
-		else if (route == '/wars')
+		else if (route.indexOf('/wars') > -1)
 			setActive('navWars');
 		else {
 			if (vm.userInfo && vm.userInfo.admin == true) {  // Then they have permissions to go to other pages

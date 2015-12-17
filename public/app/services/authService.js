@@ -93,6 +93,7 @@ angular.module('authService', [])
 	interceptorFactory.responseError = function(response) {
 		// if our server returns a 403 forbidden response
 		if (response.status == 403) {
+			console.log(response.data);
 			// Delete the token if it has expired
 			if (response.data.error.name == 'TokenExpiredError')
 				AuthToken.setToken();

@@ -308,6 +308,82 @@ module.exports = function(app, express) {
 		});
 	});
 
+	apiRouter.route('/wars/:war_id')
+	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
+	.get(function(req, res) {
+		dynamodb.query({
+			TableName : 'Wars',
+			KeyConditionExpression: '#1 = :createdAt',
+			ExpressionAttributeNames: {
+				'#1': 'createdAt'
+			},
+			ExpressionAttributeValues: {
+				':createdAt': { 'S': req.params.war_id }
+			},
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				console.log(err.message);
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: err
+				});
+			}
+
+			if (data.Count == 0) {  // Then the username must have been incorrect
+				return res.json({
+					success: false,
+					message: 'Query Failed. War not found.'
+				});
+			} else {
+
+				// Get the only item we want out of the array
+				data = data.Items[0];
+
+				// Convert all the values to non-object values
+				data.createdAt = Number(data.createdAt.S);
+				data.start = Number(data.start.N);
+				data.size = Number(data.size.N);
+				data.opponent = data.opponent.S;
+				if (data.outcome) {
+					data.exp = Number(data.exp.N);
+					data.ourScore = data.ourScore.N;
+					data.theirScore = data.theirScore.N;
+					data.ourDest = Number(data.ourDest.N);
+					data.theirDest = Number(data.theirDest.N);
+					data.outcome = data.outcome.S;
+				}
+				if (data.img)
+					data.img = data.img.S;
+
+				// Correct warrior data array
+				data.warriors = data.warriors.L
+				for (var i = 0; i < data.warriors.length; i++) {
+					// Strip L
+					data.warriors[i] = data.warriors[i].M;
+
+					// Convert all the values to non-object values
+					data.warriors[i].attack1 = data.warriors[i].attack1.S;
+					data.warriors[i].attack2 = data.warriors[i].attack2.S;
+					data.warriors[i].stars1 = data.warriors[i].stars1.S;
+					data.warriors[i].stars2 = data.warriors[i].stars2.S;
+					data.warriors[i].name = data.warriors[i].name.S;
+					data.warriors[i].viewed = data.warriors[i].viewed.BOOL;
+					data.warriors[i].lock1 = data.warriors[i].lock1.BOOL;
+					data.warriors[i].lock2 = data.warriors[i].lock2.BOOL;
+
+				};
+
+				res.json({
+					success: true,
+					message: 'Successfully returned all Wars',
+					data: data
+				});
+			}
+		});
+	})
+
 	// apiRouter.route('/lastWar')
 	// // get the last war (accessed at GET http://localhost:8080/api/lastWar)
 	// .get(function(req, res) {
@@ -350,7 +426,7 @@ module.exports = function(app, express) {
 			next();
 		} else {
 			return res.status(403).send({
-				error: err,
+				error: {},  // This is here for code in AuthService, DO NOT REMOVE
 				success: false,
 				message: 'Failed to authenticate token.'
 			});
@@ -586,80 +662,6 @@ module.exports = function(app, express) {
 
 	// SPECIFIC WARS //
 	apiRouter.route('/wars/:war_id')
-	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
-	.get(function(req, res) {
-		dynamodb.query({
-			TableName : 'Wars',
-			KeyConditionExpression: '#1 = :createdAt',
-			ExpressionAttributeNames: {
-				'#1': 'createdAt'
-			},
-			ExpressionAttributeValues: {
-				':createdAt': { 'S': req.params.war_id }
-			},
-			Limit : 1000
-		}, function(err, data) {
-			if (err) { 
-				console.log(err.message);
-				return res.json({
-					success: false,
-					message: 'Database Error. Try again later.',
-					data: err
-				});
-			}
-
-			if (data.Count == 0) {  // Then the username must have been incorrect
-				return res.json({
-					success: false,
-					message: 'Query Failed. War not found.'
-				});
-			} else {
-
-				// Get the only item we want out of the array
-				data = data.Items[0];
-
-				// Convert all the values to non-object values
-				data.createdAt = Number(data.createdAt.S);
-				data.start = Number(data.start.N);
-				data.size = Number(data.size.N);
-				data.opponent = data.opponent.S;
-				if (data.outcome) {
-					data.exp = Number(data.exp.N);
-					data.ourScore = data.ourScore.N;
-					data.theirScore = data.theirScore.N;
-					data.ourDest = Number(data.ourDest.N);
-					data.theirDest = Number(data.theirDest.N);
-					data.outcome = data.outcome.S;
-				}
-				if (data.img)
-					data.img = data.img.S;
-
-				// Correct warrior data array
-				data.warriors = data.warriors.L
-				for (var i = 0; i < data.warriors.length; i++) {
-					// Strip L
-					data.warriors[i] = data.warriors[i].M;
-
-					// Convert all the values to non-object values
-					data.warriors[i].attack1 = data.warriors[i].attack1.S;
-					data.warriors[i].attack2 = data.warriors[i].attack2.S;
-					data.warriors[i].stars1 = data.warriors[i].stars1.S;
-					data.warriors[i].stars2 = data.warriors[i].stars2.S;
-					data.warriors[i].name = data.warriors[i].name.S;
-					data.warriors[i].viewed = data.warriors[i].viewed.BOOL;
-					data.warriors[i].lock1 = data.warriors[i].lock1.BOOL;
-					data.warriors[i].lock2 = data.warriors[i].lock2.BOOL;
-
-				};
-
-				res.json({
-					success: true,
-					message: 'Successfully returned all Wars',
-					data: data
-				});
-			}
-		});
-	})
 
 	// update the war with this id
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
