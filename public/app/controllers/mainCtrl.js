@@ -24,8 +24,14 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	var checkRoutePermission = function(route) {
 		if (route == '/')  // home
 			setActive('navHome');
-		else if (route == '/login')
-			setActive('navProfile');
+		else if (route == '/login') {
+			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
+				setActive('navHome');
+				$location.path('/');
+			} else {  // User is not logged in, let them go there
+				setActive('navProfile');
+			}
+		}
 		else if (route.indexOf('/wars') > -1)
 			setActive('navWars');
 		else {
