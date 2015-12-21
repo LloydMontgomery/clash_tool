@@ -1,5 +1,5 @@
 // start our angular module and inject userService
-angular.module('userCtrl', ['userService'])
+angular.module('userCtrl', ['userService', 'chart.js'])
 // user controller for the main page
 // inject the User factory 
 .controller('userController', function(User) {
@@ -93,7 +93,6 @@ angular.module('userCtrl', ['userService'])
 	User.get($routeParams.user_id)
 		.then(function(data) {
 			if (data.data.success) {
-				console.log(data.data.data);
 				vm.userData = data.data.data;
 				vm.processing = false;
 			} else {
@@ -116,6 +115,40 @@ angular.module('userCtrl', ['userService'])
 				}
 		});
 	};
+})
+
+.controller('userProfileController', function($routeParams, User) {
+	var vm = this;
+
+	// var route = $location.path();
+	// if (route.substr('profile/view/') > -1) {
+	// 	vm.type = 'profile';
+	// }
+	// else if (route.substr('profile') > -1)
+	// 	vm.type = 'create';
+	// else if ($location.path().substr(0, 11) == '/wars/edit/') // Edit page
+	// 	vm.type = 'edit';
+	// else if ($location.path().substr(0, 11) == '/wars/view/') { // view page
+	// 	vm.type = 'view';
+	// 	vm.attackClass = 'col-xs-6';
+	// 	vm.nameClass = 'col-xs-12';
+	// }
+
+
+	vm.pageLoading = true;
+	// get the user data for the user you want to edit // $routeParams is the way we grab data from the URL 
+	User.getProfile($routeParams.user_id)
+		.then(function(data) {
+			if (data.data.success) {
+				console.log(data.data.data);
+				vm.profile = data.data.data;
+				vm.pageLoading = false;
+			} else {
+				vm.message = data.data.message;
+			}
+	});
+
+
 });
 
 

@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="assets/libs/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets/css/glyphicons.css">
 	<link rel="stylesheet" href="assets/libs/angular-animate/animate.css">
+	<link rel="stylesheet" href="assets/libs/angular-chart.js/dist/angular-chart.css">
 
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
@@ -33,6 +34,8 @@
 	<script src="assets/libs/humanize-duration/humanize-duration.js"></script>
 	<script src="assets/libs/momentjs/moment.js"></script>
 	<script src="assets/libs/angular-timer/dist/angular-timer.min.js"></script>
+	<script src="assets/libs/Chart.js/Chart.min.js"></script>
+	<script src="assets/libs/angular-chart.js/dist/angular-chart.js"></script>
 
 	<!-- APP -->
 	<script src="app/controllers/mainCtrl.js"></script>
@@ -70,8 +73,8 @@
 					<li class="dropdown">
 						<a id="navProfile" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Account <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="#">Profile (Coming Soon!)</a></li>
-							<li role="separator" class="divider"></li>
+							<li ng-show="main.loggedIn"><a ng-href="/users/profile/{{ main.userInfo.name }}">Profile (Coming Soon!)</a></li>
+							<li ng-show="main.loggedIn" role="separator" class="divider"></li>
 							<li ng-show="!main.loggedIn"><a href="/login" data-toggle="collapse" data-target=".navbar-collapse.in">Login</a></li>
 							<li ng-show="main.loggedIn"><a ng-click="main.doLogout()" data-toggle="collapse" data-target=".navbar-collapse.in">Sign Out</a></li>
 						</ul>

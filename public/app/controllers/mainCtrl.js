@@ -10,40 +10,70 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
 
+	// Keeps the proper Navbar option highlighted; reflects the page currently visiting
 	var setActive = function(active) {
 
-		if (vm.loggedIn) {
-			document.getElementById('navUsers').className = '';
-			document.getElementById('navWars').className = '';
-		}
+		document.getElementById('navUsers').className = '';
+		document.getElementById('navWars').className = '';
 		document.getElementById('navHome').className = '';
 		document.getElementById('navProfile').className = '';
 		document.getElementById(active).className = 'active';
 	}
 
 	var checkRoutePermission = function(route) {
-		if (route == '/')  // home
+
+		/* Routes that anyone can go to */
+		if (route == '/') {  // home
 			setActive('navHome');
-		else if (route == '/login') {
+			return;
+		}
+		if (route == '/login') {
 			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
 				setActive('navHome');
 				$location.path('/');
 			} else {  // User is not logged in, let them go there
 				setActive('navProfile');
 			}
+			return;
+		} 
+
+		/* Logged In Authentication */
+		if (!vm.loggedIn){
+			setActive('navHome');
+			$location.path('/');
+			return;
 		}
-		else if (route.indexOf('/wars') > -1)
+
+		/* Routes that only people who are logged in can go to */
+		if (route == '/wars') {
 			setActive('navWars');
-		else {
-			if (vm.userInfo && vm.userInfo.admin == true) {  // Then they have permissions to go to other pages
-				if (route == '/users')
-					setActive('navUsers');
-			}
-			else {
-				setActive('navHome');
-				$location.path('/');
-			}
+			return;
 		}
+		if (route.substr('/wars/view') > -1) {
+			setActive('navWars');
+			return;
+		}
+		if (route.substr('/users/profile') > -1) {
+			setActive('navProfile');
+			return;
+		}
+
+		/* Admin In Authentication */
+		if (!vm.userInfo.admin){
+			setActive('navHome');
+			$location.path('/');
+			return;
+		}
+
+		if (route.substr('/wars/edit') > -1) {
+			setActive('navWars');
+			return;
+		}
+		if (route.substr('/users') > -1) {
+			setActive('navUsers');
+			return;
+		}
+		
 	}
 	
 	// check to see if a user is logged in on every request

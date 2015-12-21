@@ -61,7 +61,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 		vm.nameClass = 'col-xs-12';
 	}
 
-
 	vm.command = 'Move';
 	vm.commandOptions = [
 		'Move',
@@ -516,12 +515,15 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.loadingPage = false;
 
 				if (vm.type == 'view') {
+
 					Auth.getUser().then(function(data) {
 						vm.userInfo = data.data;
 						for (var i = 0; i < vm.warData.warriors.length; i++) {
 							if (vm.warData.warriors[i].name == vm.userInfo.name) {
-								vm.warData.warriors[i].viewed = true;
-								vm.updateWar(false);
+								console.log(vm.warData.warriors[i].viewed);
+								
+								if (vm.warData.warriors[i].viewed == false)
+									vm.updateWar(false);
 							}
 						};
 					});
@@ -532,55 +534,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 		vm.checkDate();
 		vm.loadingPage = false;
 	}
-
 });
-
-// // controller applied to user edit page
-// .controller('warEditController', function($routeParams, $location, War) { 
-// 	var vm = this;
-// 	// variable to hide/show elements of the view // differentiates between create or edit pages 
-// 	vm.type = 'edit';
-
-// 	// get the user data for the user you want to edit // $routeParams is the way we grab data from the URL 
-// 	War.get($routeParams.war_id)
-// 		.success(function(data) {
-// 			vm.warData = data;
-
-// 			// Set a few parameters that come back in the wrong format
-// 			vm.warData.start = new Date(vm.warData.start);
-// 	});
-
-// 	// function to save the war
-// 	vm.saveWar = function() { 
-// 		vm.processing = true; 
-// 		vm.message = '';
-
-// 		if (vm.warData.file != null) {
-// 			console.log("Saving Photo");
-// 			War.upload(vm.warData.file)
-// 				.then(function(data) {
-// 					vm.processing = false;
-// 					if (data.status == 200) {
-// 						console.log(data.data);
-// 						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
-// 					} else {
-// 						vm.message = 'Could not get signed URL.';
-// 					}
-// 			});
-// 		}
-// 		else {
-// 			// call the userService function to update
-// 			War.update($routeParams.war_id, vm.warData) 
-// 				.success(function(data) {
-// 					vm.processing = false; // clear the form
-// 					// bind the message from our API to vm.message
-// 					vm.message = data.message;
-// 					$location.path('/wars');
-// 			});
-// 		}
-// 	};
-// })
-
-
 
 

@@ -1,0 +1,16 @@
+<section>
+	<div class="col-xs-12" id="profilePage">
+		<div id="warPageTitle">
+			<h3>Profile</h3>
+		</div>
+		<hr>
+		<!-- LOADING MESSAGE -->
+		<div class="jumbotron text-center" ng-show="user.loadingPage"> 
+			<span class="glyphicon glyphicon-repeat spinner"></span>
+			<p>Loading Profile...</p>
+		</div>
+		<div ng-show="!user.loadingPage">
+			{{user.profile}}
+		</div>
+	</div>
+</section>

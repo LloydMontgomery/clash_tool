@@ -64,7 +64,7 @@ module.exports = function(app, express) {
 			},
 			Limit : 1000
 		}, function(err, data) {
-			if (err) { 
+			if (err) {
 				return res.json({
 					success: false,
 					message: 'Database Error. Try again later.',
@@ -124,8 +124,6 @@ module.exports = function(app, express) {
 	apiRouter.route('/users')
 	// create a user (accessed at POST http://localhost:8080/api/users)
 	.post(function(req, res) {
-
-		userModel = new User();
 
 		var user = {
 			TableName: 'Users',
@@ -308,6 +306,8 @@ module.exports = function(app, express) {
 		});
 	});
 
+	var func = "Hello";
+
 	apiRouter.route('/wars/:war_id')
 	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
 	.get(function(req, res) {
@@ -384,38 +384,174 @@ module.exports = function(app, express) {
 		});
 	})
 
-	// apiRouter.route('/lastWar')
-	// // get the last war (accessed at GET http://localhost:8080/api/lastWar)
-	// .get(function(req, res) {
+	// update the war with this id
+	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
+	.put(function(req, res) {
 
-	// 	dynamodb.query({
-	// 		TableName : 'Wars',
-	// 		KeyConditionExpression: '#1 ',
-	// 		ExpressionAttributeNames: {
-	// 			'#1': 'start'
-	// 		},
-	// 		ExpressionAttributeValues: {
-	// 			':nameVal': ''
-	// 		},
-	// 		Limit : 1000
-	// 	}, function(err, data) {
-	// 		if (err) { 
-	// 			console.log(err); return; 
-	// 		}
-	// 		res.json({
-	// 			success: true,
-	// 			message: 'Successfully returned all Wars',
-	// 			data: data.Items
-	// 		});
-	// 	});
+		// Remove these Pesky attributes
+		for (var i = 0; i < req.body.warriors.length; i++) {
+			delete req.body.warriors[i]['s1Opt1'];
+			delete req.body.warriors[i]['s1Opt2'];
+			delete req.body.warriors[i]['s1Opt3'];
+			delete req.body.warriors[i]['s2Opt1'];
+			delete req.body.warriors[i]['s2Opt2'];
+			delete req.body.warriors[i]['s2Opt3'];
+		};
 
-	// 	// console.log("LAST WAR");
-	// 	// War.findOne({}, {}, { sort: { 'start' : -1 } }, function(err, wars) {
-	// 	// 	if (err) res.send(err);
-	// 	// 	// return the wars
-	// 	// 	res.json(wars);
-	// 	// });
-	// });
+		if (req.body.inProgress) {  // Then we only want to set a limit number of values
+			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';
+			expressionAttributeValues = {
+				':val1' : req.body.start,
+				':val2' : req.body.opponent,
+				':val3' : req.body.size,
+				':val4' : req.body.warriors
+			}
+		} else {
+			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4,\
+								exp = :val5, ourScore = :val6, theirScore = :val7,\
+								ourDest = :val8, theirDest = :val9, outcome = :val10';
+			expressionAttributeValues = {
+				':val1' : req.body.start,
+				':val2' : req.body.opponent,
+				':val3' : req.body.size,
+				':val4' : req.body.warriors,
+				':val5' : req.body.exp,
+				':val6' : req.body.ourScore,
+				':val7' : req.body.theirScore,
+				':val8' : req.body.ourDest,
+				':val9' : req.body.theirDest,
+				':val10': req.body.outcome
+			}
+
+			/* Write to each user the updated war information */
+			for (var i = 0; i < req.body.warriors.length; i++) {
+
+				console.log(req.body.warriors[i]);
+
+				// updateExpression = 'set #att1 = :val1';
+				// expressionAttributeValues = {
+				// 	':val1' : req.
+				// }
+
+				// if (req.body.password) {  // Then we need to change the password
+				// 	updateExpression = updateExpression + ', password = :val5';
+				// 	expressionAttributeValues[':val5'] = bcrypt.hashSync(req.body.password);
+				// }
+
+				// dynamodbDoc.update({
+				// 	TableName: 'Users',
+				// 	Key:{
+				// 		'name': req.body.name
+				// 	},
+				// 	UpdateExpression: updateExpression,
+				// 	ExpressionAttributeNames: {
+				// 		'#att1': 
+				// 	},
+				// 	ExpressionAttributeValues: expressionAttributeValues
+				// }, function(err, data) {
+				// 	if (err) {
+				// 		console.log(err);
+				// 		return res.json({
+				// 			success: false,
+				// 			message: err.message
+				// 		});
+				// 	} else {
+				// 		res.json({
+				// 			success: true,
+				// 			message: 'Successfully Updated User'
+				// 		});
+				// 	}
+				// });
+
+				// userData = req.body.warriors[i];
+				// userData['opponent'] = req.body.opponent;
+				// userData['you'] = i+1;
+				// console.log(userData);
+
+				// data = $http.put('/api/users/' + id, userData);
+			};
+		}
+		if (req.body.img) {  // If there is an img to write, add it to the database
+			updateExpression = updateExpression + ', img = :val11';
+			expressionAttributeValues[':val11'] = req.body.img;
+		};
+
+		// dynamodbDoc.update({
+		// 	TableName: 'Wars',
+		// 	Key:{
+		// 		'createdAt': req.body.createdAt.toString()
+		// 	},
+		// 	UpdateExpression: updateExpression,
+		// 	ExpressionAttributeNames: {
+		// 		'#s': 'start'
+		// 	},
+		// 	ExpressionAttributeValues: expressionAttributeValues
+		// }, function(err, data) {
+		// 	if (err) {
+		// 		console.log(err);
+		// 		return res.json({
+		// 			success: false,
+		// 			message: err.message
+		// 		});
+		// 	} else {
+
+		// 		res.json({
+		// 			success: true,
+		// 			message: 'Successfully Updated War'
+		// 		});
+		// 	}
+		// });
+	});
+
+	// SPECIFIC USERS PROFILE //
+	apiRouter.route('/users/profile/:user_id')
+	// (accessed at GET http://localhost:8080/api/users/:user_id) 
+	.get(function(req, res) {
+		dynamodb.query({
+			TableName : 'Users',
+			ProjectionExpression: "#1, id, inClan, admin, dateJoined, title",
+			KeyConditionExpression: '#1 = :val',
+			ExpressionAttributeNames: {
+				'#1': 'name'
+			},
+			ExpressionAttributeValues: {
+				':val': { 'S': req.params.user_id }
+			},
+			Limit : 1000
+		}, function(err, data) {
+
+			if (err) { 
+				console.log(err.message);
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: err
+				});
+			}
+
+			if (data.Count == 0) {  // Then the username must have been incorrect
+				return res.json({
+					success: false,
+					message: 'Query Failed. User not found.'
+				});
+			} else {
+				// Convert Data before sending it back to client
+				data = data.Items[0];
+				data.name = data.name.S;
+				data.id = data.id.S;
+				data.inClan = data.inClan.BOOL;
+				data.admin = data.admin.BOOL;
+				data.dateJoined = data.dateJoined.N;
+				data.title = data.title.S;
+
+				res.json({
+					success: true,
+					message: 'Successfully returned user',
+					data: data
+				});
+			}
+		});
+	});
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
 
@@ -538,12 +674,13 @@ module.exports = function(app, express) {
 				});
 			}
 		});
-
 	})
 
 	// update the user with this id
 	// (accessed at PUT http://localhost:8080/api/users/:user_id) 
 	.put(function(req, res) {
+
+		attacks = req.body.warriors
 
 		updateExpression = 'set id = :val1, title = :val2, inClan = :val3, admin = :val4';
 		expressionAttributeValues = {
@@ -631,7 +768,19 @@ module.exports = function(app, express) {
 		war.Item.opponent = req.body.opponent;
 		war.Item.start = req.body.start;
 		war.Item.size = req.body.size;
-		war.Item.warriors = req.body.warriors;
+
+		// Warriors are added separately, each as their own entry //
+		for (var i = 0; i < req.body.warriors.length; i++) {
+			// Need to delete these pesky fields
+			delete req.body.warriors[i]['s1Opt1'];
+			delete req.body.warriors[i]['s1Opt2'];
+			delete req.body.warriors[i]['s1Opt3'];
+			delete req.body.warriors[i]['s2Opt1'];
+			delete req.body.warriors[i]['s2Opt2'];
+			delete req.body.warriors[i]['s2Opt3'];
+
+			war.Item[i] = req.body.warriors[i];
+		};
 
 		// Optional Information if War is Over//
 		if (!req.body.inProgress) {
@@ -657,82 +806,6 @@ module.exports = function(app, express) {
 				});
 			}
 		});
-	});
-
-
-	// SPECIFIC WARS //
-	apiRouter.route('/wars/:war_id')
-
-	// update the war with this id
-	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
-	.put(function(req, res) {
-
-		// Remove these Pesky attributes
-		for (var i = 0; i < req.body.warriors.length; i++) {
-			delete req.body.warriors[i]['s1Opt1'];
-			delete req.body.warriors[i]['s1Opt2'];
-			delete req.body.warriors[i]['s1Opt3'];
-			delete req.body.warriors[i]['s2Opt1'];
-			delete req.body.warriors[i]['s2Opt2'];
-			delete req.body.warriors[i]['s2Opt3'];
-		};
-
-		if (req.body.inProgress) {  // Then we only want to set a limit number of values
-			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';
-			expressionAttributeValues = {
-				':val1' : req.body.start,
-				':val2' : req.body.opponent,
-				':val3' : req.body.size,
-				':val4' : req.body.warriors
-			}
-		} else {
-			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4,\
-								exp = :val5, ourScore = :val6, theirScore = :val7,\
-								ourDest = :val8, theirDest = :val9, outcome = :val10';
-			expressionAttributeValues = {
-				':val1' : req.body.start,
-				':val2' : req.body.opponent,
-				':val3' : req.body.size,
-				':val4' : req.body.warriors,
-				':val5' : req.body.exp,
-				':val6' : req.body.ourScore,
-				':val7' : req.body.theirScore,
-				':val8' : req.body.ourDest,
-				':val9' : req.body.theirDest,
-				':val10': req.body.outcome
-			}
-		}
-		if (req.body.img) {  // If there is an img to write, add it to the database
-			updateExpression = updateExpression + ', img = :val11';
-			expressionAttributeValues[':val11'] = req.body.img;
-		};
-
-		dynamodbDoc.update({
-			TableName: 'Wars',
-			Key:{
-				'createdAt': req.body.createdAt.toString()
-			},
-			UpdateExpression: updateExpression,
-			ExpressionAttributeNames: {
-				'#s': 'start'
-			},
-			ExpressionAttributeValues: expressionAttributeValues
-		}, function(err, data) {
-			if (err) {
-				console.log(err);
-				return res.json({
-					success: false,
-					message: err.message
-				});
-			} else {
-
-				res.json({
-					success: true,
-					message: 'Successfully Updated War'
-				});
-			}
-		});
-
 	});
 
 	return apiRouter;
