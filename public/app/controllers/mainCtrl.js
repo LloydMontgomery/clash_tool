@@ -12,7 +12,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 
 	// Keeps the proper Navbar option highlighted; reflects the page currently visiting
 	var setActive = function(active) {
-
 		document.getElementById('navUsers').className = '';
 		document.getElementById('navWars').className = '';
 		document.getElementById('navHome').className = '';
@@ -49,11 +48,11 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			setActive('navWars');
 			return;
 		}
-		if (route.substr('/wars/view') > -1) {
+		if (route.indexOf('/wars/view') > -1) {
 			setActive('navWars');
 			return;
 		}
-		if (route.substr('/users/profile') > -1) {
+		if (route.indexOf('/users/profile') > -1) {
 			setActive('navProfile');
 			return;
 		}
@@ -65,11 +64,11 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			return;
 		}
 
-		if (route.substr('/wars/edit') > -1) {
+		if (route.indexOf('/wars/edit') > -1) {
 			setActive('navWars');
 			return;
 		}
-		if (route.substr('/users') > -1) {
+		if (route.indexOf('/users') > -1) {
 			setActive('navUsers');
 			return;
 		}

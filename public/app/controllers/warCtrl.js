@@ -94,6 +94,10 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
+	// $scope.$watch('', function() {
+	// 	alert('hey, myVar has changed!');
+	// });
+
 	vm.setMaxStars = function() {
 		vm.maxStars = Array.apply(null, Array((vm.warData.size*3)+1)).map(function (_, i) {return ((vm.warData.size*3) - i);});
 		if (vm.warData.ourScore > (vm.warData.size*3))
@@ -305,24 +309,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 								viewed: false
 							});
 						};
-						// call the warService function to retrieve last war
-						// War.last() 
-						// 	.then(function(data) {
-						// 		if (data.data) {
-						// 			if (vm.type != 'create') {
-						// 				for (var i = 0; i < data.data.warriors.length; i++) {
-						// 					vm.warData.warriors[i] = data.data.warriors[i]
-						// 				};
-						// 			} else {
-						// 				for (var i = 0; i < data.data.warriors.length; i++) {
-						// 					vm.warData.warriors[i].name = data.data.warriors[i].name
-						// 				};
-						// 			};
-						// 		}
-						// 		vm.adjustUsers();
-						// 		vm.adjustTargets();
-						// 		vm.warriorsReady = true;
-						// });
+
 						vm.adjustUsers();
 						vm.adjustTargets();
 						vm.warriorsReady = true;
@@ -334,57 +321,55 @@ angular.module('warCtrl', ['warService', 'userService'])
 					}
 				} else {
 					// Database Error, decide what to do here
-				}
-				
-
+			}
 		});
 	};
 
-	vm.validateFields = function() {
-		if (vm.warData.opponent == '') {
+	vm.validateFields = function(data) {
+		if (data.opponent == '') {
 			vm.message = 'Please set Opponent name';
 			return false;
 		}
 
 		var warDataCleansed = {};
+		if (data.createdAt)
+			warDataCleansed['createdAt'] = data.createdAt;
+		warDataCleansed.opponent = data.opponent;
+		warDataCleansed.size = data.size;
+		warDataCleansed.inProgress = data.inProgress;
 
-		warDataCleansed.createdAt = vm.warData.createdAt;
-		warDataCleansed.opponent = vm.warData.opponent;
-		warDataCleansed.size = vm.warData.size;
-		warDataCleansed.inProgress = vm.warData.inProgress;
+		warDataCleansed.start = data.start;
 
-		warDataCleansed.start = vm.warData.start;
-
-		if (vm.warData.inProgress == false) {
-			if (vm.warData.exp == undefined) {
+		if (data.inProgress == false) {
+			if (data.exp == undefined) {
 				vm.message = 'Please set Exp Gained';
 				return false;
 			}
-			if (vm.warData.ourScore == undefined) {
+			if (data.ourScore == undefined) {
 				vm.message = 'Please set Stars for SpaceMonkeys';
 				return false;
 			}
-			if (vm.warData.theirScore == undefined) {
+			if (data.theirScore == undefined) {
 				vm.message = 'Please set Stars for ' + warDataCleansed.opponent;
 				return false;
 			}
-			if (vm.warData.ourDest == undefined) {
+			if (data.ourDest == undefined) {
 				vm.message = 'Please set Destruction for Space Monkeys';
 				return false;
 			}
-			if (vm.warData.theirDest == undefined) {
+			if (data.theirDest == undefined) {
 				vm.message = 'Please set Destruction for ' + warDataCleansed.opponent;
 				return false;
 			}
-			if (vm.warData.img) {
-				warDataCleansed.img = vm.warData.img;
+			if (data.img) {
+				warDataCleansed.img = data.img;
 			}
 
-			warDataCleansed.exp = vm.warData.exp;
-			warDataCleansed.ourDest = vm.warData.ourDest;
-			warDataCleansed.theirDest = vm.warData.theirDest;
-			warDataCleansed.ourScore = Number(vm.warData.ourScore);
-			warDataCleansed.theirScore = Number(vm.warData.theirScore);
+			warDataCleansed.exp = data.exp;
+			warDataCleansed.ourDest = data.ourDest;
+			warDataCleansed.theirDest = data.theirDest;
+			warDataCleansed.ourScore = Number(data.ourScore);
+			warDataCleansed.theirScore = Number(data.theirScore);
 
 			if (warDataCleansed.ourScore > warDataCleansed.theirScore)
 				warDataCleansed.outcome = 'war-win';
@@ -401,8 +386,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 
 		warDataCleansed.warriors = [];
-		for (var i = 0; i < vm.warData.warriors.length; i++) {
-			warDataCleansed.warriors.push(vm.warData.warriors[i]);
+		for (var i = 0; i < data.warriors.length; i++) {
+			warDataCleansed.warriors.push(data.warriors[i]);
 			if (vm.warData.warriors[i].name == 'Pick Warrior') {
 				vm.message = 'Please Fill all Warrior Slots';
 				return false;
@@ -412,13 +397,12 @@ angular.module('warCtrl', ['warService', 'userService'])
 		return warDataCleansed;
 	}
 
-	// function to save the war
 	vm.saveWar = function() { 
 		vm.processing = true;
 		vm.message = '';
 		
 		// Cleanse the data before passing to the database
-		var warDataCleansed = vm.validateFields();
+		var warDataCleansed = vm.validateFields(vm.warData);
 		if (!warDataCleansed)
 			return;
 
@@ -432,26 +416,44 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.message = data.data.message;
 				$location.path('/wars');
 		});
+		vm.updateUsers();
 	};
 
-	vm.updateWar = function(print) {
+	vm.updateUsers = function() {
+
+		User.setProfile('Zephyro', {'start': 128979234})
+		.then(function(data) {
+			if (data.data.success) {
+				// vm.warData.users = data.data.data;
+			}
+		});
+	}
+
+	vm.updateWar = function(quick, data) {
 		vm.message = '';
 		
-		// Cleanse the data before passing to the database
-		var warDataCleansed = vm.validateFields();
-		if (!warDataCleansed)
-			return;
+		if (!quick) {
+			// Cleanse the data before passing to the database
+			var warDataCleansed = vm.validateFields(data);
+			// If there were any errors in validation, do not proceed
+			if (!warDataCleansed)
+				return;
+		} else {
+			warDataCleansed = data
+		}
 
 		// call the userService function to update
 		War.update($routeParams.war_id, warDataCleansed) 
 			.then(function(data) {
 				vm.processing = false; // clear the form
 				// bind the message from our API to vm.message
-				if (print) {
+				if (!quick) {
 					vm.message = data.data.message;
 					$location.path('/wars');
 				}
 		});
+		// Finish by updating all the users in this war
+		vm.updateUsers();
 	};
 
 	vm.uploadImg = function () {
@@ -465,16 +467,14 @@ angular.module('warCtrl', ['warService', 'userService'])
 					// call the userService function to update
 					vm.warData.file = null;
 					vm.processingImg = false;
-					vm.updateWar(false);
+					vm.updateWar(true, vm.warData);
 				} else {
 					vm.processingImg = false;
-					vm.updateWar(false);
 				}
 			};
 			xhr.onerror = function() {
 				alert("Could not upload file.");
 				processingImg = false;
-				vm.updateWar(false);
 			};
 			xhr.send(file);
 		}
@@ -488,7 +488,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 						vm.upload_file(vm.warData.file, data.data.signed_request, data.data.url);
 					} else {
 						vm.processingImg = false;
-						vm.updateWar(false);
 						vm.message = 'Could not get signed URL.';
 					}
 			});
@@ -502,33 +501,38 @@ angular.module('warCtrl', ['warService', 'userService'])
 	// Finish loading the page
 	if (vm.type != 'create') {
 		War.get($routeParams.war_id)
-			.then(function(data) {
-				vm.warData = data.data.data;
+		.then(function(data) {
+			vm.warData = data.data.data;
 
-				vm.warData.startDisplay = new Date(vm.warData.start);
-				
-				// Set Countdown timers
-				vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours
-				vm.preparationCountdown = vm.warData.start + 82800000;  // Add 23 Hours
+			vm.warData.startDisplay = new Date(vm.warData.start);
 
-				vm.checkDate();
-				vm.loadingPage = false;
+			// Set Countdown timers
+			vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours
+			vm.preparationCountdown = vm.warData.start + 82800000;  // Add 23 Hours
 
-				if (vm.type == 'view') {
+			vm.checkDate();
+			vm.loadingPage = false;
 
-					Auth.getUser().then(function(data) {
-						vm.userInfo = data.data;
-						for (var i = 0; i < vm.warData.warriors.length; i++) {
-							if (vm.warData.warriors[i].name == vm.userInfo.name) {
-								console.log(vm.warData.warriors[i].viewed);
-								
-								if (vm.warData.warriors[i].viewed == false)
-									vm.updateWar(false);
+			if (vm.type == 'view') {
+
+				Auth.getUser().then(function(data) {
+					vm.userInfo = data.data;
+					for (var i = 0; i < vm.warData.warriors.length; i++) {
+						if (vm.warData.warriors[i].name == vm.userInfo.name) {
+							if (vm.warData.warriors[i].viewed == false) {
+								pos = i.toString();
+								tempData = { 'createdAt':vm.warData.createdAt,
+											 'warriors':{}
+											};
+								tempData.warriors[i] = vm.warData.warriors[i];
+								tempData.warriors[i].viewed = true;
+								vm.updateWar(true, tempData);
 							}
-						};
-					});
-				}
-				vm.genWarriorList();
+						}
+					};
+				});
+			}
+			vm.genWarriorList();
 		});
 	} else {
 		vm.checkDate();

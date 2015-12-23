@@ -3,7 +3,8 @@ var express	= require('express'),			// Express simplifies Node
 	War 	= require('../models/war'),		// War Schema
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
 	aws 	= require('aws-sdk'),			// This is for uploading to S3
-	bcrypt	= require('bcrypt-nodejs');
+	bcrypt	= require('bcrypt-nodejs'),
+	http 	= require('http');
 
 // Need to try/catch the config setup
 var config = {}; // This is to prevent errors later
@@ -40,7 +41,7 @@ var dynamodb = new AWS.DynamoDB();
 
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
-module.exports = function(app, express) {
+module.exports = function(app, express, $http) {
 
 	// Get an instance of the express router
 	var apiRouter = express.Router();
@@ -306,8 +307,6 @@ module.exports = function(app, express) {
 		});
 	});
 
-	var func = "Hello";
-
 	apiRouter.route('/wars/:war_id')
 	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
 	.get(function(req, res) {
@@ -358,10 +357,10 @@ module.exports = function(app, express) {
 					data.img = data.img.S;
 
 				// Correct warrior data array
-				data.warriors = data.warriors.L
-				for (var i = 0; i < data.warriors.length; i++) {
-					// Strip L
-					data.warriors[i] = data.warriors[i].M;
+				data.warriors = [];
+				for (var i = 0; data[i] != null; i++) {
+					// Strip M
+					data.warriors[i] = data[i].M;
 
 					// Convert all the values to non-object values
 					data.warriors[i].attack1 = data.warriors[i].attack1.S;
@@ -387,120 +386,100 @@ module.exports = function(app, express) {
 	// update the war with this id
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
+		console.log(req.body);
 
-		// Remove these Pesky attributes
-		for (var i = 0; i < req.body.warriors.length; i++) {
-			delete req.body.warriors[i]['s1Opt1'];
-			delete req.body.warriors[i]['s1Opt2'];
-			delete req.body.warriors[i]['s1Opt3'];
-			delete req.body.warriors[i]['s2Opt1'];
-			delete req.body.warriors[i]['s2Opt2'];
-			delete req.body.warriors[i]['s2Opt3'];
-		};
+		// Initialize and assign attributes to be written to DynamoDB
+		updateExp = 'set';
+		expAttNames = {};
+		expAttVals = {};
 
-		if (req.body.inProgress) {  // Then we only want to set a limit number of values
-			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4';
-			expressionAttributeValues = {
-				':val1' : req.body.start,
-				':val2' : req.body.opponent,
-				':val3' : req.body.size,
-				':val4' : req.body.warriors
-			}
-		} else {
-			updateExpression = 'set #s = :val1, opponent = :val2, size = :val3, warriors = :val4,\
-								exp = :val5, ourScore = :val6, theirScore = :val7,\
-								ourDest = :val8, theirDest = :val9, outcome = :val10';
-			expressionAttributeValues = {
-				':val1' : req.body.start,
-				':val2' : req.body.opponent,
-				':val3' : req.body.size,
-				':val4' : req.body.warriors,
-				':val5' : req.body.exp,
-				':val6' : req.body.ourScore,
-				':val7' : req.body.theirScore,
-				':val8' : req.body.ourDest,
-				':val9' : req.body.theirDest,
-				':val10': req.body.outcome
-			}
-
-			/* Write to each user the updated war information */
-			for (var i = 0; i < req.body.warriors.length; i++) {
-
-				console.log(req.body.warriors[i]);
-
-				// updateExpression = 'set #att1 = :val1';
-				// expressionAttributeValues = {
-				// 	':val1' : req.
-				// }
-
-				// if (req.body.password) {  // Then we need to change the password
-				// 	updateExpression = updateExpression + ', password = :val5';
-				// 	expressionAttributeValues[':val5'] = bcrypt.hashSync(req.body.password);
-				// }
-
-				// dynamodbDoc.update({
-				// 	TableName: 'Users',
-				// 	Key:{
-				// 		'name': req.body.name
-				// 	},
-				// 	UpdateExpression: updateExpression,
-				// 	ExpressionAttributeNames: {
-				// 		'#att1': 
-				// 	},
-				// 	ExpressionAttributeValues: expressionAttributeValues
-				// }, function(err, data) {
-				// 	if (err) {
-				// 		console.log(err);
-				// 		return res.json({
-				// 			success: false,
-				// 			message: err.message
-				// 		});
-				// 	} else {
-				// 		res.json({
-				// 			success: true,
-				// 			message: 'Successfully Updated User'
-				// 		});
-				// 	}
-				// });
-
-				// userData = req.body.warriors[i];
-				// userData['opponent'] = req.body.opponent;
-				// userData['you'] = i+1;
-				// console.log(userData);
-
-				// data = $http.put('/api/users/' + id, userData);
-			};
+		// Only update the values the server is passed, 
+		// and don't try to update things that do not exist
+		if (req.body.opponent) {
+			updateExp += ' #name1 = :val1,';
+			expAttNames['#name1'] = 'opponent';
+			expAttVals[':val1'] = req.body.opponent;
+		} if (req.body.size) {
+			updateExp += ' #name2 = :val2,';
+			expAttNames['#name2'] = 'size';
+			expAttVals[':val2'] = req.body.size;
+		} if (req.body.start) {
+			updateExp += ' #name3 = :val3,';
+			expAttNames['#name3'] = 'start';
+			expAttVals[':val3'] = req.body.start;
+		} if (req.body.exp) {
+			updateExp += ' #name4 = :val4,';
+			expAttNames['#name4'] = 'exp';
+			expAttVals[':val4'] = req.body.exp;
+		} if (req.body.ourDest) {
+			updateExp += ' #name5 = :val5,';
+			expAttNames['#name5'] = 'ourDest';
+			expAttVals[':val5'] = req.body.ourDest;
+		} if (req.body.theirDest) {
+			updateExp += ' #name6 = :val6,';
+			expAttNames['#name6'] = 'theirDest';
+			expAttVals[':val6'] = req.body.theirDest;
+		} if (req.body.ourScore) {
+			updateExp += ' #name7 = :val7,';
+			expAttNames['#name7'] = 'ourScore';
+			expAttVals[':val7'] = req.body.ourScore;
+		} if (req.body.theirScore) {
+			updateExp += ' #name8 = :val8,';
+			expAttNames['#name8'] = 'theirScore';
+			expAttVals[':val8'] = req.body.theirScore;
+		} if (req.body.outcome) {
+			updateExp += ' #name8 = :val9,';
+			expAttNames['#name8'] = 'outcome';
+			expAttVals[':val9'] = req.body.outcome;
+		} if (req.body.img) {
+			updateExp += ' #name10 = :val10,';
+			expAttNames['#name10'] = 'img';
+			expAttVals[':val10'] = req.body.img;
 		}
-		if (req.body.img) {  // If there is an img to write, add it to the database
-			updateExpression = updateExpression + ', img = :val11';
-			expressionAttributeValues[':val11'] = req.body.img;
+
+		// Warriors are added separately, each as their own entry //
+		for (warrior in req.body.warriors) {
+			// Need to delete these pesky fields
+			delete req.body.warriors[warrior]['s1Opt1'];
+			delete req.body.warriors[warrior]['s1Opt2'];
+			delete req.body.warriors[warrior]['s1Opt3'];
+			delete req.body.warriors[warrior]['s2Opt1'];
+			delete req.body.warriors[warrior]['s2Opt2'];
+			delete req.body.warriors[warrior]['s2Opt3'];
+
+			updateExp = updateExp + ' #warrior' + warrior.toString() + ' = :warrior' + warrior.toString() + ',';
+			expAttNames['#warrior' + warrior.toString()] = warrior.toString();
+			expAttVals[':warrior' + warrior.toString()] = req.body.warriors[warrior];
 		};
 
-		// dynamodbDoc.update({
-		// 	TableName: 'Wars',
-		// 	Key:{
-		// 		'createdAt': req.body.createdAt.toString()
-		// 	},
-		// 	UpdateExpression: updateExpression,
-		// 	ExpressionAttributeNames: {
-		// 		'#s': 'start'
-		// 	},
-		// 	ExpressionAttributeValues: expressionAttributeValues
-		// }, function(err, data) {
-		// 	if (err) {
-		// 		console.log(err);
-		// 		return res.json({
-		// 			success: false,
-		// 			message: err.message
-		// 		});
-		// 	} else {
+		if (updateExp != 'set')  // Then something was added to it
+			updateExp = updateExp.slice(0, -1);
 
-		// 		res.json({
-		// 			success: true,
-		// 			message: 'Successfully Updated War'
-		// 		});
-		// 	}
-		// });
+		console.log(updateExp);
+
+		dynamodbDoc.update({
+			TableName: 'Wars',
+			Key:{
+				'createdAt': req.body.createdAt.toString()
+			},
+			UpdateExpression: updateExp,
+			ExpressionAttributeNames: expAttNames,
+			ExpressionAttributeValues: expAttVals
+		}, function(err, data) {
+			if (err) {
+				console.log(err);
+				return res.json({
+					success: false,
+					message: err.message
+				});
+			} else {
+
+				res.json({
+					success: true,
+					message: 'Successfully Updated War'
+				});
+			}
+		});
 	});
 
 	// SPECIFIC USERS PROFILE //
@@ -551,6 +530,48 @@ module.exports = function(app, express) {
 				});
 			}
 		});
+	})
+
+	// update the user with this id
+	// (accessed at PUT http://localhost:8080/api/users/profile/:user_id) 
+	.put(function(req, res) {
+
+		console.log(req.body);
+
+		// updateExpression = 'set id = :val1, title = :val2, inClan = :val3, admin = :val4';
+		// expressionAttributeValues = {
+		// 	':val1' : req.body.id,
+		// 	':val2' : req.body.title,
+		// 	':val3' : req.body.inClan,
+		// 	':val4' : req.body.admin
+		// }
+
+		// if (req.body.password) {  // Then we need to change the password
+		// 	updateExpression = updateExpression + ', password = :val5';
+		// 	expressionAttributeValues[':val5'] = bcrypt.hashSync(req.body.password);
+		// }
+
+		// dynamodbDoc.update({
+		// 	TableName: 'Users',
+		// 	Key:{
+		// 		'name': req.body.name
+		// 	},
+		// 	UpdateExpression: updateExpression,
+		// 	ExpressionAttributeValues: expressionAttributeValues
+		// }, function(err, data) {
+		// 	if (err) {
+		// 		console.log(err);
+		// 		return res.json({
+		// 			success: false,
+		// 			message: err.message
+		// 		});
+		// 	} else {
+		// 		res.json({
+		// 			success: true,
+		// 			message: 'Successfully Updated User'
+		// 		});
+		// 	}
+		// });
 	});
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
@@ -680,7 +701,7 @@ module.exports = function(app, express) {
 	// (accessed at PUT http://localhost:8080/api/users/:user_id) 
 	.put(function(req, res) {
 
-		attacks = req.body.warriors
+		console.log(req.body);
 
 		updateExpression = 'set id = :val1, title = :val2, inClan = :val3, admin = :val4';
 		expressionAttributeValues = {
@@ -753,6 +774,35 @@ module.exports = function(app, express) {
 	// create a war (accessed at POST http://localhost:8080/api/wars)
 	.post(function(req, res) {
 
+		// Check to make sure the client has sent all the necessary information
+		if (req.body.opponent && 
+			req.body.start && 
+			req.body.size
+			) {
+			if (!req.body.inProgress) {
+				if (req.body.exp && 
+					req.body.ourScore && 
+					req.body.theirScore && 
+					req.body.ourDest && 
+					req.body.theirDest && 
+					req.body.outcome &&
+					req.body.warriors) {
+					// Then all the attributes we need exist
+				} else {
+					return res.json({ 
+						success: false,
+						message: 'Missing necessary attributes of war' 
+					});
+				}
+			}
+			// Then all the attributes we need exist
+		} else {
+			return res.json({ 
+				success: false,
+				message: 'Missing necessary attributes of war' 
+			});
+		}
+
 		var war = {
 			TableName: 'Wars',
 			Item: {},
@@ -768,6 +818,8 @@ module.exports = function(app, express) {
 		war.Item.opponent = req.body.opponent;
 		war.Item.start = req.body.start;
 		war.Item.size = req.body.size;
+		if (req.body.img)  // If the image has been included, write it to DB
+			war.Item.img = req.body.img;
 
 		// Warriors are added separately, each as their own entry //
 		for (var i = 0; i < req.body.warriors.length; i++) {

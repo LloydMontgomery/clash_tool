@@ -24,7 +24,7 @@
 		</thead>
 		<tbody>
 			<!-- LOOP OVER THE WARS -->
-			<tr ng-repeat="battle in war.wars">
+			<tr ng-repeat="battle in war.wars" class="excludeAnimation">
 				<td>{{ battle.opponent.S }}</td>
 				<td>{{ battle.start.toDateString().substr(4) }}</td>
 				<td><a ng-href="{{ battle.img.S }}" target="_blank">Overview</a></td>
