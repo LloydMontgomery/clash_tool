@@ -38,7 +38,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 })
 
 // controller applied to War creation page
-.controller('warManipulationController', function($route, $routeParams, $location, Auth, War, User) { 
+.controller('warManipulationController', function($route, $routeParams, $location, $timeout, Auth, War, User) { 
 	var vm = this;
 	vm.loadingPage = true;
 
@@ -94,10 +94,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
-	// $scope.$watch('', function() {
-	// 	alert('hey, myVar has changed!');
-	// });
-
 	vm.setMaxStars = function() {
 		vm.maxStars = Array.apply(null, Array((vm.warData.size*3)+1)).map(function (_, i) {return ((vm.warData.size*3) - i);});
 		if (vm.warData.ourScore > (vm.warData.size*3))
@@ -144,7 +140,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 				}
 			}
 		}
-	}
+	};
 
 	vm.checkDate = function() {
 		if (!vm.warData.startDisplay)
@@ -395,7 +391,38 @@ angular.module('warCtrl', ['warService', 'userService'])
 		};
 
 		return warDataCleansed;
-	}
+	};
+
+	vm.updateUsers = function(warriors) {
+
+		console.log(warriors);
+		var callbackTime = 0;
+		for (i in warriors) {
+			createdAt = vm.warData.createdAt;
+			temp = {};
+			temp[createdAt] = {
+				'start' : vm.warData.start,
+				'attack1' : {
+					'you' : i,
+					'opp' : 'N/A',
+					'stars' : warriors[i].stars1
+				},
+				'attack2' : {
+					'you' : i,
+					'opp' : 'N/A',
+					'stars' : warriors[i].stars2
+				},
+				'opponent' : vm.warData.opponent
+			}
+			// console.log(warriors[i].name);
+			// $timeout(function() {
+				// console.log('CallBack!');
+			User.setProfile(warriors[i].name, temp);
+			// }, (callbackTime + (1000 * i)), true, null);
+			// window.setTimeout(console.log('Hello'), 1000);
+			// User.setProfile(warriors[i].name, temp);
+		};
+	};
 
 	vm.saveWar = function() { 
 		vm.processing = true;
@@ -416,18 +443,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.message = data.data.message;
 				$location.path('/wars');
 		});
-		vm.updateUsers();
+		vm.updateUsers(vm.warData.warriors);
 	};
-
-	vm.updateUsers = function() {
-
-		User.setProfile('Zephyro', {'start': 128979234})
-		.then(function(data) {
-			if (data.data.success) {
-				// vm.warData.users = data.data.data;
-			}
-		});
-	}
 
 	vm.updateWar = function(quick, data) {
 		vm.message = '';
@@ -453,7 +470,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 				}
 		});
 		// Finish by updating all the users in this war
-		vm.updateUsers();
+		vm.updateUsers(data.warriors);
 	};
 
 	vm.uploadImg = function () {

@@ -46,6 +46,11 @@ module.exports = function(app, express, $http) {
 	// Get an instance of the express router
 	var apiRouter = express.Router();
 
+	apiRouter.use(function(req, res, next) {
+		console.log('Request to API: ' + req.path);
+		next();
+	});
+
 	// ============================ PUBLIC APIS ============================ //
 
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
@@ -386,7 +391,6 @@ module.exports = function(app, express, $http) {
 	// update the war with this id
 	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
 	.put(function(req, res) {
-		console.log(req.body);
 
 		// Initialize and assign attributes to be written to DynamoDB
 		updateExp = 'set';
@@ -428,8 +432,8 @@ module.exports = function(app, express, $http) {
 			expAttNames['#name8'] = 'theirScore';
 			expAttVals[':val8'] = req.body.theirScore;
 		} if (req.body.outcome) {
-			updateExp += ' #name8 = :val9,';
-			expAttNames['#name8'] = 'outcome';
+			updateExp += ' #name9 = :val9,';
+			expAttNames['#name9'] = 'outcome';
 			expAttVals[':val9'] = req.body.outcome;
 		} if (req.body.img) {
 			updateExp += ' #name10 = :val10,';
@@ -454,8 +458,6 @@ module.exports = function(app, express, $http) {
 
 		if (updateExp != 'set')  // Then something was added to it
 			updateExp = updateExp.slice(0, -1);
-
-		console.log(updateExp);
 
 		dynamodbDoc.update({
 			TableName: 'Wars',
@@ -537,41 +539,35 @@ module.exports = function(app, express, $http) {
 	.put(function(req, res) {
 
 		console.log(req.body);
+		warID = Object.keys(req.body)[0].toString();
+		console.log(warID);
 
-		// updateExpression = 'set id = :val1, title = :val2, inClan = :val3, admin = :val4';
-		// expressionAttributeValues = {
-		// 	':val1' : req.body.id,
-		// 	':val2' : req.body.title,
-		// 	':val3' : req.body.inClan,
-		// 	':val4' : req.body.admin
-		// }
-
-		// if (req.body.password) {  // Then we need to change the password
-		// 	updateExpression = updateExpression + ', password = :val5';
-		// 	expressionAttributeValues[':val5'] = bcrypt.hashSync(req.body.password);
-		// }
-
-		// dynamodbDoc.update({
-		// 	TableName: 'Users',
-		// 	Key:{
-		// 		'name': req.body.name
-		// 	},
-		// 	UpdateExpression: updateExpression,
-		// 	ExpressionAttributeValues: expressionAttributeValues
-		// }, function(err, data) {
-		// 	if (err) {
-		// 		console.log(err);
-		// 		return res.json({
-		// 			success: false,
-		// 			message: err.message
-		// 		});
-		// 	} else {
-		// 		res.json({
-		// 			success: true,
-		// 			message: 'Successfully Updated User'
-		// 		});
-		// 	}
-		// });
+		dynamodbDoc.update({
+			TableName: 'Users',
+			Key:{
+				'name': req.params.user_id
+			},
+			UpdateExpression: 'set #name1 = :val1',
+			ExpressionAttributeNames: {
+				'#name1' : warID
+			},
+			ExpressionAttributeValues: {
+				':val1' : req.body[warID]
+			}
+		}, function(err, data) {
+			if (err) {
+				console.log(err);
+				return res.json({
+					success: false,
+					message: err.message
+				});
+			} else {
+				res.json({
+					success: true,
+					message: 'Successfully Updated User'
+				});
+			}
+		});
 	});
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
