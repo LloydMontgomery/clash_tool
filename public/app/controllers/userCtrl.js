@@ -136,16 +136,17 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 
 
 	vm.pageLoading = true;
-	// get the user data for the user you want to edit // $routeParams is the way we grab data from the URL 
+	// get the user data for the user you want to edit 
+	// $routeParams is the way we grab data from the URL 
 	User.getProfile($routeParams.user_id)
-		.then(function(data) {
-			if (data.data.success) {
-				console.log(data.data.data);
-				vm.profile = data.data.data;
-				vm.pageLoading = false;
-			} else {
-				vm.message = data.data.message;
-			}
+	.then(function(data) {
+		if (data.data.success) {
+			console.log(data.data.data);
+			vm.profile = data.data.data;	
+		} else {
+			vm.message = data.data.message;
+		}
+		vm.pageLoading = false;
 	});
 
 

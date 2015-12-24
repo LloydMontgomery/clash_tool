@@ -12,5 +12,42 @@
 		<div ng-show="!user.loadingPage">
 			{{user.profile}}
 		</div>
+		<table class="table table-bordered table-striped" ng-show="user.profile.wars"> 
+			<thead>
+				<tr>
+					<th>Opponent</th> 
+					<th >War Position</th>
+					<th>1st Attack</th>
+					<th>2nd Attack</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- LOOP OVER THE USERS -->
+				<tr ng-repeat="war in user.profile.wars" class="excludeAnimation"> 
+					<td>{{ war.opponent }}</td>
+					<td>{{ war.warPos }}</td>
+					<td>
+						<div>
+							<span ng-show="war.attack1.stars > 0" class="glyphicons glyphicons-star drop"></span>
+							<span ng-show="war.attack1.stars > 1" class="glyphicons glyphicons-star drop"></span>
+							<span ng-show="war.attack1.stars > 2" class="glyphicons glyphicons-star drop"></span>
+							<span ng-hide="war.attack1.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
+							<span ng-hide="war.attack1.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
+							<span ng-hide="war.attack1.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
+						</div>
+					</td>
+					<td>
+						<div>
+							<span ng-show="war.attack2.stars > 0" class="glyphicons glyphicons-star drop"></span>
+							<span ng-show="war.attack2.stars > 1" class="glyphicons glyphicons-star drop"></span>
+							<span ng-show="war.attack2.stars > 2" class="glyphicons glyphicons-star drop"></span>
+							<span ng-hide="war.attack2.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
+							<span ng-hide="war.attack2.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
+							<span ng-hide="war.attack2.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </section>

@@ -41,6 +41,17 @@ var dynamodb = new AWS.DynamoDB();
 
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
+var convertData = function(data) {
+	for (item in data) {
+		type = Object.keys(data[item])[0];
+		if (type == 'M' || type == 'L')
+			data[item] = convertData(data[item][type]);
+		else
+			data[item] = data[item][type]
+	}
+	return data;
+};
+
 module.exports = function(app, express, $http) {
 
 	// Get an instance of the express router
@@ -490,19 +501,17 @@ module.exports = function(app, express, $http) {
 	.get(function(req, res) {
 		dynamodb.query({
 			TableName : 'Users',
-			ProjectionExpression: "#1, id, inClan, admin, dateJoined, title",
+			// ProjectionExpression: "#1, id, inClan, admin, dateJoined, title",
 			KeyConditionExpression: '#1 = :val',
 			ExpressionAttributeNames: {
 				'#1': 'name'
 			},
 			ExpressionAttributeValues: {
 				':val': { 'S': req.params.user_id }
-			},
-			Limit : 1000
+			}
 		}, function(err, data) {
 
-			if (err) { 
-				console.log(err.message);
+			if (err) {
 				return res.json({
 					success: false,
 					message: 'Database Error. Try again later.',
@@ -510,20 +519,31 @@ module.exports = function(app, express, $http) {
 				});
 			}
 
-			if (data.Count == 0) {  // Then the username must have been incorrect
+			if (data.Count == 0) {
 				return res.json({
 					success: false,
 					message: 'Query Failed. User not found.'
 				});
 			} else {
+
 				// Convert Data before sending it back to client
-				data = data.Items[0];
-				data.name = data.name.S;
-				data.id = data.id.S;
-				data.inClan = data.inClan.BOOL;
-				data.admin = data.admin.BOOL;
-				data.dateJoined = data.dateJoined.N;
-				data.title = data.title.S;
+				data = convertData(data.Items[0]);
+				delete data.password; // This is important... Well, it's hashed, but still
+				
+				// The list of wars someone has participated in need to be compacted into a single array
+				data.wars = []
+				for (item in data) {
+					if (!isNaN(item)) {  // We only care about the numbers, as they represent wars
+						data[item]['createdAt'] = item;  // Store the war createdAt value within the object
+						data.wars.push((data[item]));    // Push this object into the array
+						delete data[item]				 // Delete this entry from 'data'
+					}
+				}
+
+				// Sort the list of wars by start time
+				data.wars.sort(function(a, b) {
+					return (Number(a.start) > Number(b.start)) ? -1 : (Number(a.start) < Number(b.start)) ? 1 : 0;
+				});
 
 				res.json({
 					success: true,

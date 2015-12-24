@@ -395,32 +395,25 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.updateUsers = function(warriors) {
 
-		console.log(warriors);
 		var callbackTime = 0;
 		for (i in warriors) {
 			createdAt = vm.warData.createdAt;
 			temp = {};
 			temp[createdAt] = {
+				'opponent' : vm.warData.opponent,
 				'start' : vm.warData.start,
+				'warPos' : (Number(i)+1).toString(),
 				'attack1' : {
-					'you' : i,
-					'opp' : 'N/A',
+					'targetPos' : 'N/A',
 					'stars' : warriors[i].stars1
 				},
 				'attack2' : {
-					'you' : i,
-					'opp' : 'N/A',
+					'targetPos' : 'N/A',
 					'stars' : warriors[i].stars2
-				},
-				'opponent' : vm.warData.opponent
+				}
 			}
-			// console.log(warriors[i].name);
-			// $timeout(function() {
-				// console.log('CallBack!');
+
 			User.setProfile(warriors[i].name, temp);
-			// }, (callbackTime + (1000 * i)), true, null);
-			// window.setTimeout(console.log('Hello'), 1000);
-			// User.setProfile(warriors[i].name, temp);
 		};
 	};
 
@@ -443,7 +436,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 				vm.message = data.data.message;
 				$location.path('/wars');
 		});
-		vm.updateUsers(vm.warData.warriors);
 	};
 
 	vm.updateWar = function(quick, data) {
@@ -455,10 +447,16 @@ angular.module('warCtrl', ['warService', 'userService'])
 			// If there were any errors in validation, do not proceed
 			if (!warDataCleansed)
 				return;
+
+			// Update all the users in this war
+			if (!vm.warData.inProgress)
+				vm.updateUsers(data.warriors);
+
 		} else {
-			warDataCleansed = data
+			warDataCleansed = data;
 		}
 
+		console.log(warDataCleansed);
 		// call the userService function to update
 		War.update($routeParams.war_id, warDataCleansed) 
 			.then(function(data) {
@@ -469,8 +467,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 					$location.path('/wars');
 				}
 		});
-		// Finish by updating all the users in this war
-		vm.updateUsers(data.warriors);
 	};
 
 	vm.uploadImg = function () {
