@@ -22,7 +22,7 @@ h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButt
     color: black;
 }
 
-#clan-description, #about-section, #rules-section, .member-panel, .panel-group, .help-tip, #band a, #band button, #warriorStats .attacks
+#clan-description, #about-section, #rules-section, .member-panel, .panel-group, .help-tip, #band a, #band button, #warriorStats .attacks, #warStatsOverall
 {
 	font-family: "QuincyCF-Black" !important;
 }

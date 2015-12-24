@@ -134,6 +134,22 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	// 	vm.nameClass = 'col-xs-12';
 	// }
 
+	vm.calculateStats = function () {
+		vm.profile.warsFought = vm.profile.wars.length;
+		vm.profile.attacksMade = (vm.profile.wars.length * 2);
+		vm.profile.threeStarRate = 0;
+		vm.profile.starsGained = 0;
+		for (var i = 0; i < vm.profile.wars.length; i++) {
+			vm.profile.starsGained += Number(vm.profile.wars[i].attack1.stars);
+			vm.profile.starsGained += Number(vm.profile.wars[i].attack2.stars);
+			if (Number(vm.profile.wars[i].attack1.stars) == 3)
+				vm.profile.threeStarRate += 1;
+			if (Number(vm.profile.wars[i].attack2.stars) == 3)
+				vm.profile.threeStarRate += 1;
+		};
+		vm.profile.threeStarRate = ((vm.profile.threeStarRate / vm.profile.attacksMade) * 100);
+	}
+
 
 	vm.pageLoading = true;
 	// get the user data for the user you want to edit 
@@ -142,7 +158,8 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	.then(function(data) {
 		if (data.data.success) {
 			console.log(data.data.data);
-			vm.profile = data.data.data;	
+			vm.profile = data.data.data;
+			vm.calculateStats();	
 		} else {
 			vm.message = data.data.message;
 		}

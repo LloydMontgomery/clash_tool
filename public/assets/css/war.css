@@ -8,15 +8,15 @@
 	text-align: center;
 }
 
+#dateTime {
+	background-color: transparent;
+	font-size: 15px;
+}
+
 /* War Stats section */
 #warStats {
 	margin-bottom: 15px;
 	font-size: 18px;
-}
-
-#dateTime {
-	background-color: transparent;
-	font-size: 15px;
 }
 
 #warStats > div {

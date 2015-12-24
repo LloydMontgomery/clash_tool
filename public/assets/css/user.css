@@ -4,3 +4,43 @@
 
 	margin: 15px 0 15px 0;
 }
+
+/* User Profile Page */
+
+#profilePage #warStatsOverall {
+	text-align: center;
+	margin-bottom: 15px;
+	font-size: 18px;
+}
+
+#profilePage #warStatsOverall > div {
+	padding: 5px;
+}
+
+#profilePage #warStatsOverall > div > div {
+	border-radius: 15px;
+	box-shadow: 0px 0px 10px 5px #dadada;
+	padding: 15px;
+}
+
+#profilePage #warStatsOverall > div > div > div > div {
+	border-radius: 5px;
+	height: 30px;
+	margin-bottom: 15px;
+	background: white;
+	padding-top: 2px;
+}
+
+
+#profilePage #allAttacks {
+	margin-top: 5px;
+	margin-bottom: 20px;
+	padding: 0 20px 0 20px;
+}
+
+#profilePage #allAttacks > div{
+	border-radius: 15px;
+	box-shadow: 0px 0px 10px 5px #dadada;
+	padding: 15px 15px 0 15px;
+}
+
