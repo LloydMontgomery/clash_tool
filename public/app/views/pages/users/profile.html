@@ -10,69 +10,68 @@
 			<p>Loading Profile...</p>
 		</div>
 		<div ng-show="!user.loadingPage">
+			<div class="col-sm-12">
+				<!-- War Stats Overview -->
+				<div id="warStatsOverall" class="infoContainer col-sm-4 col-xs-12">
+					<div class="col-xs-12">
+						<div>
+							<div >
+								Wars Fought<br>
+								{{ user.profile.warsFought }}
+							</div>
+							<hr class="accentBlue">
+							<div>
+								Stars Gained<br>
+								{{ user.profile.starsGained }}
+							</div>
+							<hr class="accentBlue">
+							<div>
+								3-Star Rate<br>
+								{{ user.profile.threeStarRate }} %
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Attack Stats -->
+				<div id="attackStats" class="infoContainer col-sm-4 col-xs-12">
+					<div>
+						<div>
+							War Stars
+							<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
+						</div>
+					</div>
+				</div>
+				<!-- Hero Stats -->
+				<div id="heroStats" class="infoContainer col-sm-4 col-xs-12">
+					<div class="col-xs-12">
+						<div>
+							<div >
+								Town Hall<br>
+								<select ng-change="user.setMaxLvls()" ng-model="user.profile.thLvl"
+									ng-options="option for option in user.thLvls">
+								</select>
+							</div>
+							<hr class="accentBlue">
+							<div>
+								Barbarian King<br>
+								<select ng-model="user.profile.barbLvl" 
+									ng-options="option for option in user.kingLvls">
+								</select>
+							</div>
+							<hr class="accentBlue">
+							<div>
+								Archer Queen<br>
+								<select ng-model="user.profile.queenLvl" 
+									ng-options="option for option in user.queenLvls">
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-			<!-- War Stats Overview -->
-			<div id="warStatsOverall" class="col-sm-4 col-xs-12">
-				<div class="col-xs-12">
-					<div>
-						<div >
-							Wars Fought<br>
-							{{ user.profile.warsFought }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							Stars Gained<br>
-							{{ user.profile.starsGained }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							3-Star Rate<br>
-							{{ user.profile.threeStarRate }} %
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Attack Stats -->
-			<div id="warStatsOverall" class="col-sm-4 col-xs-12">
-				<div class="col-xs-12">
-					<div>
-						<div >
-							Wars Fought<br>
-							{{ user.profile.warsFought }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							Stars Gained<br>
-							{{ user.profile.starsGained }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							3-Star Rate<br>
-							{{ user.profile.threeStarRate }} %
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Hero Stats -->
-			<div id="warStatsOverall" class="col-sm-4 col-xs-12">
-				<div class="col-xs-12">
-					<div>
-						<div >
-							Wars Fought<br>
-							{{ user.profile.warsFought }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							Stars Gained<br>
-							{{ user.profile.starsGained }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							3-Star Rate<br>
-							{{ user.profile.threeStarRate }} %
-						</div>
-					</div>
-				</div>
+			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" class="col-xs-offset-4 col-xs-4">
+				<button ng-click="war.updateWar()" class="btn btn-lg btn-block updateButton">Update War</button>
 			</div>
 
 			<!-- All Attacks -->

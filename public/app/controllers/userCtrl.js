@@ -117,8 +117,10 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	};
 })
 
-.controller('userProfileController', function($routeParams, User) {
+.controller('userProfileController', function($scope, $routeParams, User) {
 	var vm = this;
+
+	/* ========================= POPULATE HTML PAGE ========================= */
 
 	// var route = $location.path();
 	// if (route.substr('profile/view/') > -1) {
@@ -134,17 +136,65 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	// 	vm.nameClass = 'col-xs-12';
 	// }
 
+	vm.loadingPage = true;
+
+	vm.thLvls = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+	vm.kingLvls = [];
+	vm.queenLvls = [];
+	$scope.stars = [[0, 0, 0, 0]];
+	$scope.labels = ['0 Stars', '1 Stars', '2 Stars', '3 Stars'];
+
+	// $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+	$scope.data = [
+		[65, 59, 80, 81, 56, 55, 40]
+	];
+
+	/* ======================== DYNAMIC PAGE CONTROL ======================== */
+
+	vm.setMaxLvls = function () {
+		vm.kingLvls = [];
+		vm.queenLvls = [];
+		var maxKingLvl = 0;
+		var maxQueenLvl = 0;
+		if (vm.profile.thLvl == 7) {
+			maxKingLvl = 5;
+			maxQueenLvl = 0;
+		} else if (vm.profile.thLvl == 8 ) {
+			maxKingLvl = 10;
+			maxQueenLvl = 0;
+		} else if (vm.profile.thLvl == 9 ) {
+			maxKingLvl = 30;
+			maxQueenLvl = 30;
+		} else if (vm.profile.thLvl == 10 ) {
+			maxKingLvl = 40;
+			maxQueenLvl = 40;
+		} else if (vm.profile.thLvl == 11 ) {
+			maxKingLvl = 40;
+			maxQueenLvl = 40;
+		}
+
+		for (var i = maxKingLvl; i > 0; i--) { vm.kingLvls.push(i) };
+		for (var i = maxQueenLvl; i > 0; i--) { vm.queenLvls.push(i) };
+	}
+
+	/* ======================= REPONSIVE PAGE CONTROL ======================= */
+
 	vm.calculateStats = function () {
+		$scope.stars = [[0, 0, 0, 0]];
 		vm.profile.warsFought = vm.profile.wars.length;
 		vm.profile.attacksMade = (vm.profile.wars.length * 2);
 		vm.profile.threeStarRate = 0;
 		vm.profile.starsGained = 0;
 		for (var i = 0; i < vm.profile.wars.length; i++) {
-			vm.profile.starsGained += Number(vm.profile.wars[i].attack1.stars);
-			vm.profile.starsGained += Number(vm.profile.wars[i].attack2.stars);
-			if (Number(vm.profile.wars[i].attack1.stars) == 3)
+			stars1 = Number(vm.profile.wars[i].attack1.stars);
+			stars2 = Number(vm.profile.wars[i].attack2.stars);
+			$scope.stars[0][stars1] += 1;
+			$scope.stars[0][stars2] += 1;
+			vm.profile.starsGained += stars1;
+			vm.profile.starsGained += stars2;
+			if (stars1 == 3)
 				vm.profile.threeStarRate += 1;
-			if (Number(vm.profile.wars[i].attack2.stars) == 3)
+			if (stars2 == 3)
 				vm.profile.threeStarRate += 1;
 		};
 		vm.profile.threeStarRate = ((vm.profile.threeStarRate / vm.profile.attacksMade) * 100);
@@ -159,11 +209,12 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		if (data.data.success) {
 			console.log(data.data.data);
 			vm.profile = data.data.data;
-			vm.calculateStats();	
+			vm.calculateStats();
+			vm.setMaxLvls();
 		} else {
 			vm.message = data.data.message;
 		}
-		vm.pageLoading = false;
+		vm.loadingPage = false;
 	});
 
 

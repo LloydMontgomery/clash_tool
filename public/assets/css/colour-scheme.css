@@ -9,7 +9,7 @@
 }
 
 /* Background is Black */
-footer {
+footer, .updateButton {
 	background-color: black !important;
 }
 
@@ -19,7 +19,7 @@ footer {
 }
 
 /* Text is the Accent Colour */
-footer a, .accentBlue, nav a {
+footer a, .accentBlue, nav a, .updateButton {
 	color: #0680AF !important;
 }
 

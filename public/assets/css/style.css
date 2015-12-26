@@ -13,6 +13,13 @@ main {
 	position: absolute;
 }
 
+.updateButton {
+	background-color: #000;
+	color: #0680AF !important;
+
+	margin: 15px 0 15px 0;
+}
+
 /*.page-scroll, .navbar
 {
 	background-color: black;
