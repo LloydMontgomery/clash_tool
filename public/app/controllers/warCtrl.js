@@ -456,7 +456,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		} else {
 			warDataCleansed = data;
 		}
-		
+
 		// call the userService function to update
 		War.update($routeParams.war_id, warDataCleansed) 
 			.then(function(data) {
@@ -516,6 +516,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		War.get($routeParams.war_id)
 		.then(function(data) {
 			vm.warData = data.data.data;
+			console.log(vm.warData);
 
 			vm.warData.startDisplay = new Date(vm.warData.start);
 
