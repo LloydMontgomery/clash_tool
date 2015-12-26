@@ -426,7 +426,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 		if (!warDataCleansed)
 			return;
 
-		console.log(warDataCleansed);
+		if (warDataCleansed.inProgress)
+			vm.updateUsers(warDataCleansed.warriors);
 
 		// call the userService function to update
 		War.create(warDataCleansed)
@@ -455,8 +456,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		} else {
 			warDataCleansed = data;
 		}
-
-		console.log(warDataCleansed);
+		
 		// call the userService function to update
 		War.update($routeParams.war_id, warDataCleansed) 
 			.then(function(data) {

@@ -27,7 +27,7 @@
 							<hr class="accentBlue">
 							<div>
 								3-Star Rate<br>
-								{{ user.profile.threeStarRate }} %
+								{{ user.profile.threeStarRate.toFixed(2) }} %
 							</div>
 						</div>
 					</div>
@@ -36,7 +36,7 @@
 				<div id="attackStats" class="infoContainer col-sm-4 col-xs-12">
 					<div>
 						<div>
-							War Stars
+							All War Stars
 							<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
 						</div>
 					</div>
@@ -71,7 +71,7 @@
 			</div>
 
 			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" class="col-xs-offset-4 col-xs-4">
-				<button ng-click="war.updateWar()" class="btn btn-lg btn-block updateButton">Update War</button>
+				<button ng-click="user.updateProfile()" class="btn btn-lg btn-block updateButton">Update Profile</button>
 			</div>
 
 			<!-- All Attacks -->

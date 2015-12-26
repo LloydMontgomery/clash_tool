@@ -142,12 +142,19 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	vm.kingLvls = [];
 	vm.queenLvls = [];
 	$scope.stars = [[0, 0, 0, 0]];
-	$scope.labels = ['0 Stars', '1 Stars', '2 Stars', '3 Stars'];
+	// $scope.labels = ['0 Stars', '1 Stars', '2 Stars', '3 Stars'];
+	$scope.labels = ['0', '1', '2', '3'];
 
 	// $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
 	$scope.data = [
 		[65, 59, 80, 81, 56, 55, 40]
 	];
+	// $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+ //  $scope.series = ['Series A', 'Series B'];
+ //  $scope.data = [
+ //    [65, 59, 80, 81, 56, 55, 40],
+ //    [28, 48, 40, 19, 86, 27, 90]
+ //  ];
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
@@ -177,7 +184,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		for (var i = maxQueenLvl; i > 0; i--) { vm.queenLvls.push(i) };
 	}
 
-	/* ======================= REPONSIVE PAGE CONTROL ======================= */
+	/* ========================= LOGIC PAGE CONTROL ========================= */
 
 	vm.calculateStats = function () {
 		$scope.stars = [[0, 0, 0, 0]];
@@ -200,6 +207,9 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		vm.profile.threeStarRate = ((vm.profile.threeStarRate / vm.profile.attacksMade) * 100);
 	}
 
+	vm.updateProfile = function() {
+		
+	}
 
 	vm.pageLoading = true;
 	// get the user data for the user you want to edit 
@@ -207,7 +217,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	User.getProfile($routeParams.user_id)
 	.then(function(data) {
 		if (data.data.success) {
-			console.log(data.data.data);
 			vm.profile = data.data.data;
 			vm.calculateStats();
 			vm.setMaxLvls();
