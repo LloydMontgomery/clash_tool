@@ -85,7 +85,7 @@
 					<!-- Leader Panel -->
 					<div ng-repeat="person in main.leaders" class="member-panel-container col-lg-3 col-xs-4">
 						<div class="member-panel">
-							<h5 class="member-name"> {{ person.name }} </h5>
+							<h6 class="member-name"> {{ person.name }} </h6>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
@@ -98,7 +98,7 @@
 					<!-- Elder Panel -->
 					<div ng-repeat="person in main.elders" class="member-panel-container col-lg-3 col-xs-4">
 						<div class="member-panel">
-							<h5 class="member-name"> {{ person.name }} </h5>
+							<h6 class="member-name"> {{ person.name }} </h6>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
@@ -111,7 +111,7 @@
 					<!-- Member Panel -->
 					<div ng-repeat="person in main.members" class="member-panel-container col-lg-3 col-xs-4">
 						<div class="member-panel">
-							<h5 class="member-name"> {{ person.name }} </h5>
+							<h6 class="member-name"> {{ person.name }} </h6>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
