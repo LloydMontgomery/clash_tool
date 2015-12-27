@@ -17,7 +17,7 @@
 
 h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
 #warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton,
-.updateButton
+.updateButton, .member-panel h5
 {
     font-family: "Supercell-Magic" !important;
     color: black;
