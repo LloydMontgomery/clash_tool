@@ -88,7 +88,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// Date and Time picker for war start
 	var now = new Date();
-
 	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
 	vm.warData.start = vm.warData.startDisplay.getTime();
 
@@ -516,9 +515,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 		War.get($routeParams.war_id)
 		.then(function(data) {
 			vm.warData = data.data.data;
-			console.log(vm.warData);
 
-			vm.warData.startDisplay = new Date(vm.warData.start);
+			vm.warData.startDisplay = new Date(Number(vm.warData.start));
 
 			// Set Countdown timers
 			vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours

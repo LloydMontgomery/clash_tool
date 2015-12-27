@@ -79,14 +79,42 @@
 	<!-- Members Section -->
 	<section id="members-section" class="section col-xs-12">
 		<div ng-class="main.mainPageSizing">
-			<h1 class="title">Members</h1>
-			<div id="member-panel-main-container">
-				<!-- Member Panel -->
-				<div ng-repeat="person in main.users" class="member-panel-container col-lg-3 col-xs-4">
-					<div class="member-panel">
-						<h4 class="member-name"> {{ person.name }} </h4>
-						{{ person.title }} <br>
-						{{ person.dateJoined.toDateString().substr(4) }}
+			<div class="row">
+				<h1 class="title">Leaders</h1>
+				<div id="member-panel-main-container">
+					<!-- Leader Panel -->
+					<div ng-repeat="person in main.leaders" class="member-panel-container col-lg-3 col-xs-4">
+						<div class="member-panel">
+							<h4 class="member-name"> {{ person.name }} </h4>
+							{{ person.title }} <br>
+							{{ person.dateJoined.toDateString().substr(4) }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<h1 class="title">Elders</h1>
+				<div id="member-panel-main-container">
+					<!-- Elder Panel -->
+					<div ng-repeat="person in main.elders" class="member-panel-container col-lg-3 col-xs-4">
+						<div class="member-panel">
+							<h4 class="member-name"> {{ person.name }} </h4>
+							{{ person.title }} <br>
+							{{ person.dateJoined.toDateString().substr(4) }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<h1 class="title">Members</h1>
+				<div id="member-panel-main-container">
+					<!-- Member Panel -->
+					<div ng-repeat="person in main.members" class="member-panel-container col-lg-3 col-xs-4">
+						<div class="member-panel">
+							<h4 class="member-name"> {{ person.name }} </h4>
+							{{ person.title }} <br>
+							{{ person.dateJoined.toDateString().substr(4) }}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -101,15 +129,15 @@
 				<div class="history-container col-xs-12">
 					<!-- War Entry -->
 					 <uib-accordion close-others="true">
-						<uib-accordion-group ng-repeat="war in main.wars" ng-if="war.outcome" class="warEntry">
+						<uib-accordion-group ng-repeat="war in main.wars" ng-if="war.outcome && war.img" class="warEntry">
 							<uib-accordion-heading>
 								<div class="warLeft"> {{ war.start.toString().substr(0,10) }} </div>
-								<div class="warRight"> +{{ war.exp.N }} Exp </div>
-								<div class="warCenter" ng-class="war.outcome.S"> 
-									{{ war.ourScore.N }} - {{ war.theirScore.N }}
+								<div class="warRight"> +{{ war.exp }} Exp </div>
+								<div class="warCenter" ng-class="war.outcome">
+									{{ war.ourScore }} - {{ war.theirScore }}
 								</div>
 							</uib-accordion-heading>
-							<img ng-src="{{war.img.S}}" style="width:100%">
+							<img ng-src="{{war.img}}" style="width:100%">
 						</uib-accordion-group>
 					</uib-accordion>
 					<span class="help-tip"> (Did ya try clicking one?) </span>

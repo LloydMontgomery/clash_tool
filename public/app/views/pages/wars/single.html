@@ -43,11 +43,11 @@
 							</div>
 							<hr class="accentBlue">
 							<div>
-								<timer ng-if="war.warStatus == 'Battle Day'" ng-attr-end-time="war.battleCountdown" 
-									max-time-unit="'hour'" interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 								<timer ng-if="war.warStatus == 'Preparation Day'" ng-attr-end-time="war.preparationCountdown" 
 									finish-callback="war.reloadPage()" max-time-unit="'hour'" 
 									interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+								<timer ng-if="war.warStatus == 'Battle Day'" ng-attr-end-time="war.battleCountdown" 
+									max-time-unit="'hour'" interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 								<div ng-if="war.warStatus == 'War Over'" class="excludeAnimation">
 									{{ war.warData.exp }}
 								</div>

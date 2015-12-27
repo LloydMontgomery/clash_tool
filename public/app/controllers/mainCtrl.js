@@ -104,6 +104,21 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					for (var i = 0; i < vm.users.length; i++) {
 						vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined)); // Convert milliseconds to date object
 					};
+
+					vm.leaders = [];
+					vm.elders  = [];
+					vm.members = [];
+
+					for (var i = 0; i < vm.users.length; i++) {
+						if (vm.users[i].title.indexOf('Leader') > -1)
+							vm.leaders.push(vm.users[i]);
+						else if (vm.users[i].title == 'Elder')
+							vm.elders.push(vm.users[i]);
+						else
+							vm.members.push(vm.users[i]);
+					};
+
+					delete vm.users;
 					
 				} else {
 					// Do Something
@@ -112,16 +127,16 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			War.partial().then(function(data) {
 				if (data.data.success) {
 
-					// bind the wars that come back to vm.wars
+					// Bind the wars that come back to vm.wars
 					vm.wars = data.data.data;
 
 					vm.wars.sort(function(a, b) {
-						return (a.start.N < b.start.N) ? -1 : (a.start.N > b.start.N) ? 1 : 0;
+						return (a.start < b.start) ? -1 : (a.start > b.start) ? 1 : 0;
 					});
 
 					now = new Date();
 					for (var i = 0; i < vm.wars.length; i++) {
-						vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+						vm.wars[i].start = new Date(Number(vm.wars[i].start - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
 					};
 
 				} else {

@@ -42,12 +42,17 @@ var dynamodb = new AWS.DynamoDB();
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
 var convertData = function(data) {
-	for (item in data) {
-		type = Object.keys(data[item])[0];
-		if (type == 'M' || type == 'L')
-			data[item] = convertData(data[item][type]);
-		else
-			data[item] = data[item][type]
+	if (Array.isArray(data)) {
+		for (i in data)
+			data[i] = convertData(data[i]);
+	} else {  // An object
+		for (item in data) {
+			type = Object.keys(data[item])[0];
+			if (type == 'M')
+				data[item] = convertData(data[item][type]);
+			else
+				data[item] = data[item][type];
+		}
 	}
 	return data;
 };
@@ -112,13 +117,14 @@ module.exports = function(app, express, $http) {
 						message: 'Authentication failed.'
 					});
 				} else {
+					data = convertData(data.Items[0]);
 
 					// if user is found and password is right
 					// create a token
 					var token = jwt.sign({
-						name: data.Items[0].name.S,
-						inClan: data.Items[0].inClan.BOOL,
-						admin: data.Items[0].admin.BOOL
+						name: data.name,
+						inClan: data.inClan,
+						admin: data.admin
 					}, TOKEN_SECRET,
 					{ expiresIn: 172800 // expires in 2 days 
 					// { expiresIn: 720 // expires in 2 hours 
@@ -126,6 +132,7 @@ module.exports = function(app, express, $http) {
 					});
 					// Save this for later
 					req.decoded = jwt.decode(token);
+
 					// return the information including token as JSON
 					res.json({
 						success: true,
@@ -157,19 +164,18 @@ module.exports = function(app, express, $http) {
 		user.Item.dateJoined = now.getTime();
 
 		user.Item.password = bcrypt.hashSync(req.body.password);
-		
+
 		user.Item.admin = false;  // Default to false
-		if (req.body.admin)
+		user.Item.inClan = false; // Default to false
+		// If the request comes from the "Create User" page, then we can set these
+		if (req.headers.referer.indexOf("/users") > -1) {
 			user.Item.admin = req.body.admin;
+			user.Item.inClan = req.body.inClan;
+		}
 
 		user.Item.title = "Member";  // Default to "Member"
 		if (req.body.title)
 			user.Item.title = req.body.title;
-
-		if (req.headers.referer.indexOf("/users") > -1)
-			user.Item.inClan = true;
-		else
-			user.Item.inClan = false;
 
 		dynamodbDoc.put(user, function(err, data) {
 			if (err) {
@@ -216,20 +222,15 @@ module.exports = function(app, express, $http) {
 					success: false,
 					message: 'Query Failed.'
 				});
+			} else {
+				data = convertData(data.Items);
+
+				res.json({
+					success: true,
+					message: 'Successfully returned all Users',
+					data: data
+				});
 			}
-
-			for (var i = 0; i < data.Items.length; i++) {
-				data.Items[i].name = data.Items[i].name.S;
-				data.Items[i].title = data.Items[i].title.S;
-				data.Items[i].inClan = data.Items[i].inClan.BOOL;
-				data.Items[i].dateJoined = data.Items[i].dateJoined.N;
-			};
-
-			res.json({
-				success: true,
-				message: 'Successfully returned all Users',
-				data: data.Items
-			});
 		});
 	});
 
@@ -250,13 +251,15 @@ module.exports = function(app, express, $http) {
 					success: false,
 					message: 'Database Error. Try again later',
 				});
-			}
+			} else {
+				data = convertData(data.Items);
 
-			res.json({
-				success: true,
-				message: 'Successfully returned all Wars',
-				data: data.Items
-			});
+				res.json({
+					success: true,
+					message: 'Successfully returned all Wars',
+					data: data
+				});
+			}
 		});
 	});
 
@@ -352,42 +355,17 @@ module.exports = function(app, express, $http) {
 					message: 'Query Failed. War not found.'
 				});
 			} else {
-
-				// Get the only item we want out of the array
-				data = data.Items[0];
-
+				// console.log(data.Items[0]);
 				// Convert all the values to non-object values
-				data.createdAt = Number(data.createdAt.S);
-				data.start = Number(data.start.N);
-				data.size = Number(data.size.N);
-				data.opponent = data.opponent.S;
-				if (data.outcome) {
-					data.exp = Number(data.exp.N);
-					data.ourScore = data.ourScore.N;
-					data.theirScore = data.theirScore.N;
-					data.ourDest = Number(data.ourDest.N);
-					data.theirDest = Number(data.theirDest.N);
-					data.outcome = data.outcome.S;
-				}
-				if (data.img)
-					data.img = data.img.S;
+				data = convertData(data.Items[0])
 
-				// Correct warrior data array
+				// console.log(data);
+
+				// Collect all the warriors into a single array
 				data.warriors = [];
 				for (var i = 0; data[i] != null; i++) {
-					// Strip M
-					data.warriors[i] = data[i].M;
-
-					// Convert all the values to non-object values
-					data.warriors[i].attack1 = data.warriors[i].attack1.S;
-					data.warriors[i].attack2 = data.warriors[i].attack2.S;
-					data.warriors[i].stars1 = data.warriors[i].stars1.S;
-					data.warriors[i].stars2 = data.warriors[i].stars2.S;
-					data.warriors[i].name = data.warriors[i].name.S;
-					data.warriors[i].viewed = data.warriors[i].viewed.BOOL;
-					data.warriors[i].lock1 = data.warriors[i].lock1.BOOL;
-					data.warriors[i].lock2 = data.warriors[i].lock2.BOOL;
-
+					data.warriors.push(data[i]);
+					delete data[i];
 				};
 
 				res.json({
