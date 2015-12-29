@@ -118,40 +118,15 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	var vm = this;
 
 	/* ========================= POPULATE HTML PAGE ========================= */
-
-	// var route = $location.path();
-	// if (route.substr('profile/view/') > -1) {
-	// 	vm.type = 'profile';
-	// }
-	// else if (route.substr('profile') > -1)
-	// 	vm.type = 'create';
-	// else if ($location.path().substr(0, 11) == '/wars/edit/') // Edit page
-	// 	vm.type = 'edit';
-	// else if ($location.path().substr(0, 11) == '/wars/view/') { // view page
-	// 	vm.type = 'view';
-	// 	vm.attackClass = 'col-xs-6';
-	// 	vm.nameClass = 'col-xs-12';
-	// }
-
 	vm.loadingPage = true;
 
 	vm.thLvls = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 	vm.kingLvls = [];
 	vm.queenLvls = [];
-	$scope.stars = [[0, 0, 0, 0]];
-	// $scope.labels = ['0 Stars', '1 Stars', '2 Stars', '3 Stars'];
-	$scope.labels = ['0', '1', '2', '3'];
 
-	// $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-	$scope.data = [
-		[65, 59, 80, 81, 56, 55, 40]
-	];
-	// $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
- //  $scope.series = ['Series A', 'Series B'];
- //  $scope.data = [
- //    [65, 59, 80, 81, 56, 55, 40],
- //    [28, 48, 40, 19, 86, 27, 90]
- //  ];
+	// Data for the Graph
+	$scope.stars = [[0, 0, 0, 0]];
+	$scope.labels = ['0', '1', '2', '3'];
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
@@ -205,10 +180,36 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	}
 
 	vm.updateProfile = function() {
-		
+		vm.error = '';
+		vm.message = '';
+		vm.updating = true;
+
+		console.log(vm.profile);
+		if (!vm.profile.thLvl || !vm.profile.barbLvl || !vm.profile.queenLvl) {
+			vm.error = 'Missing Town Hall, Barb King, or Queen Information'
+			vm.updating = false;
+			return;
+		}
+
+		updateData = {
+			'name': vm.profile.name,
+			'thLvl': vm.profile.thLvl,
+			'barbLvl': vm.profile.barbLvl,
+			'queenLvl': vm.profile.queenLvl,
+		};
+
+		User.setProfile(vm.profile.name, updateData)
+		.then(function(data) {
+			if (data.data.success) {
+				vm.message = 'Successfully Updated Profile'
+			} else {
+				vm.error = data.data.message;
+			}
+			vm.updating = false;
+		});
 	}
 
-	vm.pageLoading = true;
+	vm.loadingPage = true;
 	// get the user data for the user you want to edit 
 	// $routeParams is the way we grab data from the URL 
 	User.getProfile($routeParams.user_id)

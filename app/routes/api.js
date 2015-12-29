@@ -537,20 +537,22 @@ module.exports = function(app, express, $http) {
 	.put(function(req, res) {
 
 		console.log(req.body);
-		warID = Object.keys(req.body)[0].toString();
-		console.log(warID);
 
 		dynamodbDoc.update({
 			TableName: 'Users',
 			Key:{
-				'name': req.params.user_id
+				'name': req.body.name
 			},
-			UpdateExpression: 'set #name1 = :val1',
+			UpdateExpression: 'set #name1 = :val1, #name2 = :val2, #name3 = :val3',
 			ExpressionAttributeNames: {
-				'#name1' : warID
+				'#name1' : 'thLvl',
+				'#name2' : 'barblvl',
+				'#name3' : 'queenLvl'
 			},
 			ExpressionAttributeValues: {
-				':val1' : req.body[warID]
+				':val1' : req.body.thLvl,
+				':val2' : req.body.barbLvl,
+				':val3' : req.body.queenLvl
 			}
 		}, function(err, data) {
 			if (err) {
