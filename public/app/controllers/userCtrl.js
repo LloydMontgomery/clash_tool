@@ -216,6 +216,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	.then(function(data) {
 		if (data.data.success) {
 			vm.profile = data.data.data;
+			console.log(vm.profile);
 			vm.calculateStats();
 			vm.setMaxLvls();
 		} else {

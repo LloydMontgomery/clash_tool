@@ -507,6 +507,11 @@ module.exports = function(app, express, $http) {
 				// Convert Data before sending it back to client
 				data = convertData(data.Items[0]);
 				delete data.password; // This is important... Well, it's hashed, but still
+
+				// Convert a few values before returning
+				data.thLvl = Number(data.thLvl);
+				data.barbLvl = Number(data.barbLvl);
+				data.queenLvl = Number(data.queenLvl);
 				
 				// The list of wars someone has participated in need to be compacted into a single array
 				data.wars = []
@@ -546,7 +551,7 @@ module.exports = function(app, express, $http) {
 			UpdateExpression: 'set #name1 = :val1, #name2 = :val2, #name3 = :val3',
 			ExpressionAttributeNames: {
 				'#name1' : 'thLvl',
-				'#name2' : 'barblvl',
+				'#name2' : 'barbLvl',
 				'#name3' : 'queenLvl'
 			},
 			ExpressionAttributeValues: {
