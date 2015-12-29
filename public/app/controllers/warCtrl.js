@@ -13,28 +13,18 @@ angular.module('warCtrl', ['warService', 'userService'])
 		// bind the wars that come back to vm.wars
 		vm.wars = data.data.data;
 		vm.wars.sort(function(a, b) {
-			return (a.start.N < b.start.N) ? 1 : (a.start.N > b.start.N) ? -1 : 0;
+			return (a.start < b.start) ? 1 : (a.start > b.start) ? -1 : 0;
 		});
 
 		now = new Date();
 		for (var i = 0; i < vm.wars.length; i++) {
 			// vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
-			vm.wars[i].start = new Date(Number(vm.wars[i].start.N)); // Convert milliseconds to date object
+			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
 		};
 
 		// when all the wars come back, remove the processing variable
 		vm.processing = false;
 	});
-
-	vm.viewWar = function(start) {
-		// $location.path('/wars/view/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
-		$location.path('/wars/view/' + Number(start));
-	}
-
-	vm.editWar = function(start) {
-		// $location.path('/wars/edit/' + (Number(start) + (now.getTimezoneOffset() * 60000)).toString());
-		$location.path('/wars/edit/' + Number(start));
-	}
 })
 
 // controller applied to War creation page

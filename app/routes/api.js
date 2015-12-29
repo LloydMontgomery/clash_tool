@@ -317,12 +317,15 @@ module.exports = function(app, express, $http) {
 					success: false,
 					message: 'Database Error. Try again later.'
 				});
+			} else {
+				data = convertData(data.Items);
+
+				res.json({
+					success: true,
+					message: 'Successfully returned all Wars',
+					data: data
+				});
 			}
-			res.json({
-				success: true,
-				message: 'Successfully returned all Wars',
-				data: data.Items
-			});
 		});
 	});
 
@@ -355,11 +358,8 @@ module.exports = function(app, express, $http) {
 					message: 'Query Failed. War not found.'
 				});
 			} else {
-				// console.log(data.Items[0]);
 				// Convert all the values to non-object values
 				data = convertData(data.Items[0])
-
-				// console.log(data);
 
 				// Collect all the warriors into a single array
 				data.warriors = [];
@@ -604,10 +604,12 @@ module.exports = function(app, express, $http) {
 				    message: 'Database Error. Try again later'
 				});
 			}
+			data = convertData(data.Items);
+
 			res.json({
 				success: true,
 			    message: 'Successfully returned all Users',
-				data: data.Items
+				data: data
 			});
 		});
 	});
@@ -673,14 +675,8 @@ module.exports = function(app, express, $http) {
 					message: 'Query Failed. User not found.'
 				});
 			} else {
-				// Convert Data before sending it back to client
-				data = data.Items[0];
-				data.name = data.name.S;
-				data.id = data.id.S;
-				data.inClan = data.inClan.BOOL;
-				data.admin = data.admin.BOOL;
-				data.dateJoined = data.dateJoined.N;
-				data.title = data.title.S;
+				
+				data = convertData(data.Items[0]);
 
 				res.json({
 					success: true,

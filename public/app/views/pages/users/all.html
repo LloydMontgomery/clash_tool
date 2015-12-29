@@ -27,14 +27,14 @@
 		<tbody>
 			<!-- LOOP OVER THE USERS -->
 			<tr ng-repeat="person in user.users" class="excludeAnimation"> 
-				<td>{{ person.name.S }}</td>
-				<td class="hidden-xs">{{ person.id.S }}</td>
-				<td>{{ person.title.S }}</td>
-				<td>{{ person.inClan.BOOL }}</td>
-				<td>{{ person.admin.BOOL }}</td>
+				<td>{{ person.name }}</td>
+				<td class="hidden-xs">{{ person.id }}</td>
+				<td>{{ person.title }}</td>
+				<td>{{ person.inClan }}</td>
+				<td>{{ person.admin }}</td>
 				<td class="col-sm-3">
-					<a ng-href="/users/{{ person.name.S }}" class="btn btn-primary">Edit</a>
-					<a ng-click="user.deleteUser(person.name.S)" class="btn btn-danger"
+					<a ng-href="/users/{{ person.name }}" class="btn btn-primary">Edit</a>
+					<a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
 						ng-if="main.userInfo.name == 'Zephyro'">Delete</a>
 				</td>
 			</tr>

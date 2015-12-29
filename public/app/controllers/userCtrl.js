@@ -15,7 +15,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 			// bind the users that come back to vm.users
 			vm.users = data.data.data;
 			vm.users.sort(function(a, b) {
-				return (a.name.S < b.name.S) ? -1 : (a.name.S > b.name.S) ? 1 : 0;
+				return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
 			});
 			vm.processing = false;
 
@@ -29,16 +29,13 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	vm.deleteUser = function(name) {
 		console.log(name);
 		vm.processing = true;
-		// accepts the user id as a parameter
+
 		User.delete(name).success(function(data) {
-			// get all users to update the table
-			// you can also set up your api
-			// to return the list of users with the delete call 
 			User.all()
 				.then(function(data) {
 					vm.users = data.data.data;
 					vm.users.sort(function(a, b) {
-						return (a.name.S < b.name.S) ? -1 : (a.name.S > b.name.S) ? 1 : 0;
+						return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
 					});
 					vm.processing = false;
 				});
