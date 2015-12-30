@@ -9,7 +9,8 @@ angular.module('ClashTool', [
 	'warCtrl',
 	'timer',
 	'chart.js', 
-	'ui.bootstrap'
+	'ui.bootstrap',
+	'door3.css'
 ])
 
 // application configuration to integrate token into requests

@@ -569,8 +569,6 @@ module.exports = function(app, express, $http) {
 					return (Number(a.start) > Number(b.start)) ? -1 : (Number(a.start) < Number(b.start)) ? 1 : 0;
 				});
 
-				console.log(data);
-
 				res.json({
 					success: true,
 					message: 'Successfully returned user',
@@ -583,8 +581,6 @@ module.exports = function(app, express, $http) {
 	// update the user with this id
 	// (accessed at PUT http://localhost:8080/api/users/profile/:user_id) 
 	.put(function(req, res) {
-
-		console.log(req.body);
 
 		dynamodbDoc.update({
 			TableName: 'Users',

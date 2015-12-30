@@ -11,7 +11,8 @@ angular.module('app.routes', ['ngRoute'])
 	.when('/login', {
 		templateUrl : 'app/views/pages/login.html',
 		controller  : 'mainController',
-		controllerAs: 'auth'
+		controllerAs: 'auth',
+		css: 'assets/css/login.css'
 	})
 
 	// USERS //
@@ -19,7 +20,8 @@ angular.module('app.routes', ['ngRoute'])
 	.when('/users', {
 		templateUrl	: 'app/views/pages/users/all.html',
 		controller	: 'userController',
-		controllerAs: 'user'
+		controllerAs: 'user',
+		css: 'assets/css/user.css'
 	})
 	// form to create a new user // same view as edit page 
 	.when('/users/create', {
@@ -37,7 +39,8 @@ angular.module('app.routes', ['ngRoute'])
 	.when('/users/profile/:user_id', {
 		templateUrl	: 'app/views/pages/users/profile.html',
 		controller	: 'userProfileController',
-		controllerAs: 'user'
+		controllerAs: 'user',
+		css: 'assets/css/user.css'
 	})
 
 	// WARS //
