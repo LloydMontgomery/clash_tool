@@ -510,8 +510,34 @@ module.exports = function(app, express, $http) {
 
 				// Convert a few values before returning
 				data.thLvl = Number(data.thLvl);
-				data.barbLvl = Number(data.barbLvl);
+				data.kingLvl = Number(data.kingLvl);
 				data.queenLvl = Number(data.queenLvl);
+				data.kingFinishDate = Number(data.kingFinishDate);
+				data.queenFinishDate = Number(data.queenFinishDate);
+
+				// Add a few values if they don't exist
+				// REMOVE THIS once all profiles have been updated
+				if (!data.kingFinishDate)
+					data.kingFinishDate = 0;
+				if (!data.queenFinishDate)
+					data.queenFinishDate = 0;
+
+				if (data.kingFinishDate != 0) {
+					now = new Date();
+					difference = data.kingFinishDate - now;
+
+					data.kingTimeMinute = Math.floor(difference / (60 * 1000)) % 60;
+					data.kingTimeHour = Math.floor(difference / (60 * 60 * 1000)) % 24;
+					data.kingTimeDay = Math.floor(difference / (24 * 60 * 60 * 1000));
+				}
+				if (data.queenFinishDate != 0) {
+					now = new Date();
+					difference = data.queenFinishDate - now;
+
+					data.queenTimeMinute = Math.floor(difference / (60 * 1000)) % 60;
+					data.queenTimeHour = Math.floor(difference / (60 * 60 * 1000)) % 24;
+					data.queenTimeDay = Math.floor(difference / (24 * 60 * 60 * 1000));
+				}
 				
 				// The list of wars someone has participated in need to be compacted into a single array
 				data.wars = []
@@ -543,6 +569,8 @@ module.exports = function(app, express, $http) {
 					return (Number(a.start) > Number(b.start)) ? -1 : (Number(a.start) < Number(b.start)) ? 1 : 0;
 				});
 
+				console.log(data);
+
 				res.json({
 					success: true,
 					message: 'Successfully returned user',
@@ -563,16 +591,20 @@ module.exports = function(app, express, $http) {
 			Key:{
 				'name': req.body.name
 			},
-			UpdateExpression: 'set #name1 = :val1, #name2 = :val2, #name3 = :val3',
+			UpdateExpression: 'set #name1 = :val1, #name2 = :val2, #name3 = :val3, #name4 = :val4, #name5 = :val5',
 			ExpressionAttributeNames: {
 				'#name1' : 'thLvl',
-				'#name2' : 'barbLvl',
-				'#name3' : 'queenLvl'
+				'#name2' : 'kingLvl',
+				'#name3' : 'queenLvl',
+				'#name4' : 'kingFinishDate',
+				'#name5' : 'queenFinishDate'
 			},
 			ExpressionAttributeValues: {
 				':val1' : req.body.thLvl,
-				':val2' : req.body.barbLvl,
-				':val3' : req.body.queenLvl
+				':val2' : req.body.kingLvl,
+				':val3' : req.body.queenLvl,
+				':val4' : req.body.kingFinishDate,
+				':val5' : req.body.queenFinishDate
 			}
 		}, function(err, data) {
 			if (err) {

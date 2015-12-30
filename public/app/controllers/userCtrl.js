@@ -181,17 +181,27 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		vm.updating = true;
 
 		console.log(vm.profile);
-		if (!vm.profile.thLvl || !vm.profile.barbLvl || !vm.profile.queenLvl) {
+		if (!vm.profile.thLvl || !vm.profile.kingLvl || !vm.profile.queenLvl) {
 			vm.error = 'Missing Town Hall, Barb King, or Queen Information'
 			vm.updating = false;
 			return;
 		}
 
+		vm.setHeroesCountdowns();
+
+		// If the user has just set their King upgrade timer, then increment the King lvl. Same for Queen
+		if (vm.initial.kingFinishDate == 0 & vm.profile.kingFinishDate != 0)
+			vm.profile.kingLvl += 1;
+		if (vm.initial.queenFinishDate == 0 & vm.profile.queenFinishDate != 0)
+			vm.profile.queenLvl += 1;
+
 		updateData = {
 			'name': vm.profile.name,
 			'thLvl': vm.profile.thLvl,
-			'barbLvl': vm.profile.barbLvl,
+			'kingLvl': vm.profile.kingLvl,
 			'queenLvl': vm.profile.queenLvl,
+			'kingFinishDate': vm.profile.kingFinishDate,
+			'queenFinishDate': vm.profile.queenFinishDate
 		};
 
 		User.setProfile(vm.profile.name, updateData)
@@ -206,40 +216,12 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	}
 
 
-	vm.loadingPage = true;
-	// get the user data for the user you want to edit 
-	// $routeParams is the way we grab data from the URL 
-	User.getProfile($routeParams.user_id)
-	.then(function(data) {
-		if (data.data.success) {
-			vm.profile = data.data.data;
-			vm.calculateStats();
-			vm.setMaxLvls();
-			vm.setBarbUpgradeTime();
-			vm.setQueenUpgradeTime();
-		} else {
-			vm.message = data.data.message;
-		}
-		vm.loadingPage = false;
-	});
-
-
-
 	/* ============================ MODAL LOGIC ============================ */
 
-	// 
-	vm.barbTimeDay = 0;
-	vm.barbTimeHour = 0;
-	vm.barbTimeMinute = 0;
-
-	vm.queenTimeDay = 0;
-	vm.queenTimeHour = 0;
-	vm.queenTimeMinute = 0;
-
 	vm.options = {};
-	vm.options.barbTimeDays = [];
-	vm.options.barbTimeHours = [];
-	vm.options.barbTimeMinutes = [];
+	vm.options.kingTimeDays = [];
+	vm.options.kingTimeHours = [];
+	vm.options.kingTimeMinutes = [];
 
 	vm.options.queenTimeDays = [];
 	vm.options.queenTimeHours = [];
@@ -250,48 +232,72 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		for (var i = 0; i < 24; i++) { vm.options.queenTimeHours.push(i) };
 		for (var i = 0; i < 60; i++) { vm.options.queenTimeMinutes.push(i) };
 
-		vm.options.barbTimeDays = [0, 1, 2, 3, 4, 5, 6, 7];
-		for (var i = 0; i < 24; i++) { vm.options.barbTimeHours.push(i) };
-		for (var i = 0; i < 60; i++) { vm.options.barbTimeMinutes.push(i) };
+		vm.options.kingTimeDays = [0, 1, 2, 3, 4, 5, 6, 7];
+		for (var i = 0; i < 24; i++) { vm.options.kingTimeHours.push(i) };
+		for (var i = 0; i < 60; i++) { vm.options.kingTimeMinutes.push(i) };
 	}; vm.initVars();
 
 	vm.setBarbUpgradeTime = function () {
 		// Set the maximum Day and select the right hours (12 or 0)
-		barbLvl = vm.profile.barbLvl;
-		if (barbLvl > 14)
-			barbLvl = 14;
-		vm.barbTimeDay = Math.floor(barbLvl * .5);
-		vm.barbTimeHour = (barbLvl * 12) % 24;
-		vm.barbTimeMinute = 0;
+		kingLvl = vm.profile.kingLvl;
+		if (kingLvl > 14)
+			kingLvl = 14;
+		vm.profile.kingTimeDay = Math.floor(kingLvl * .5);
+		vm.profile.kingTimeHour = (kingLvl * 12) % 24;
+		vm.profile.kingTimeMinute = 0;
 
-		vm.options.barbTimeDays = [];
-		for (var i = 0; i <= vm.barbTimeDay; i++) { vm.options.barbTimeDays.push(i) };
+		vm.options.kingTimeDays = [];
+		for (var i = 0; i <= vm.profile.kingTimeDay; i++) { vm.options.kingTimeDays.push(i) };
 	}
 
 	vm.setQueenUpgradeTime = function () {
 		queenLvl = vm.profile.queenLvl;
 		if (queenLvl > 14)
 			queenLvl = 14;
-		vm.queenTimeDay = Math.floor(queenLvl * .5);
-		vm.queenTimeHour = (queenLvl * 12) % 24;
-		vm.queenTimeMinute = 0;
+		vm.profile.queenTimeDay = Math.floor(queenLvl * .5);
+		vm.profile.queenTimeHour = (queenLvl * 12) % 24;
+		vm.profile.queenTimeMinute = 0;
 
 		vm.options.queenTimeDays = [];
-		for (var i = 0; i <= vm.queenTimeDay; i++) { vm.options.queenTimeDays.push(i) };
+		for (var i = 0; i <= vm.profile.queenTimeDay; i++) { vm.options.queenTimeDays.push(i) };
 	}
 
 	vm.setHeroesCountdowns = function () {
-		if (vm.barbTimer) {
-
+		if (!vm.kingTimerDisable) {
+			// Add the time together
+			var minutesAway = (vm.profile.kingTimeDay * 24 * 60) + (vm.profile.kingTimeHour * 60) + vm.profile.kingTimeMinute;
+			
+			// Get the current time and offset it by the timer length
+			now = new Date();
+			now = now.getTime();
+			vm.profile.kingFinishDate = now + (minutesAway * 60 * 1000);
+		} else {
+			vm.profile.kingFinishDate = 0;
 		}
 
-		if (vm.queenTimer) {
+		console.log(vm.profile.kingFinishDate);
+
+		if (!vm.queenTimerDisable) {
+			// Add the time together
+			var minutesAway = (vm.profile.queenTimeDay * 24 * 60) + (vm.profile.queenTimeHour * 60) + vm.profile.queenTimeMinute;
 			
+			// Get the current time and offset it by the timer length
+			now = new Date();
+			now = now.getTime();
+			vm.profile.queenFinishDate = now + (minutesAway * 60 * 1000);
+		} else {
+			vm.profile.queenFinishDate = 0;
 		}
 	}
 
 	vm.open = function (size) {
 		vm.updating = true;
+
+		if (vm.initial.kingFinishDate == 0)
+			vm.kingTimer = false;
+		if (vm.initial.queenFinishDate == 0)
+			vm.queenTimer = false;
+
 		var modalInstance = $uibModal.open({
 			animation: true,
 			templateUrl: 'myModalContent.html',
@@ -306,12 +312,46 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 
 		modalInstance.result.then(function (user) {
 			vm.updating = false;
-			vm.setHeroesCountdowns()
+			vm.updateProfile()
 		}, function () {
 			vm.updating = false;
-			vm.setHeroesCountdowns()
+			vm.updateProfile()
 		});
 	};
+
+	/* =================== AUTO-RUN CODE FOR LOADING PAGE =================== */
+
+	// get the user data for the user you want to edit 
+	// $routeParams is the way we grab data from the URL 
+	User.getProfile($routeParams.user_id)
+	.then(function(data) {
+		if (data.data.success) {
+			vm.profile = data.data.data;
+
+			// Save some initial values so we know if they change when writing back
+			vm.initial = {};
+			vm.initial.kingFinishDate = vm.profile.kingFinishDate;
+			vm.initial.queenFinishDate = vm.profile.queenFinishDate;
+
+			console.log(vm.profile);
+
+			vm.calculateStats();
+			vm.setMaxLvls();
+			if (vm.initial.kingFinishDate == 0) {
+				vm.kingTimerDisable = true;
+				vm.setBarbUpgradeTime();
+			}
+			if (vm.initial.queenFinishDate == 0) {
+				vm.queenTimerDisable = true;
+				vm.setQueenUpgradeTime();
+			}
+		} else {
+			vm.message = data.data.message;
+		}
+		vm.loadingPage = false;
+	});
+
+
 
 })
 
