@@ -1,5 +1,5 @@
 <section>
-	<div class="col-xs-12" id="profilePage">
+	<div class="col-xs-12">
 		<div id="warPageTitle">
 			<h3>{{ user.profile.name }}'s Profile</h3>
 		</div>
@@ -129,15 +129,15 @@
 			<div class="modal-header">
 				<h3 class="modal-title">Edit Profile</h3>
 			</div>
-			<div class="modal-body">
-				<div class="innerModalContainer">
+			<div class="row modal-body">
+				<div class=" innerModalContainer">
 					Town Hall Level
 					<select ng-change="user.setMaxLvls()" ng-model="user.profile.thLvl"
 						ng-options="option for option in user.thLvls">
 					</select>
 				</div>
-
-				<div class="innerModalContainer">
+				<hr class="accentBlue">
+				<div class=" innerModalContainer">
 					<br>Barbarian King Level
 					<select ng-change="user.setBarbUpgradeTime()" ng-model="user.profile.kingLvl" 
 						ng-options="option for option in user.kingLvls">
@@ -159,8 +159,8 @@
 							class="btn btn-warning" type="button"> Cancel BK Upgrade Timer </button>
 					</div>
 				</div>
-
-				<div class="innerModalContainer">
+				<hr class="accentBlue">
+				<div class=" innerModalContainer">
 					<br>Archer Queen Level
 					<select ng-change="user.setQueenUpgradeTime()" ng-model="user.profile.queenLvl" 
 						ng-options="option for option in user.queenLvls">

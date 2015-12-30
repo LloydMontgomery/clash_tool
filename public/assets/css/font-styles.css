@@ -17,14 +17,14 @@
 
 h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
 #warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton,
-.updateButton, .member-panel h6, #username
+.updateButton, .member-panel h6, #username, .modal-header
 {
     font-family: "Supercell-Magic" !important;
     color: black;
 }
 
 #clan-description, #about-section, #rules-section, .member-panel, .panel-group, .help-tip, 
-#band a, #band button, #warriorStats .attacks, #warStatsOverall, #heroStats
+#band a, #band button, #warriorStats .attacks, #warStatsOverall, #heroStats, .modal-body
 {
 	font-family: "QuincyCF-Black" !important;
 }
