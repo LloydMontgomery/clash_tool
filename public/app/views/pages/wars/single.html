@@ -43,11 +43,11 @@
 							</div>
 							<hr class="accentBlue">
 							<div>
-								<timer ng-if="war.warStatus == 'Battle Day'" ng-attr-end-time="war.battleCountdown" 
-									max-time-unit="'hour'" interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 								<timer ng-if="war.warStatus == 'Preparation Day'" ng-attr-end-time="war.preparationCountdown" 
 									finish-callback="war.reloadPage()" max-time-unit="'hour'" 
 									interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
+								<timer ng-if="war.warStatus == 'Battle Day'" ng-attr-end-time="war.battleCountdown" 
+									max-time-unit="'hour'" interval="1000" class="excludeAnimation">{{hours}}H {{mminutes}}M {{sseconds}}S</timer>
 								<div ng-if="war.warStatus == 'War Over'" class="excludeAnimation">
 									{{ war.warData.exp }}
 								</div>
@@ -152,7 +152,7 @@
 			<div ng-show="(war.type == 'view' && war.warData.img) || (war.type != 'view' && !war.warData.inProgress)" 
 				ng-show="war.showWarriors" id="imgUpload" class="col-sm-offset-3 col-sm-6 col-xs-12">
 				<div class="col-xs-12">
-					<div ng-if="war.type == 'edit'" id="imgContainer">
+					<div ng-if="war.type != 'view'" id="imgContainer">
 						<div ng-show="war.warData.img">
 							<img ng-src="{{war.warData.img}}">
 						</div>
@@ -169,7 +169,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- Warriors Stats -->
+			<!-- Warriors -->
 			<div ng-show="war.showWarriors" id="warriorStats" class="col-xs-12">
 				<div ng-show="!war.warriorsReady" class="jumbotron text-center"> 
 					<span class="glyphicon glyphicon-repeat spinner"></span>
@@ -251,7 +251,7 @@
 										{{ warrior.attack2 }}
 									</div>
 								</div>
-								<div ng-init="war.setStars(1, warrior, 2, warrior.stars1)" ng-show="!war.warData.inProgress">
+								<div ng-init="war.setStars(1, warrior, 2, warrior.stars2)" ng-show="!war.warData.inProgress">
 									<span ng-click="war.setStars(0, warrior, 2, '0')" class="glyphicons glyphicons-refresh"></span>
 									<span ng-click="war.setStars(0, warrior, 2, '1')" ng-class="warrior.s2Opt1" class="glyphicons x2 drop"></span>
 									<span ng-click="war.setStars(0, warrior, 2, '2')" ng-class="warrior.s2Opt2" class="glyphicons x2 drop"></span>
@@ -292,7 +292,7 @@
 				<!-- Button to Submit War or Update War -->
 				<div ng-show="war.showWarriors && war.warriorsReady">
 					<button ng-click="war.saveWar()" class="btn btn-lg btn-block warButton" ng-if="war.type == 'create'">Create War</button>
-					<button ng-click="war.updateWar(true)" class="btn btn-lg btn-block warButton" ng-if="war.type != 'create'">Update War</button>
+					<button ng-click="war.updateWar(false, war.warData)" class="btn btn-lg btn-block warButton" ng-if="war.type != 'create'">Update War</button>
 				</div>
 			</div>
 		</form>

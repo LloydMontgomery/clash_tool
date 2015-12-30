@@ -7,7 +7,9 @@ angular.module('ClashTool', [
 	'mainCtrl',
 	'userCtrl',
 	'warCtrl',
-	'timer'
+	'timer',
+	'chart.js', 
+	'ui.bootstrap'
 ])
 
 // application configuration to integrate token into requests
@@ -74,6 +76,14 @@ angular.module('ClashTool', [
 			});
 		}
 	}
+}])
+
+// Optional configuration
+.config(['ChartJsProvider', function (ChartJsProvider) {
+	// Configure all charts
+		ChartJsProvider.setOptions({
+		colours: ['#0680AF']
+	});
 }]);
 
 

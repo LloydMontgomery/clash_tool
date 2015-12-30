@@ -17,6 +17,13 @@ section {
 	margin: 100px 0 50px 0;
 }
 
+#intro-section #gf-logo {
+	margin-top: 40px;
+	min-height: 150px;
+	max-height: 300px;
+	height: 40vh;
+}
+
 /* Every Other Section Starting with the First One */
 #intro-section, #rules-section, #history-section {
 	background-color: white;
@@ -31,8 +38,8 @@ section {
 #intro-section {
 	/*padding-top: 75px;	*/
 }
-#intro-section #clan-description {
-	margin-top: 50px;
+#intro-section #clan-description div {
+	margin-top: 10px;
 }
 #intro-section .intro-spacer {
 	height: 50px;
@@ -54,7 +61,7 @@ section {
 	color: #0680AF !important;
 }
 #currentWarButton {
-	margin-top: -15px;
+	margin-top: 10px auto;
 	padding-top: 0;
 }
 

@@ -16,13 +16,15 @@
 }
 
 h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
-#warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton
+#warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton,
+.updateButton, .member-panel h6, #username
 {
-    font-family: "Supercell-Magic";
+    font-family: "Supercell-Magic" !important;
     color: black;
 }
 
-#clan-description, .rules-container, .member-panel, .panel-group, .help-tip, #band a, #band button, #warriorStats .attacks
+#clan-description, #about-section, #rules-section, .member-panel, .panel-group, .help-tip, 
+#band a, #band button, #warriorStats .attacks, #warStatsOverall, #heroStats
 {
-	font-family: "QuincyCF-Black";
+	font-family: "QuincyCF-Black" !important;
 }

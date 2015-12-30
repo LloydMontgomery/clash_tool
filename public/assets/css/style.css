@@ -13,17 +13,24 @@ main {
 	position: absolute;
 }
 
-.page-scroll, .navbar
+.updateButton {
+	background-color: #000;
+	color: #0680AF !important;
+
+	margin: 15px 0 15px 0;
+}
+
+/*.page-scroll, .navbar
 {
 	background-color: black;
 	color: #0680AF !important;
-/*	background-color: #0680AF;
-	color: black !important;*/
-}
+	background-color: #0680AF;
+	color: black !important;
+}*/
 
 
 /* ===================== NAVBAR ===================== */
-.navbar {
+/*.navbar {
 	height: 50px !important;
 }
 .navbar-header {
@@ -44,15 +51,10 @@ main {
 }
 #navbar-links a {
 	color: #0680AF;
-}
+}*/
 
 
 
-
-.help-tip
-{
-	margin-top: 20px;
-}
 
 #navigation-buttons .btn
 {
@@ -61,34 +63,9 @@ main {
 	width: 100%;
 }
 
-#gf-logo
-{
-	width: 80%;
-}
-
-a
-{
-	color: black;
-}
-
 .greyedOutText {
 	color: #eaeaea !important;
 }
-
-
-/* HEADER ===================== */
-header .navbar {
-	position: absolute;
-	top: 0;
-	width: 100%;
-	border-radius: 0;
-}
-
-
-/* FOOTER ===================== */
-
-
-
 
 
 

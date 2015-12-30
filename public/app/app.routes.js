@@ -33,6 +33,12 @@ angular.module('app.routes', ['ngRoute'])
 		controller	: 'userEditController',
 		controllerAs: 'user'
 	})
+	//page to view a user profile
+	.when('/users/profile/:user_id', {
+		templateUrl	: 'app/views/pages/users/profile.html',
+		controller	: 'userProfileController',
+		controllerAs: 'user'
+	})
 
 	// WARS //
 	// show all wars

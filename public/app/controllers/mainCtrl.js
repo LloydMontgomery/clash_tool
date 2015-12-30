@@ -9,39 +9,74 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
+
+	// Keeps the proper Navbar option highlighted; reflects the page currently visiting
+	var setActive = function(active) {
+		document.getElementById('navUsers').className = '';
+		document.getElementById('navWars').className = '';
+		document.getElementById('navHome').className = '';
+		document.getElementById('navProfile').className = '';
+		document.getElementById(active).className = 'active';
+	}
+
+	var checkRoutePermission = function(route) {
+
+		/* Routes that anyone can go to */
+		if (route == '/') {  // home
+			setActive('navHome');
+			return;
+		}
+		if (route == '/login') {
+			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
+				setActive('navHome');
+				$location.path('/');
+			} else {  // User is not logged in, let them go there
+				setActive('navProfile');
+			}
+			return;
+		} 
+
+		/* Logged In Authentication */
+		if (!vm.loggedIn){
+			setActive('navHome');
+			$location.path('/');
+			return;
+		}
+
+		/* Routes that only people who are logged in can go to */
+		if (route == '/wars') {
+			setActive('navWars');
+			return;
+		}
+		if (route.indexOf('/wars/view') > -1) {
+			setActive('navWars');
+			return;
+		}
+		if (route.indexOf('/users/profile') > -1) {
+			setActive('navProfile');
+			return;
+		}
+
+		/* Admin In Authentication */
+		if (!vm.userInfo.admin){
+			setActive('navHome');
+			$location.path('/');
+			return;
+		}
+
+		if (route.indexOf('/wars/edit') > -1) {
+			setActive('navWars');
+			return;
+		}
+		if (route.indexOf('/users') > -1) {
+			setActive('navUsers');
+			return;
+		}
+		
+	}
 	
 	// check to see if a user is logged in on every request
-	$rootScope.$on('$routeChangeStart', function() {
-
-		vm.route = $location.path();
-
-		var checkRoutePermission = function(route) {
-			if (route == '/' || route == '/login' ){
-				// Do Something
-			} else {
-				if (vm.userInfo.admin == true) {
-					// Do Something
-				}
-				else
-					$location.path('/');
-			}
-			
-		}
-
-		vm.route = $location.path();
-
-		var checkRoutePermission = function(route) {
-			if (route == '/' || route == '/login' ){
-				// Do Something
-			} else {
-				if (vm.userInfo.admin == true) {
-					// Do Something
-				}
-				else
-					$location.path('/');
-			}
-			
-		}
+	var routeChange = function() {
 
 		vm.loggedIn = Auth.isLoggedIn();
 
@@ -51,6 +86,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				vm.userInfo = data.data;
 				checkRoutePermission($location.path());
 			});
+		} else {
+			checkRoutePermission($location.path());
 		}
 
 		// Grab all users & wars if routing to main page
@@ -67,6 +104,21 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					for (var i = 0; i < vm.users.length; i++) {
 						vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined)); // Convert milliseconds to date object
 					};
+
+					vm.leaders = [];
+					vm.elders  = [];
+					vm.members = [];
+
+					for (var i = 0; i < vm.users.length; i++) {
+						if (vm.users[i].title.indexOf('Leader') > -1)
+							vm.leaders.push(vm.users[i]);
+						else if (vm.users[i].title == 'Elder')
+							vm.elders.push(vm.users[i]);
+						else
+							vm.members.push(vm.users[i]);
+					};
+
+					delete vm.users;
 					
 				} else {
 					// Do Something
@@ -75,16 +127,16 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			War.partial().then(function(data) {
 				if (data.data.success) {
 
-					// bind the wars that come back to vm.wars
+					// Bind the wars that come back to vm.wars
 					vm.wars = data.data.data;
 
 					vm.wars.sort(function(a, b) {
-						return (a.start.N < b.start.N) ? -1 : (a.start.N > b.start.N) ? 1 : 0;
+						return (a.start < b.start) ? -1 : (a.start > b.start) ? 1 : 0;
 					});
 
 					now = new Date();
 					for (var i = 0; i < vm.wars.length; i++) {
-						vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+						vm.wars[i].start = new Date(Number(vm.wars[i].start - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
 					};
 
 				} else {
@@ -92,6 +144,10 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				}
 			});
 		}
+	};
+
+	$rootScope.$on('$routeChangeStart', function () {
+		routeChange();
 	});
 	
 	vm.currentWar = function(start) {

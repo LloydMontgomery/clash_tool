@@ -1,0 +1,195 @@
+<section>
+	<div class="col-xs-12" id="profilePage">
+		<div id="warPageTitle">
+			<h3>{{ user.profile.name }}'s Profile</h3>
+		</div>
+		<hr>
+		<!-- LOADING MESSAGE -->
+		<div class="jumbotron text-center" ng-show="user.loadingPage"> 
+			<span class="glyphicon glyphicon-repeat spinner"></span>
+			<p>Loading Profile...</p>
+		</div>
+		<div ng-show="!user.loadingPage">
+			<div class="col-sm-12">
+				<!-- War Stats Overview -->
+				<div id="warStatsOverall" class="infoContainer col-sm-4 col-xs-12">
+					<div class="col-xs-12">
+						<div>
+							<div >
+								Wars Fought<br>
+								{{ user.profile.warsFought }}
+							</div>
+							<hr class="accentBlue">
+							<div>
+								Stars Gained<br>
+								{{ user.profile.starsGained }}
+							</div>
+							<hr class="accentBlue">
+							<div>
+								3-Star Rate<br>
+								{{ user.profile.threeStarRate.toFixed(2) }} %
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Attack Stats -->
+				<div id="attackStats" class="infoContainer col-sm-4 col-xs-12">
+					<div>
+						<div>
+							All War Stars
+							<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
+						</div>
+					</div>
+				</div>
+				<!-- Hero Stats -->
+				<div id="heroStats" class="infoContainer col-sm-4 col-xs-12">
+					<div class="col-xs-12">
+						<div>
+							<div >
+								Town Hall<br>
+								{{ user.profile.thLvl }}
+							</div>
+							<hr class="accentBlue">
+							<div>
+								Barbarian King<br>
+								<span class="accentBlue">{{ user.profile.kingLvl }}</span>
+								<timer ng-show="user.profile.kingFinishDate" ng-attr-end-time="user.profile.kingFinishDate" max-time-unit="'day'" interval="1000">
+									in <span class="accentBlue">{{days}}</span>D <span class="accentBlue">{{hours}}</span>H <span class="accentBlue">{{mminutes}}</span>M
+								</timer>
+							</div>
+							<hr class="accentBlue">
+							<div>
+								Archer Queen<br>
+								<span class="accentBlue">{{ user.profile.queenLvl }}</span>
+								<timer ng-show="user.profile.queenFinishDate" ng-attr-end-time="user.profile.queenFinishDate" max-time-unit="'day'" interval="1000">
+									in <span class="accentBlue">{{days}}</span>D <span class="accentBlue">{{hours}}</span>H <span class="accentBlue">{{mminutes}}</span>M
+								</timer>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- ERROR MESSAGE -->
+			<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
+				{{ user.error }}
+			</div>
+			<!-- SUCCESS MESSAGE -->
+			<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
+				{{ user.message }}
+			</div>
+			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" class="col-sm-offset-4 col-sm-4 col-xs-12">
+				<button ng-click="user.open()" class="btn btn-lg btn-block updateButton">
+					<span ng-show="!user.updating"> Edit Profile </span>
+					<div ng-show="user.updating">
+						<span class="glyphicon glyphicon-repeat spinner"></span> 
+					</div>
+				</button>
+			</div>
+
+			<!-- All Attacks -->
+			<div id="allAttacks" class="col-sm-offset-2 col-sm-8 col-xs-12">
+				<div class="col-xs-12">
+					<table class="table table-bordered table-striped col-xs-12" ng-show="user.profile.wars"> 
+						<thead>
+							<tr>
+								<th>Opponent</th> 
+								<th>You</th>
+								<th>Opp</th>
+								<th>Stars</th>
+								<!-- <th>%</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<!-- LOOP OVER THE USERS -->
+							<tr ng-repeat="war in user.profile.wars" class="excludeAnimation"> 
+								<td>{{ war.opponent }}</td>
+								<td>{{ war.you }}</td>
+								<td>{{ war.opp }}</td>
+								<td>
+									<div>
+										<span ng-show="war.stars > 0" class="glyphicons glyphicons-star drop"></span>
+										<span ng-show="war.stars > 1" class="glyphicons glyphicons-star drop"></span>
+										<span ng-show="war.stars > 2" class="glyphicons glyphicons-star drop"></span>
+										<span ng-hide="war.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
+										<span ng-hide="war.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
+										<span ng-hide="war.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/ng-template" id="myModalContent.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Editing {{user.profile.name}}''s Profile</h3>
+		</div>
+		<div class="modal-body">
+			<div class="innerModalContainer">
+				Town Hall Level
+				<select ng-change="user.setMaxLvls()" ng-model="user.profile.thLvl"
+					ng-options="option for option in user.thLvls">
+				</select>
+			</div>
+
+			<div class="innerModalContainer">
+				<br>Barbarian King Level
+				<select ng-change="user.setBarbUpgradeTime()" ng-model="user.profile.kingLvl" 
+					ng-options="option for option in user.kingLvls">
+				</select>
+				<div>
+					<div ng-hide="user.kingTimerDisable" class="col-xs-12"> 
+						D: <select ng-model="user.profile.kingTimeDay" ng-disabled="user.kingTimerDisable" 
+							ng-options="option for option in user.options.kingTimeDays"></select>
+						H: <select ng-model="user.profile.kingTimeHour" ng-disabled="user.kingTimerDisable" 
+							ng-options="option for option in user.options.kingTimeHours"></select>
+						M: <select ng-model="user.profile.kingTimeMinute" ng-disabled="user.kingTimerDisable" 
+							ng-options="option for option in user.options.kingTimeMinutes"></select>
+					</div>
+				</div>
+				<div>
+					<button ng-show="user.kingTimerDisable" ng-click="user.kingTimerDisable = false"
+						class="btn btn-success" type="button"> Set BK Upgrade Timer </button>
+					<button ng-show="!user.kingTimerDisable" ng-click="user.kingTimerDisable = true"
+						class="btn btn-warning" type="button"> Cancel BK Upgrade Timer </button>
+				</div>
+			</div>
+
+			<div class="innerModalContainer">
+				<br>Archer Queen Level
+				<select ng-change="user.setQueenUpgradeTime()" ng-model="user.profile.queenLvl" 
+					ng-options="option for option in user.queenLvls">
+				</select>
+				<div>
+					<div ng-hide="user.queenTimerDisable" class="col-xs-12"> 
+						D: <select ng-model="user.profile.queenTimeDay" ng-disabled="user.queenTimerDisable" 
+							ng-options="option for option in user.options.queenTimeDays"></select>
+						H: <select ng-model="user.profile.queenTimeHour" ng-disabled="user.queenTimerDisable" 
+							ng-options="option for option in user.options.queenTimeHours"></select>
+						M: <select ng-model="user.profile.queenTimeMinute" ng-disabled="user.queenTimerDisable"
+							ng-options="option for option in user.options.queenTimeMinutes"></select>
+					</div>
+				</div>
+				<div>
+					<button ng-show="user.queenTimerDisable" ng-click="user.queenTimerDisable = false"
+						class="btn btn-success" type="button"> Set AQ Upgrade Timer </button>
+					<button ng-show="!user.queenTimerDisable" ng-click="user.queenTimerDisable = true"
+						class="btn btn-warning" type="button"> Cancel AQ Upgrade Timer </button>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="button" ng-click="ok()">Done</button>
+		</div>
+	</script>
+</section>
+
+
+
+
+
+

@@ -1,29 +1,30 @@
 <div>
 	<!-- Intro Section -->
 	<section id="intro-section" class="section col-xs-12">
-		<div class="col-lg-12" ng-class="main.mainPageSizing">
-			<div class="hidden-xs hidden-md hidden-lg  intro-spacer"></div>
-			<div class="intro-spacer"></div>
-
-			<a href="http://fav.me/d25xjwq" target="_blank">
-				<img id="gf-logo" src="assets/imgs/spacemonkey_transparant.png" style="width:200px;">
-				<div class="row" style="font-size:10px">
-				©2009-2015 designMS
+		<div class="col-xs-12" ng-class="main.mainPageSizing">
+			<div class="col-xs-12">
+				<a href="http://fav.me/d25xjwq" target="_blank">
+					<img id="gf-logo" src="assets/imgs/spacemonkey_transparant.png">
+					<div class="row" style="font-size:10px">
+					©2009-2015 designMS
+					</div>
+				</a>
+			</div>
+			<div id="clan-description" class="col-xs-12">
+				<div class="col-xs-12">
+					Fight Club was the beginning, now it's moved out of the basement, it's called Project Mayhem. Like a monkey, ready to be shot into space. Space monkey! Ready to sacrifice himself for the greater good.
 				</div>
-			</a>
-			<div id="clan-description">
-				<div ng-show="!main.userInfo.admin">
-					Fight Club was the beginning, now it's moved out of the basement, it's called Project Mayhem. We are the Space Monkeys, and we are the men and women who give their lives to Project Mayhem.
-				</div>
-				<a href="/users" class="routeButton btn" type="button" ng-if="main.loggedIn  && main.userInfo.inClan && main.userInfo.admin">
+<!-- 				<a href="/users" class="routeButton btn" type="button" ng-if="main.loggedIn  && main.userInfo.inClan && main.userInfo.admin">
 					<h5>Users</h5>
 				</a>
 				<a href="/wars" class="routeButton btn" type="button" ng-if="main.loggedIn && main.userInfo.inClan">
 					<h5>Wars</h5>
-				</a><br>
-				<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt.S }}" id="currentWarButton" class="routeButton btn" type="button" ng-if="main.loggedIn && main.userInfo.inClan">
-					<h5>Current<br>War</h5>
-				</a>
+				</a><br> -->
+				<div class="col-xs-12">
+					<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt.S }}" ng-if="main.loggedIn" id="currentWarButton" class="routeButton btn" type="button">
+						<h5>Current<br>War</h5>
+					</a>
+				</div>
 			</div>
 
 		</div>
@@ -78,14 +79,42 @@
 	<!-- Members Section -->
 	<section id="members-section" class="section col-xs-12">
 		<div ng-class="main.mainPageSizing">
-			<h1 class="title">Members</h1>
-			<div id="member-panel-main-container">
-				<!-- Member Panel -->
-				<div ng-repeat="person in main.users" class="member-panel-container col-lg-3 col-xs-4">
-					<div class="member-panel">
-						<h4 class="member-name"> {{ person.name }} </h4>
-						{{ person.title }} <br>
-						{{ person.dateJoined.toDateString().substr(4) }}
+			<div class="row">
+				<h2 class="title">Leaders</h2>
+				<div id="member-panel-main-container">
+					<!-- Leader Panel -->
+					<div ng-repeat="person in main.leaders" class="member-panel-container col-lg-3 col-xs-4">
+						<div class="member-panel">
+							<h6 class="member-name"> {{ person.name }} </h6>
+							{{ person.title }} <br>
+							{{ person.dateJoined.toDateString().substr(4) }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<h2 class="title">Elders</h2>
+				<div id="member-panel-main-container">
+					<!-- Elder Panel -->
+					<div ng-repeat="person in main.elders" class="member-panel-container col-lg-3 col-xs-4">
+						<div class="member-panel">
+							<h6 class="member-name"> {{ person.name }} </h6>
+							{{ person.title }} <br>
+							{{ person.dateJoined.toDateString().substr(4) }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<h2 class="title">Members</h2>
+				<div id="member-panel-main-container">
+					<!-- Member Panel -->
+					<div ng-repeat="person in main.members" class="member-panel-container col-lg-3 col-xs-4">
+						<div class="member-panel">
+							<h6 class="member-name"> {{ person.name }} </h6>
+							{{ person.title }} <br>
+							{{ person.dateJoined.toDateString().substr(4) }}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -100,15 +129,15 @@
 				<div class="history-container col-xs-12">
 					<!-- War Entry -->
 					 <uib-accordion close-others="true">
-						<uib-accordion-group ng-repeat="war in main.wars" ng-if="war.outcome" class="warEntry">
+						<uib-accordion-group ng-repeat="war in main.wars" ng-if="war.outcome && war.img" class="warEntry">
 							<uib-accordion-heading>
 								<div class="warLeft"> {{ war.start.toString().substr(0,10) }} </div>
-								<div class="warRight"> +{{ war.exp.N }} Exp </div>
-								<div class="warCenter" ng-class="war.outcome.S"> 
-									{{ war.ourScore.N }} - {{ war.theirScore.N }}
+								<div class="warRight"> +{{ war.exp }} Exp </div>
+								<div class="warCenter" ng-class="war.outcome">
+									{{ war.ourScore }} - {{ war.theirScore }}
 								</div>
 							</uib-accordion-heading>
-							<img ng-src="{{war.img.S}}" style="width:100%">
+							<img ng-src="{{war.img}}" style="width:100%">
 						</uib-accordion-group>
 					</uib-accordion>
 					<span class="help-tip"> (Did ya try clicking one?) </span>
@@ -127,7 +156,7 @@
 			<a type="button" class="userButton btn" href="https://evernote.com/skitch/" target="_blank">
 				<h4> Skitch </h4>
 			</a>
-			<div> (Seriously, click one) </div>
+			<div class="help-tip"> (Seriously, click one) </div>
 		</div>
 	</section>
 </div>
