@@ -14,14 +14,8 @@
 				<div class="col-xs-12">
 					Fight Club was the beginning, now it's moved out of the basement, it's called Project Mayhem. Like a monkey, ready to be shot into space. Space monkey! Ready to sacrifice himself for the greater good.
 				</div>
-<!-- 				<a href="/users" class="routeButton btn" type="button" ng-if="main.loggedIn  && main.userInfo.inClan && main.userInfo.admin">
-					<h5>Users</h5>
-				</a>
-				<a href="/wars" class="routeButton btn" type="button" ng-if="main.loggedIn && main.userInfo.inClan">
-					<h5>Wars</h5>
-				</a><br> -->
 				<div class="col-xs-12">
-					<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt.S }}" ng-if="main.loggedIn" id="currentWarButton" class="routeButton btn" type="button">
+					<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt }}" ng-if="main.loggedIn && !main.wars[main.wars.length-1].outcome" id="currentWarButton" class="routeButton btn" type="button">
 						<h5>Current<br>War</h5>
 					</a>
 				</div>
