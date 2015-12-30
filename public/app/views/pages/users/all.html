@@ -33,9 +33,10 @@
 				<td>{{ person.inClan }}</td>
 				<td>{{ person.admin }}</td>
 				<td class="col-sm-3">
-					<a ng-href="/users/{{ person.name }}" class="btn btn-primary">Edit</a>
-					<a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
-						ng-if="main.userInfo.name == 'Zephyro'">Delete</a>
+					<a ng-href="/users/profile/{{ person.name }}" class="btn btn-primary">Profile</a>
+					<a ng-href="/users/{{ person.name }}" class="btn btn-danger">Edit</a>
+					<!-- <a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
+						ng-if="main.userInfo.name == 'Zephyro'">Delete</a> -->
 				</td>
 			</tr>
 		</tbody>

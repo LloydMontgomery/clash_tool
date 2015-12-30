@@ -1,7 +1,7 @@
 <section>
 	<div class="col-xs-12" id="profilePage">
 		<div id="warPageTitle">
-			<h3>Profile</h3>
+			<h3>{{ user.profile.name }}'s Profile</h3>
 		</div>
 		<hr>
 		<!-- LOADING MESSAGE -->
@@ -57,6 +57,17 @@
 								<select ng-model="user.profile.barbLvl" 
 									ng-options="option for option in user.kingLvls">
 								</select>
+								
+								<button type="button" class="btn btn-default" ng-click="user.open()">Open me!</button>
+
+								<!-- Modal -->
+								<div class="modal fade bs-example-modal-sm excludeAnimation" tabindex="-1" role="dialog">
+									<div class="modal-dialog modal-sm">
+										<div class="modal-content">
+											...
+										</div>
+									</div>
+								</div>
 							</div>
 							<hr class="accentBlue">
 							<div>
@@ -71,16 +82,16 @@
 			</div>
 
 			<!-- ERROR MESSAGE -->
-			<div class="alert alert-danger col-xs-offset-4 col-xs-4 col-xs-12" ng-show="user.error">
+			<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
 				{{ user.error }}
 			</div>
 			<!-- SUCCESS MESSAGE -->
-			<div class="alert alert-success col-xs-offset-4 col-xs-4 col-xs-12" ng-show="user.message">
+			<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
 				{{ user.message }}
 			</div>
-			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" class="col-xs-offset-4 col-xs-4 col-xs-12">
+			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" class="col-sm-offset-4 col-sm-4 col-xs-12">
 				<button ng-click="user.updateProfile()" class="btn btn-lg btn-block updateButton">
-					Update Profile
+					<span ng-show="!user.updating"> Update Profile </span>
 					<div ng-show="user.updating">
 						<span class="glyphicon glyphicon-repeat spinner"></span> 
 					</div>
@@ -94,34 +105,26 @@
 						<thead>
 							<tr>
 								<th>Opponent</th> 
-								<th >War Position</th>
-								<th>1st Attack</th>
-								<th>2nd Attack</th>
+								<th>You</th>
+								<th>Opp</th>
+								<th>Stars</th>
+								<!-- <th>%</th> -->
 							</tr>
 						</thead>
 						<tbody>
 							<!-- LOOP OVER THE USERS -->
 							<tr ng-repeat="war in user.profile.wars" class="excludeAnimation"> 
 								<td>{{ war.opponent }}</td>
-								<td>{{ war.warPos }}</td>
+								<td>{{ war.you }}</td>
+								<td>{{ war.opp }}</td>
 								<td>
 									<div>
-										<span ng-show="war.attack1.stars > 0" class="glyphicons glyphicons-star drop"></span>
-										<span ng-show="war.attack1.stars > 1" class="glyphicons glyphicons-star drop"></span>
-										<span ng-show="war.attack1.stars > 2" class="glyphicons glyphicons-star drop"></span>
-										<span ng-hide="war.attack1.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
-										<span ng-hide="war.attack1.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
-										<span ng-hide="war.attack1.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
-									</div>
-								</td>
-								<td>
-									<div>
-										<span ng-show="war.attack2.stars > 0" class="glyphicons glyphicons-star drop"></span>
-										<span ng-show="war.attack2.stars > 1" class="glyphicons glyphicons-star drop"></span>
-										<span ng-show="war.attack2.stars > 2" class="glyphicons glyphicons-star drop"></span>
-										<span ng-hide="war.attack2.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
-										<span ng-hide="war.attack2.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
-										<span ng-hide="war.attack2.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
+										<span ng-show="war.stars > 0" class="glyphicons glyphicons-star drop"></span>
+										<span ng-show="war.stars > 1" class="glyphicons glyphicons-star drop"></span>
+										<span ng-show="war.stars > 2" class="glyphicons glyphicons-star drop"></span>
+										<span ng-hide="war.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
+										<span ng-hide="war.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
+										<span ng-hide="war.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
 									</div>
 								</td>
 							</tr>
@@ -131,6 +134,24 @@
 			</div>
 		</div>
 	</div>
+
+	<script type="text/ng-template" id="myModalContent.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Im a modal!</h3>
+		</div>
+		<div class="modal-body">
+			<ul>
+				<li ng-repeat="item in items" class="excludeAnimation">
+					<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
+				</li>
+			</ul>
+			Selected: <b>{{ selected.item }}</b>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+			<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+		</div>
+	</script>
 </section>
 
 

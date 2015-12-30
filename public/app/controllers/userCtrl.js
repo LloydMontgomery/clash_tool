@@ -114,7 +114,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	};
 })
 
-.controller('userProfileController', function($scope, $routeParams, User) {
+.controller('userProfileController', function($scope, $routeParams, $uibModal, User) {
 	var vm = this;
 
 	/* ========================= POPULATE HTML PAGE ========================= */
@@ -160,20 +160,16 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 
 	vm.calculateStats = function () {
 		$scope.stars = [[0, 0, 0, 0]];
-		vm.profile.warsFought = vm.profile.wars.length;
-		vm.profile.attacksMade = (vm.profile.wars.length * 2);
+		vm.profile.warsFought = vm.profile.wars.length / 2;
+		vm.profile.attacksMade = vm.profile.wars.length;
 		vm.profile.threeStarRate = 0;
 		vm.profile.starsGained = 0;
+
 		for (var i = 0; i < vm.profile.wars.length; i++) {
-			stars1 = Number(vm.profile.wars[i].attack1.stars);
-			stars2 = Number(vm.profile.wars[i].attack2.stars);
-			$scope.stars[0][stars1] += 1;
-			$scope.stars[0][stars2] += 1;
-			vm.profile.starsGained += stars1;
-			vm.profile.starsGained += stars2;
-			if (stars1 == 3)
-				vm.profile.threeStarRate += 1;
-			if (stars2 == 3)
+			stars = Number(vm.profile.wars[i].stars);
+			$scope.stars[0][stars] += 1;
+			vm.profile.starsGained += stars;
+			if (stars == 3)
 				vm.profile.threeStarRate += 1;
 		};
 		vm.profile.threeStarRate = ((vm.profile.threeStarRate / vm.profile.attacksMade) * 100);
@@ -209,6 +205,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		});
 	}
 
+
 	vm.loadingPage = true;
 	// get the user data for the user you want to edit 
 	// $routeParams is the way we grab data from the URL 
@@ -216,7 +213,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	.then(function(data) {
 		if (data.data.success) {
 			vm.profile = data.data.data;
-			console.log(vm.profile);
 			vm.calculateStats();
 			vm.setMaxLvls();
 		} else {
@@ -226,6 +222,48 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	});
 
 
+
+	/* ============================ MODAL LOGIC ============================ */
+
+	$scope.items = ['item1', 'item2', 'item3'];
+
+	vm.open = function (size) {
+		var modalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: 'myModalContent.html',
+			controller: 'ModalInstanceCtrl',
+			size: size,
+			resolve: {
+				items: function () {
+					return $scope.items;
+				}
+			}
+		});
+
+		modalInstance.result.then(function (selectedItem) {
+			console.log(selectedItem);
+		}, function () {
+			console.log('Modal dismissed at: ' + new Date());
+		});
+	};
+
+
+})
+
+.controller('ModalInstanceCtrl', function($scope, $uibModalInstance, items) {
+
+	$scope.items = items;
+	$scope.selected = {
+		item: $scope.items[0]
+	};
+
+	$scope.ok = function () {
+		$uibModalInstance.close($scope.selected.item);
+	};
+
+	$scope.cancel = function () {
+		$uibModalInstance.dismiss('cancel');
+	};
 });
 
 

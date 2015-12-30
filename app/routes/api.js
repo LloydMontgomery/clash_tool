@@ -517,9 +517,24 @@ module.exports = function(app, express, $http) {
 				data.wars = []
 				for (item in data) {
 					if (!isNaN(item)) {  // We only care about the numbers, as they represent wars
-						data[item]['createdAt'] = item;  // Store the war createdAt value within the object
-						data.wars.push((data[item]));    // Push this object into the array
-						delete data[item]				 // Delete this entry from 'data'
+						data.wars.push({
+							'start' : data[item].start,
+							'createdAt' : item,
+							'opponent' : data[item].opponent,
+							'stars' : data[item].attack1.stars,
+							'you' : data[item].warPos,
+							'opp' : data[item].attack1.targetPos,
+						});
+						data.wars.push({
+							'start' : data[item].start,
+							'createdAt' : item,
+							'opponent' : data[item].opponent,
+							'stars' : data[item].attack2.stars,
+							'you' : data[item].warPos,
+							'opp' : data[item].attack2.targetPos,
+						});
+
+						delete data[item]			   // Delete this entry from 'data'
 					}
 				}
 

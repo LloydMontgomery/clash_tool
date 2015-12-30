@@ -8,7 +8,8 @@ angular.module('ClashTool', [
 	'userCtrl',
 	'warCtrl',
 	'timer',
-	'chart.js'
+	'chart.js', 
+	'ui.bootstrap'
 ])
 
 // application configuration to integrate token into requests
