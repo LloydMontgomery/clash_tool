@@ -152,8 +152,8 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 			maxQueenLvl = 40;
 		}
 
-		for (var i = maxKingLvl; i > 0; i--) { vm.kingLvls.push(i) };
-		for (var i = maxQueenLvl; i > 0; i--) { vm.queenLvls.push(i) };
+		for (var i = maxKingLvl; i >= 0; i--) { vm.kingLvls.push(i) };
+		for (var i = maxQueenLvl; i >= 0; i--) { vm.queenLvls.push(i) };
 	}
 
 	/* ========================= LOGIC PAGE CONTROL ========================= */
@@ -215,6 +215,8 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 			vm.profile = data.data.data;
 			vm.calculateStats();
 			vm.setMaxLvls();
+			vm.setBarbUpgradeTime();
+			vm.setQueenUpgradeTime();
 		} else {
 			vm.message = data.data.message;
 		}
@@ -225,44 +227,100 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 
 	/* ============================ MODAL LOGIC ============================ */
 
-	$scope.items = ['item1', 'item2', 'item3'];
+	// 
+	vm.barbTimeDay = 0;
+	vm.barbTimeHour = 0;
+	vm.barbTimeMinute = 0;
+
+	vm.queenTimeDay = 0;
+	vm.queenTimeHour = 0;
+	vm.queenTimeMinute = 0;
+
+	vm.options = {};
+	vm.options.barbTimeDays = [];
+	vm.options.barbTimeHours = [];
+	vm.options.barbTimeMinutes = [];
+
+	vm.options.queenTimeDays = [];
+	vm.options.queenTimeHours = [];
+	vm.options.queenTimeMinutes = [];
+
+	vm.initVars = function () {
+		vm.options.queenTimeDays = [0, 1, 2, 3, 4, 5, 6, 7];
+		for (var i = 0; i < 24; i++) { vm.options.queenTimeHours.push(i) };
+		for (var i = 0; i < 60; i++) { vm.options.queenTimeMinutes.push(i) };
+
+		vm.options.barbTimeDays = [0, 1, 2, 3, 4, 5, 6, 7];
+		for (var i = 0; i < 24; i++) { vm.options.barbTimeHours.push(i) };
+		for (var i = 0; i < 60; i++) { vm.options.barbTimeMinutes.push(i) };
+	}; vm.initVars();
+
+	vm.setBarbUpgradeTime = function () {
+		// Set the maximum Day and select the right hours (12 or 0)
+		barbLvl = vm.profile.barbLvl;
+		if (barbLvl > 14)
+			barbLvl = 14;
+		vm.barbTimeDay = Math.floor(barbLvl * .5);
+		vm.barbTimeHour = (barbLvl * 12) % 24;
+		vm.barbTimeMinute = 0;
+
+		vm.options.barbTimeDays = [];
+		for (var i = 0; i <= vm.barbTimeDay; i++) { vm.options.barbTimeDays.push(i) };
+	}
+
+	vm.setQueenUpgradeTime = function () {
+		queenLvl = vm.profile.queenLvl;
+		if (queenLvl > 14)
+			queenLvl = 14;
+		vm.queenTimeDay = Math.floor(queenLvl * .5);
+		vm.queenTimeHour = (queenLvl * 12) % 24;
+		vm.queenTimeMinute = 0;
+
+		vm.options.queenTimeDays = [];
+		for (var i = 0; i <= vm.queenTimeDay; i++) { vm.options.queenTimeDays.push(i) };
+	}
+
+	vm.setHeroesCountdowns = function () {
+		if (vm.barbTimer) {
+
+		}
+
+		if (vm.queenTimer) {
+			
+		}
+	}
 
 	vm.open = function (size) {
+		vm.updating = true;
 		var modalInstance = $uibModal.open({
 			animation: true,
 			templateUrl: 'myModalContent.html',
 			controller: 'ModalInstanceCtrl',
 			size: size,
 			resolve: {
-				items: function () {
-					return $scope.items;
+				user: function () {
+					return vm;
 				}
 			}
 		});
 
-		modalInstance.result.then(function (selectedItem) {
-			console.log(selectedItem);
+		modalInstance.result.then(function (user) {
+			vm.updating = false;
+			vm.setHeroesCountdowns()
 		}, function () {
-			console.log('Modal dismissed at: ' + new Date());
+			vm.updating = false;
+			vm.setHeroesCountdowns()
 		});
 	};
 
-
 })
 
-.controller('ModalInstanceCtrl', function($scope, $uibModalInstance, items) {
+.controller('ModalInstanceCtrl', function($scope, $uibModalInstance, user) {
 
-	$scope.items = items;
-	$scope.selected = {
-		item: $scope.items[0]
-	};
+	$scope.user = user;
 
 	$scope.ok = function () {
-		$uibModalInstance.close($scope.selected.item);
-	};
-
-	$scope.cancel = function () {
-		$uibModalInstance.dismiss('cancel');
+		$uibModalInstance.close($scope.user);
 	};
 });
 

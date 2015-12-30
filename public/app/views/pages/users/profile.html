@@ -47,34 +47,17 @@
 						<div>
 							<div >
 								Town Hall<br>
-								<select ng-change="user.setMaxLvls()" ng-model="user.profile.thLvl"
-									ng-options="option for option in user.thLvls">
-								</select>
+								{{ user.profile.thLvl }}
 							</div>
 							<hr class="accentBlue">
 							<div>
 								Barbarian King<br>
-								<select ng-model="user.profile.barbLvl" 
-									ng-options="option for option in user.kingLvls">
-								</select>
-								
-								<button type="button" class="btn btn-default" ng-click="user.open()">Open me!</button>
-
-								<!-- Modal -->
-								<div class="modal fade bs-example-modal-sm excludeAnimation" tabindex="-1" role="dialog">
-									<div class="modal-dialog modal-sm">
-										<div class="modal-content">
-											...
-										</div>
-									</div>
-								</div>
+								{{ user.profile.barbLvl }}
 							</div>
 							<hr class="accentBlue">
 							<div>
 								Archer Queen<br>
-								<select ng-model="user.profile.queenLvl" 
-									ng-options="option for option in user.queenLvls">
-								</select>
+								{{ user.profile.queenLvl }}
 							</div>
 						</div>
 					</div>
@@ -90,8 +73,8 @@
 				{{ user.message }}
 			</div>
 			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" class="col-sm-offset-4 col-sm-4 col-xs-12">
-				<button ng-click="user.updateProfile()" class="btn btn-lg btn-block updateButton">
-					<span ng-show="!user.updating"> Update Profile </span>
+				<button ng-click="user.open()" class="btn btn-lg btn-block updateButton">
+					<span ng-show="!user.updating"> Edit Profile </span>
 					<div ng-show="user.updating">
 						<span class="glyphicon glyphicon-repeat spinner"></span> 
 					</div>
@@ -137,19 +120,62 @@
 
 	<script type="text/ng-template" id="myModalContent.html">
 		<div class="modal-header">
-			<h3 class="modal-title">Im a modal!</h3>
+			<h3 class="modal-title">Editing {{user.profile.name}}''s Profile</h3>
 		</div>
 		<div class="modal-body">
-			<ul>
-				<li ng-repeat="item in items" class="excludeAnimation">
-					<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
-				</li>
-			</ul>
-			Selected: <b>{{ selected.item }}</b>
+			<div class="innerModalContainer">
+				Town Hall Level
+				<select ng-change="user.setMaxLvls()" ng-model="user.profile.thLvl"
+					ng-options="option for option in user.thLvls">
+				</select>
+			</div>
+
+			<div class="innerModalContainer">
+				<br>Barbarian King Level
+				<select ng-change="user.setBarbUpgradeTime()" ng-model="user.profile.barbLvl" 
+					ng-options="option for option in user.kingLvls">
+				</select>
+				<div class="slideable" id="barbTimerDiv">
+					<div style="height:70px"> 
+						<div class="col-xs-12"> 
+							D: <select ng-model="user.barbTimeDay" ng-options="option for option in user.options.barbTimeDays"></select>
+							H: <select ng-model="user.barbTimeHour" ng-options="option for option in user.options.barbTimeHours"></select>
+							M: <select ng-model="user.barbTimeMinute" ng-options="option for option in user.options.barbTimeMinutes"></select>
+						</div>
+					</div>
+				</div>
+				<div slide-toggle="#barbTimerDiv">
+					<button ng-show="!user.barbTimer" ng-click="user.barbTimer = true"
+						class="btn btn-success" type="button"> Set BK Upgrade Timer </button>
+					<button ng-show="user.barbTimer" ng-click="user.barbTimer = false"
+						class="btn btn-warning" type="button"> Cancel BK Upgrade Timer </button>
+				</div>
+			</div>
+
+			<div class="innerModalContainer">
+				<br>Archer Queen Level
+				<select ng-change="user.setQueenUpgradeTime()" ng-model="user.profile.queenLvl" 
+					ng-options="option for option in user.queenLvls">
+				</select>
+				<div class="slideable" id="queenTimerDiv">
+					<div style="height:70px"> 
+						<div class="col-xs-12"> 
+							D: <select ng-model="user.queenTimeDay" ng-options="option for option in user.options.queenTimeDays"></select>
+							H: <select ng-model="user.queenTimeHour" ng-options="option for option in user.options.queenTimeHours"></select>
+							M: <select ng-model="user.queenTimeMinute" ng-options="option for option in user.options.queenTimeMinutes"></select>
+						</div>
+					</div>
+				</div>
+				<div slide-toggle="#queenTimerDiv">
+					<button ng-show="!user.queenTimer" ng-click="user.queenTimer = true"
+						class="btn btn-success" type="button"> Set AQ Upgrade Timer </button>
+					<button ng-show="user.queenTimer" ng-click="user.queenTimer = false"
+						class="btn btn-warning" type="button"> Cancel AQ Upgrade Timer </button>
+				</div>
+			</div>
 		</div>
 		<div class="modal-footer">
-			<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-			<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+			<button class="btn btn-primary" type="button" ng-click="ok()">Done</button>
 		</div>
 	</script>
 </section>
