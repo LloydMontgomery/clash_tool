@@ -189,12 +189,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 
 		vm.setHeroesCountdowns();
 
-		// If the user has just set their King upgrade timer, then increment the King lvl. Same for Queen
-		if (vm.initial.kingFinishDate == 0 & vm.profile.kingFinishDate != 0)
-			vm.profile.kingLvl += 1;
-		if (vm.initial.queenFinishDate == 0 & vm.profile.queenFinishDate != 0)
-			vm.profile.queenLvl += 1;
-
 		updateData = {
 			'name': vm.profile.name,
 			'thLvl': vm.profile.thLvl,

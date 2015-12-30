@@ -131,26 +131,28 @@
 			</div>
 			<div class="row modal-body">
 				<div class=" innerModalContainer">
-					Town Hall Level
+					<h3>Town Hall Level</h3>
 					<select ng-change="user.setMaxLvls()" ng-model="user.profile.thLvl"
 						ng-options="option for option in user.thLvls">
 					</select>
 				</div>
 				<hr class="accentBlue">
-				<div class=" innerModalContainer">
-					<br>Barbarian King Level
-					<select ng-change="user.setBarbUpgradeTime()" ng-model="user.profile.kingLvl" 
-						ng-options="option for option in user.kingLvls">
-					</select>
+				<h3>Barbarian King Level</h3>
+				<div class="innerModalContainer">
 					<div>
-						<div ng-hide="user.kingTimerDisable" class="col-xs-12"> 
-							D: <select ng-model="user.profile.kingTimeDay" ng-disabled="user.kingTimerDisable" 
-								ng-options="option for option in user.options.kingTimeDays"></select>
-							H: <select ng-model="user.profile.kingTimeHour" ng-disabled="user.kingTimerDisable" 
-								ng-options="option for option in user.options.kingTimeHours"></select>
-							M: <select ng-model="user.profile.kingTimeMinute" ng-disabled="user.kingTimerDisable" 
-								ng-options="option for option in user.options.kingTimeMinutes"></select>
-						</div>
+						<span ng-hide="user.kingTimerDisable">Will be level: </span>
+						<select ng-change="user.setBarbUpgradeTime()" ng-model="user.profile.kingLvl" 
+							ng-options="option for option in user.kingLvls">
+						</select>
+						<span ng-hide="user.kingTimerDisable"> in</span>
+					</div>
+					<div ng-hide="user.kingTimerDisable" class="col-xs-12">
+						D: <select ng-model="user.profile.kingTimeDay" ng-disabled="user.kingTimerDisable" 
+							ng-options="option for option in user.options.kingTimeDays"></select>
+						H: <select ng-model="user.profile.kingTimeHour" ng-disabled="user.kingTimerDisable" 
+							ng-options="option for option in user.options.kingTimeHours"></select>
+						M: <select ng-model="user.profile.kingTimeMinute" ng-disabled="user.kingTimerDisable" 
+							ng-options="option for option in user.options.kingTimeMinutes"></select>
 					</div>
 					<div>
 						<button ng-show="user.kingTimerDisable" ng-click="user.kingTimerDisable = false"
@@ -160,20 +162,22 @@
 					</div>
 				</div>
 				<hr class="accentBlue">
-				<div class=" innerModalContainer">
-					<br>Archer Queen Level
-					<select ng-change="user.setQueenUpgradeTime()" ng-model="user.profile.queenLvl" 
-						ng-options="option for option in user.queenLvls">
-					</select>
+				<h3>Archer Queen Level</h3>
+				<div class="innerModalContainer">
 					<div>
-						<div ng-hide="user.queenTimerDisable" class="col-xs-12"> 
-							D: <select ng-model="user.profile.queenTimeDay" ng-disabled="user.queenTimerDisable" 
-								ng-options="option for option in user.options.queenTimeDays"></select>
-							H: <select ng-model="user.profile.queenTimeHour" ng-disabled="user.queenTimerDisable" 
-								ng-options="option for option in user.options.queenTimeHours"></select>
-							M: <select ng-model="user.profile.queenTimeMinute" ng-disabled="user.queenTimerDisable"
-								ng-options="option for option in user.options.queenTimeMinutes"></select>
-						</div>
+						<span ng-hide="user.queenTimerDisable">Will be level: </span>
+						<select ng-change="user.setQueenUpgradeTime()" ng-model="user.profile.queenLvl" 
+							ng-options="option for option in user.queenLvls">
+						</select>
+						<span ng-hide="user.queenTimerDisable"> in</span>
+					</div>
+					<div ng-hide="user.queenTimerDisable" class="col-xs-12"> 
+						D: <select ng-model="user.profile.queenTimeDay" ng-disabled="user.queenTimerDisable" 
+							ng-options="option for option in user.options.queenTimeDays"></select>
+						H: <select ng-model="user.profile.queenTimeHour" ng-disabled="user.queenTimerDisable" 
+							ng-options="option for option in user.options.queenTimeHours"></select>
+						M: <select ng-model="user.profile.queenTimeMinute" ng-disabled="user.queenTimerDisable"
+							ng-options="option for option in user.options.queenTimeMinutes"></select>
 					</div>
 					<div>
 						<button ng-show="user.queenTimerDisable" ng-click="user.queenTimerDisable = false"

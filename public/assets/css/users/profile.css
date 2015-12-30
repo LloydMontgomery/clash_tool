@@ -65,8 +65,9 @@
 	text-align: center;
 }
 
-.innerModalContainer {
-	margin-bottom: 30px;
+.innerModalContainer > div {
+	margin-bottom: 10px;
+	font-size: 1.25em;
 }
 
 .modal-header {
