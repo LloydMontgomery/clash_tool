@@ -15,15 +15,15 @@
 	src: url('../fonts/QuincyCF-Black-webfont.ttf') format('truetype');
 }
 
-h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
+.font1, h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
 #warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton,
-.updateButton, .member-panel h6, #username, .modal-header
+.updateButton, #username, .modal-header
 {
     font-family: "Supercell-Magic" !important;
     color: black;
 }
 
-#clan-description, #about-section, #rules-section, .member-panel, .panel-group, .help-tip, 
+.font2, #clan-description, #about-section, #rules-section, .panel-group, .help-tip, 
 #band a, #band button, #warriorStats .attacks, #warStatsOverall, #heroStats, .modal-body,
 .memberType
 {

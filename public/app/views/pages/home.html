@@ -79,9 +79,11 @@
 				<h2 class="memberType accentBlue">Leaders</h2>
 				<div id="member-panel-main-container">
 					<!-- Leader Panel -->
-					<div ng-repeat="person in main.leaders" class="member-panel-container col-lg-3 col-xs-4">
-						<div class="member-panel">
-							<h6 class="member-name"> {{ person.name }} </h6>
+					<div ng-repeat="person in main.leaders" class="member-panel-container font2 col-lg-3 col-xs-4">
+						<div>
+							<div class="font1 textCenter"> 
+								<h6>{{ person.name }}</h6>
+							</div>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
@@ -92,9 +94,11 @@
 				<h2 class="memberType accentBlue">Elders</h2>
 				<div id="member-panel-main-container">
 					<!-- Elder Panel -->
-					<div ng-repeat="person in main.elders" class="member-panel-container col-lg-3 col-xs-4">
-						<div class="member-panel">
-							<h6 class="member-name"> {{ person.name }} </h6>
+					<div ng-repeat="person in main.elders" class="member-panel-container font2 col-lg-3 col-xs-4">
+						<div>
+							<div class="font1 textCenter"> 
+								<h6>{{ person.name }}</h6>
+							</div>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
@@ -105,9 +109,11 @@
 				<h2 class="memberType accentBlue">Members</h2>
 				<div id="member-panel-main-container">
 					<!-- Member Panel -->
-					<div ng-repeat="person in main.members" class="member-panel-container col-lg-3 col-xs-4">
-						<div class="member-panel">
-							<h6 class="member-name"> {{ person.name }} </h6>
+					<div ng-repeat="person in main.members" class="member-panel-container font2 col-lg-3 col-xs-4">
+						<div>
+							<div class="font1 textCenter"> 
+								<h6>{{ person.name }}</h6>
+							</div>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>

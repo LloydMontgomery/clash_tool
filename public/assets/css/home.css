@@ -93,31 +93,41 @@ section {
 /* ============================ MEMBERS SECTION ============================ */
 #members-section {
 }
-#member-panel-main-container{
+#member-panel-main-container {
 	width: auto;
 	margin: 0 auto 0 auto;
 }
-.member-panel-container{
+.member-panel-container {
 	padding: 6px;
 	border-width: 0;
 	background-color: transparent;
 }
-.member-panel{
-	margin: 0px 0px 0px 0px;
 
+.member-panel-container > div {
 	border-radius: 10px;
 
 	background-color: white;
 	box-shadow: 0px 0px 10px #dadada;
 	padding: 5px;
 }
-#members h4, #members h5{
+
+.member-panel-container > div > div {
+	height: 30px;
+	font-size: .75em;
+}
+
+.member-panel-container > div > div > h6 {
+	font-size: 1em;
+}
+
+
+#members h4, #members h5 {
 	height: 25px;
 }
-.filler{
+.filler {
 	color: white;
 }
-.smaller-text{
+.smaller-text {
 	font-size: 90%;
 }
 
@@ -135,6 +145,11 @@ section {
 .panel-default>.panel-heading:hover{
 	background-color: #eee;
 }
+
+.warEntry {
+	box-shadow: 0px 0px 10px 5px #dadada;
+}
+
 .panel-body > img{
 	width: 100%;
 	margin: 2px;
