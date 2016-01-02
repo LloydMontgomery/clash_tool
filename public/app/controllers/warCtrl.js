@@ -18,7 +18,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		now = new Date();
 		for (var i = 0; i < vm.wars.length; i++) {
-			// vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
 			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
 		};
 
