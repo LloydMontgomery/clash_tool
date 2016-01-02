@@ -150,6 +150,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	$rootScope.$on('$routeChangeStart', function () {
 		routeChange();
 	});
+
+	vm.viewProfile = function(name) {
+		console.log("HERE");
+		if (vm.loggedIn)
+			$location.path('/users/profile/' + name);
+	}
 	
 	vm.currentWar = function(start) {
 		$location.path('/wars/view/' + Number(start).toString());

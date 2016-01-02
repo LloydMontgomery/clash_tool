@@ -21,25 +21,27 @@
 	<table class="table table-bordered table-striped" ng-show="user.users"> 
 		<thead>
 			<tr>
-				<th>Name</th> 
+				<th class="col-xs-4">Name</th> 
 				<th class="hidden-xs">ID</th>
-				<th>Title</th>
+				<th class="col-xs-4">Title</th>
 				<th class="hidden-xs">Admin</th>
-				<th class="col-sm-2"></th>
+				<th class="col-sm-4"></th>
 			</tr>
 		</thead>
 		<tbody>
 			<!-- LOOP OVER THE USERS -->
 			<tr ng-repeat="person in user.displayUsers" class="excludeAnimation"> 
-				<td>{{ person.name }}</td>
+				<td class="col-xs-4">{{ person.name }}</td>
 				<td class="hidden-xs">{{ person.id }}</td>
-				<td>{{ person.title }}</td>
+				<td class="col-xs-4">{{ person.title }}</td>
 				<td class="hidden-xs">{{ person.admin }}</td>
-				<td class="col-sm-3">
-					<a ng-href="/users/profile/{{ person.name }}" class="btn btn-primary col-sm-6 col-xs-12">Profile</a>
-					<a ng-href="/users/{{ person.name }}" class="btn btn-danger col-sm-6 col-xs-12">Edit</a>
-					<!-- <a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
-						ng-if="main.userInfo.name == 'Zephyro'">Delete</a> -->
+				<td class="col-xs-4">
+					<div class="userActions col-xs-12">
+						<a ng-href="/users/profile/{{ person.name }}" id="profileBtn" class="col-sm-6 col-xs-12 btn btn-primary">Profile</a>
+						<a ng-href="/users/{{ person.name }}" class="col-sm-6 col-xs-12 btn btn-danger">Edit</a>
+						<!-- <a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
+							ng-if="main.userInfo.name == 'Zephyro'">Delete</a> -->
+					</div>
 				</td>
 			</tr>
 		</tbody>

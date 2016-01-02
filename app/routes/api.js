@@ -359,7 +359,12 @@ module.exports = function(app, express, $http) {
 				});
 			} else {
 				// Convert all the values to non-object values
-				data = convertData(data.Items[0])
+				data = convertData(data.Items[0]);
+
+				data.size = Number(data.size);
+				data.exp = Number(data.exp);
+				data.ourDest = Number(data.ourDest);
+				data.theirDest = Number(data.theirDest);
 
 				// Collect all the warriors into a single array
 				data.warriors = [];
