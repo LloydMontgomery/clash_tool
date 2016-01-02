@@ -13,28 +13,31 @@
 		<span class="glyphicon glyphicon-repeat spinner"></span>
 		<p>Loading Users...</p>
 	</div>
+	<div ng-show="user.users" ng-click="user.filterList()" id="userFilter" class="btn-group">
+		<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'0'">In Clan</label>
+		<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'1'">Not In Clan</label>
+		<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'2'">Admins</label>
+	</div>
 	<table class="table table-bordered table-striped" ng-show="user.users"> 
 		<thead>
 			<tr>
 				<th>Name</th> 
 				<th class="hidden-xs">ID</th>
 				<th>Title</th>
-				<th>In Clan</th>
-				<th>Admin</th>
+				<th class="hidden-xs">Admin</th>
 				<th class="col-sm-2"></th>
 			</tr>
 		</thead>
 		<tbody>
 			<!-- LOOP OVER THE USERS -->
-			<tr ng-repeat="person in user.users" class="excludeAnimation"> 
+			<tr ng-repeat="person in user.displayUsers" class="excludeAnimation"> 
 				<td>{{ person.name }}</td>
 				<td class="hidden-xs">{{ person.id }}</td>
 				<td>{{ person.title }}</td>
-				<td>{{ person.inClan }}</td>
-				<td>{{ person.admin }}</td>
+				<td class="hidden-xs">{{ person.admin }}</td>
 				<td class="col-sm-3">
-					<a ng-href="/users/profile/{{ person.name }}" class="btn btn-primary">Profile</a>
-					<a ng-href="/users/{{ person.name }}" class="btn btn-danger">Edit</a>
+					<a ng-href="/users/profile/{{ person.name }}" class="btn btn-primary col-sm-6 col-xs-12">Profile</a>
+					<a ng-href="/users/{{ person.name }}" class="btn btn-danger col-sm-6 col-xs-12">Edit</a>
 					<!-- <a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
 						ng-if="main.userInfo.name == 'Zephyro'">Delete</a> -->
 				</td>

@@ -5,4 +5,12 @@
 	margin: 15px 0 15px 0;
 }
 
+tbody .btn {
+	margin: 5px;
+}
+
+#userFilter {
+	margin-bottom: 20px;
+}
+
 

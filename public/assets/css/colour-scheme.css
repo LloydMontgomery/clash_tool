@@ -1,6 +1,6 @@
 /* Background is the Accent Colour */
 #login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover,
-.active, .icon-bar 
+.navbar .active, .icon-bar 
 {
 	background-color: #0680AF !important;
 }
