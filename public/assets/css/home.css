@@ -1,27 +1,10 @@
-/* General Page CSS */
+/* =========================== GENERAL HOME PAGE =========================== */
 section {
 	min-height: 100vh !important;
 	width: 100vw;
-}
 
-.section {
 	padding-bottom: 20px;
-
 	text-align: center;
-}
-.section{
-	margin: 0px !important;
-}
-.title
-{
-	margin: 100px 0 50px 0;
-}
-
-#intro-section #gf-logo {
-	margin-top: 40px;
-	min-height: 150px;
-	max-height: 300px;
-	height: 40vh;
 }
 
 /* Every Other Section Starting with the First One */
@@ -34,113 +17,114 @@ section {
 	background-color: #eee;
 }
 
-/* Intro Section */
+/* Each section has a title */
+.title {
+	margin: 75px 0 50px 0;
+}
+
+/* Buttons that lead to other parts of the site, or outside the site */
+.routeButton {
+	height: 75px;
+	width: 125px;
+
+	margin-left: 5px;
+	margin-right: 5px;
+
+	border-radius: 50% !important;
+	background-color: black;
+	box-shadow: 0px 0px 10px 5px #dadada;
+}
+
+/* Container with text in it */
+.text-container {
+	margin-bottom: 12px;
+	padding: 10px;
+	padding-bottom: 20px;
+
+	border-radius: 10px;
+
+	box-shadow: 0px 0px 10px 5px #dadada;
+	background-color: white;
+}
+
+/* ============================= INTRO SECTION ============================= */
 #intro-section {
 	/*padding-top: 75px;	*/
 }
+
+#intro-section #gf-logo {
+	margin-top: 40px;
+	height: 200px;
+}
+
 #intro-section #clan-description div {
 	margin-top: 10px;
 }
 #intro-section .intro-spacer {
 	height: 50px;
 }
-.routeButton {
-	height: 75px;
-	width: 125px;
 
-	margin: 3px 10px 20px 10px;
-	padding-top: -10px;
-
-	border: solid lightgrey 2px;
-	border-radius: 50% !important;
-
-	background-color: black;
-}
-.routeButton h5 {
-	margin-top: 22px;
-	color: #0680AF !important;
-}
 #currentWarButton {
 	margin-top: 10px auto;
 	padding-top: 0;
 }
 
-/* About Section */
-#about-section {
-}
-#about-section .about-container {
-	margin-bottom: 12px;
-	padding: 10px;
-	padding-bottom: 20px;
+/* ============================= ABOUT SECTION ============================= */
 
-	border-radius: 10px;
 
-	box-shadow: 0px 0px 10px 5px #dadada;
-	background-color: white;
-}
+/* ============================= RULES SECTION ============================= */
 
-/* Rules Section */
-#rules-section {
-}
-.rules-container{
-	margin-bottom: 12px;
-	padding: 10px;
-	padding-bottom: 20px;
 
-	border-radius: 10px;
-
-	box-shadow: 0px 0px 10px 5px #dadada;
-	background-color: white;
-}
-
-/* Members Section */
-#members-section {
-}
-#member-panel-main-container{
+/* ============================ MEMBERS SECTION ============================ */
+#member-panel-main-container {
 	width: auto;
 	margin: 0 auto 0 auto;
 }
-.member-panel-container{
+.member-panel-container {
 	padding: 6px;
 	border-width: 0;
 	background-color: transparent;
 }
-.member-panel{
-	margin: 0px 0px 0px 0px;
 
+.member-panel-container > div {
 	border-radius: 10px;
 
 	background-color: white;
 	box-shadow: 0px 0px 10px #dadada;
 	padding: 5px;
 }
-#members h4, #members h5{
-	height: 25px;
-}
-.filler{
-	color: white;
-}
-.smaller-text{
-	font-size: 90%;
+
+.member-panel-container > div > div {
+	height: 30px;
+	font-size: .75em;
 }
 
-/* War History Section */
+.member-panel-container > div > div > h6 {
+	font-size: 1em;
+}
+
+/* ========================== WAR HISTORY SECTION ========================== */
 #history-section {
 }
 .war-win  { color: green; }
 .war-loss { color: red; }
+
 .panel, .panel-heading{
 	border-radius: 20px !important;
 }
-.panel-default>.panel-heading{
+.panel-default > .panel-heading {
 	background-color: white;
 }
-.panel-default>.panel-heading:hover{
+.panel-default > .panel-heading:hover {
 	background-color: #eee;
 }
-.panel-body > img{
+
+.warEntry {
+	box-shadow: 0px 0px 5px 1px #dadada;
+}
+
+.panel-body > img {
 	width: 100%;
-	margin: 2px;
 }
 .warCenter {
 	text-align: center;
@@ -154,24 +138,6 @@ section {
 	float: right;
 }
 
-/* Collaboration Section */
-#collaboration-section {
-}
-.userButton {
-	height: 100px;
-	width: 150px;
+/* ========================== COLLABORATION SECTION ========================== */
 
-	margin: 3px 10px 20px 10px;
-	padding-top: 15px;
-
-	border: solid lightgrey 2px;
-	border-radius: 50% !important;
-
-	background-color: black;
-
-}
-.userButton h4 {
-	margin-top: 25px;
-	color: #0680AF !important;
-}
 

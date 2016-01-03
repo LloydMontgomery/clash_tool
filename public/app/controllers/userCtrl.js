@@ -5,6 +5,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 .controller('userController', function(User) {
 	var vm = this;
 	vm.message = '';
+	vm.filter = '0';
 
 	// set a processing variable to show loading things
 	vm.processing = true;
@@ -17,16 +18,39 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 			vm.users.sort(function(a, b) {
 				return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
 			});
-			vm.processing = false;
 
+			vm.inClan = [];
+			vm.notInClan = [];
+			vm.admins = [];
+
+			for (var i = 0; i < vm.users.length; i++) {
+				if (vm.users[i].inClan)
+					vm.inClan.push(vm.users[i]);
+				else
+					vm.notInClan.push(vm.users[i]);
+				if (vm.users[i].admin)
+					vm.admins.push(vm.users[i]);
+			};
+			vm.displayUsers = vm.inClan;
+
+			vm.processing = false;
 		} else {
 			vm.message = 'Database Error. Try again another time.'
 			vm.processing = false;
 		}
 	});
 
+	vm.filterList = function () {
+		if (vm.filter == '0')
+			vm.displayUsers = vm.inClan;
+		else if (vm.filter == '1')
+			vm.displayUsers = vm.notInClan;
+		else
+			vm.displayUsers = vm.admins;
+	};
+
 	// function to delete a user
-	vm.deleteUser = function(name) {
+	vm.deleteUser = function (name) {
 		console.log(name);
 		vm.processing = true;
 
@@ -188,12 +212,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		}
 
 		vm.setHeroesCountdowns();
-
-		// If the user has just set their King upgrade timer, then increment the King lvl. Same for Queen
-		if (vm.initial.kingFinishDate == 0 & vm.profile.kingFinishDate != 0)
-			vm.profile.kingLvl += 1;
-		if (vm.initial.queenFinishDate == 0 & vm.profile.queenFinishDate != 0)
-			vm.profile.queenLvl += 1;
 
 		updateData = {
 			'name': vm.profile.name,

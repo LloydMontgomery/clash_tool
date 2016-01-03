@@ -1,0 +1,24 @@
+#userPage .btn {
+	background-color: #000;
+	color: #0680AF !important;
+
+	margin: 15px 0 15px 0;
+}
+
+#userFilter {
+	margin-bottom: 20px;
+}
+
+.userActions {
+	padding: 10px;
+}
+
+#profileBtn {
+	margin-bottom: 5px;
+}
+
+/*.userActions a {
+	width: 100%;
+}*/
+
+

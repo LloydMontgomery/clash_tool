@@ -16,8 +16,7 @@
     "express": "^4.13.3",
     "jsonwebtoken": "^5.4.1",
     "mongoose": "^4.2.8",
-    "morgan": "^1.6.1",
-    "angular-ui-bootstrap": "^0.14.3"
+    "morgan": "^1.6.1"
   },
   "engines": {
     "node": "0.12.5"

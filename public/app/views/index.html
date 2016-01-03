@@ -17,10 +17,6 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="assets/css/style.css">
 	<link rel="stylesheet" href="assets/css/colour-scheme.css">
-	<link rel="stylesheet" href="assets/css/auth.css">
-	<link rel="stylesheet" href="assets/css/home.css">
-	<link rel="stylesheet" href="assets/css/war.css">
-	<link rel="stylesheet" href="assets/css/user.css">
 	<link rel="stylesheet" href="assets/css/font-styles.css">
 	<link rel="stylesheet" href="assets/css/animations.css">
 
@@ -36,6 +32,7 @@
 	<script src="assets/libs/angular-timer/dist/angular-timer.min.js"></script>
 	<script src="assets/libs/Chart.js/Chart.min.js"></script>
 	<script src="assets/libs/angular-chart.js/dist/angular-chart.js"></script>
+	<script src="assets/libs/angular-css/angular-css.min.js"></script>
 
 	<!-- APP -->
 	<script src="app/controllers/mainCtrl.js"></script>
@@ -73,7 +70,7 @@
 					<li class="dropdown">
 						<a id="navProfile" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Account <span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li ng-show="main.loggedIn"><a ng-href="/users/profile/{{ main.userInfo.name }}" data-toggle="collapse" data-target=".navbar-collapse.in">Profile (Coming Soon!)</a></li>
+							<li ng-show="main.loggedIn"><a ng-href="/users/profile/{{ main.userInfo.name }}" data-toggle="collapse" data-target=".navbar-collapse.in">Profile</a></li>
 							<li ng-show="main.loggedIn" role="separator" class="divider"></li>
 							<li ng-show="!main.loggedIn"><a href="/login" data-toggle="collapse" data-target=".navbar-collapse.in">Login</a></li>
 							<li ng-show="main.loggedIn"><a ng-click="main.doLogout()" data-toggle="collapse" data-target=".navbar-collapse.in">Sign Out</a></li>

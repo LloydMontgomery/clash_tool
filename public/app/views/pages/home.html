@@ -1,6 +1,6 @@
 <div>
 	<!-- Intro Section -->
-	<section id="intro-section" class="section col-xs-12">
+	<section id="intro-section" class="col-xs-12">
 		<div class="col-xs-12" ng-class="main.mainPageSizing">
 			<div class="col-xs-12">
 				<a href="http://fav.me/d25xjwq" target="_blank">
@@ -14,58 +14,53 @@
 				<div class="col-xs-12">
 					Fight Club was the beginning, now it's moved out of the basement, it's called Project Mayhem. Like a monkey, ready to be shot into space. Space monkey! Ready to sacrifice himself for the greater good.
 				</div>
-<!-- 				<a href="/users" class="routeButton btn" type="button" ng-if="main.loggedIn  && main.userInfo.inClan && main.userInfo.admin">
-					<h5>Users</h5>
-				</a>
-				<a href="/wars" class="routeButton btn" type="button" ng-if="main.loggedIn && main.userInfo.inClan">
-					<h5>Wars</h5>
-				</a><br> -->
 				<div class="col-xs-12">
-					<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt.S }}" ng-if="main.loggedIn" id="currentWarButton" class="routeButton btn" type="button">
-						<h5>Current<br>War</h5>
-					</a>
+					<div class="hCenter">
+						<div ng-if="main.loggedIn && !main.wars[main.wars.length-1].outcome" class="routeButton textCenter">
+							<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt }}" >
+								<h5>Current<br>War</h5>
+							</a>
+						</div>
+					</div>
 				</div>
 			</div>
-
 		</div>
 	</section>
 
 	<!-- About Section -->
-	<section id="about-section" class="section col-xs-12">
+	<section id="about-section" class="col-xs-12">
 		<div ng-class="main.mainPageSizing">
 			<h1 class="title">About</h1>
-			<div class="hidden-xs col-md-2 col-lg-3"> <!-- Space Div --> </div>
-			<div class="about-container" class="col-xs-12">
-				<h4> The Clan </h4>
+			<div class="text-container" class="col-xs-12">
+				<h4 class="accentBlue"> The Clan </h4>
 				Established on November 1st, 2015, Space Monkeys is a brand new fair-play clan dedicated to wars, winning, and improving together. When fully functional, clan wars will consist of town hall levels 8-10 with varying strategies that give the best opportunities for 3 stars. We are not an elite level clan, but we aim for this clan to do so in the near future.
 			</div>
-			<div class="about-container" class="col-xs-12">
-				<h4> The Leaders </h4>
+			<div class="text-container" class="col-xs-12">
+				<h4 class="accentBlue"> The Leaders </h4>
 				The leaders of this clan are experienced war veterans that are dedicated to improving individually as well as a team. We can offer advice at any town hall level and will help in any way that we can. Recently coming from a highly skilled war clan that just met some inactivity, we are ready to lead and win wars ultimately!
 			</div>
 		</div>
 	</section>
 
 	<!-- Rules Section -->
-	<section id="rules-section" class="section col-xs-12">
+	<section id="rules-section" class="col-xs-12">
 		<div ng-class="main.mainPageSizing">
 			<h1 class="title">Rules</h1>
-			<div class="hidden-xs col-md-2 col-lg-3"> <!-- Space Div --> </div>
-			<div class="rules-container" class="col-xs-12">
-				<h4> Personal Requirements </h4>
+			<div class="text-container" class="col-xs-12">
+				<h4 class="accentBlue"> Personal Requirements </h4>
 				Adults Only (18+)
 				<br> Adaptable and Dedicated
 				<br> No Egos
 			</div>
-			<div class="rules-container" class="col-xs-12">
-				<h4> Clan </h4>
+			<div class="text-container" class="col-xs-12">
+				<h4 class="accentBlue"> Clan </h4>
 				No Donate Ratio - Donate Before You Request
 				<br> Elder is Earned, Not Given
 				<br> Co-Leader is Owned, Not Earned
 				<br> Don't Ask About Promotions
 			</div>
-			<div class="rules-container" class="col-xs-12">
-				<h4> War </h4>
+			<div class="text-container" class="col-xs-12">
+				<h4 class="accentBlue"> War </h4>
 				Fair Play War Clan
 				<br> Back-to-Back Wars
 				<br> Both Attacks are Manditory
@@ -77,15 +72,19 @@
 	</section>
 
 	<!-- Members Section -->
-	<section id="members-section" class="section col-xs-12">
+	<section id="members-section" class="col-xs-12">
 		<div ng-class="main.mainPageSizing">
 			<div class="row">
-				<h2 class="title">Leaders</h2>
+				<h1 class="title">The Space Monkeys</h1>
+				<h2 class="memberType accentBlue">Leaders</h2>
 				<div id="member-panel-main-container">
 					<!-- Leader Panel -->
-					<div ng-repeat="person in main.leaders" class="member-panel-container col-lg-3 col-xs-4">
-						<div class="member-panel">
-							<h6 class="member-name"> {{ person.name }} </h6>
+					<div ng-repeat="person in main.leaders" ng-click="main.viewProfile(person.name)"
+						class="member-panel-container font2 col-lg-3 col-xs-4">
+						<div>
+							<div class="font1 textCenter"> 
+								<h6>{{ person.name }}</h6>
+							</div>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
@@ -93,12 +92,15 @@
 				</div>
 			</div>
 			<div class="row">
-				<h2 class="title">Elders</h2>
+				<h2 class="memberType accentBlue">Elders</h2>
 				<div id="member-panel-main-container">
 					<!-- Elder Panel -->
-					<div ng-repeat="person in main.elders" class="member-panel-container col-lg-3 col-xs-4">
-						<div class="member-panel">
-							<h6 class="member-name"> {{ person.name }} </h6>
+					<div ng-repeat="person in main.elders" ng-click="main.viewProfile(person.name)" 
+						class="member-panel-container font2 col-lg-3 col-xs-4">
+						<div>
+							<div class="font1 textCenter"> 
+								<h6>{{ person.name }}</h6>
+							</div>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
@@ -106,12 +108,15 @@
 				</div>
 			</div>
 			<div class="row">
-				<h2 class="title">Members</h2>
+				<h2 class="memberType accentBlue">Members</h2>
 				<div id="member-panel-main-container">
 					<!-- Member Panel -->
-					<div ng-repeat="person in main.members" class="member-panel-container col-lg-3 col-xs-4">
-						<div class="member-panel">
-							<h6 class="member-name"> {{ person.name }} </h6>
+					<div ng-repeat="person in main.members" ng-click="main.viewProfile(person.name)"
+						class="member-panel-container font2 col-lg-3 col-xs-4">
+						<div>
+							<div class="font1 textCenter"> 
+								<h6>{{ person.name }}</h6>
+							</div>
 							{{ person.title }} <br>
 							{{ person.dateJoined.toDateString().substr(4) }}
 						</div>
@@ -122,7 +127,7 @@
 	</section>
 
 	<!-- War History Section -->
-	<section id="history-section" class="section col-xs-12">
+	<section id="history-section" class="col-xs-12">
 		<div ng-class="main.mainPageSizing">
 			<h1 class="title">War History</h1>
 			<div id="history-main-container">
@@ -147,15 +152,21 @@
 	</section>
 
 	<!-- Collaboration Section -->
-	<section id="collaboration-section" class="section col-xs-12">
+	<section id="collaboration-section" class="col-xs-12">
 		<div ng-class="main.mainPageSizing">
 			<h1 class="title"> Apps </h1>
-			<a type="button" class="userButton btn" href="https://groupme.com/join_group/17586299/qlSTbS" target="_blank">
-				<h4> GroupMe </h4>
-			</a>
-			<a type="button" class="userButton btn" href="https://evernote.com/skitch/" target="_blank">
-				<h4> Skitch </h4>
-			</a>
+			<div class="hCenter">
+				<div class="routeButton textCenter pull-left">
+					<a href="https://groupme.com/join_group/17586299/qlSTbS" target="_blank">
+						<h5> GroupMe </h5>
+					</a>
+				</div>
+				<div class="routeButton textCenter pull-left">
+					<a href="https://evernote.com/skitch/" target="_blank">
+						<h5> Skitch </h5>
+					</a>
+				</div>
+			</div>
 			<div class="help-tip"> (Seriously, click one) </div>
 		</div>
 	</section>

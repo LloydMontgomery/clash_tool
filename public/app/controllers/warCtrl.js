@@ -18,7 +18,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 		now = new Date();
 		for (var i = 0; i < vm.wars.length; i++) {
-			// vm.wars[i].start = new Date(Number(vm.wars[i].start.N - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
 			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
 		};
 
@@ -164,23 +163,25 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.adjustTargets = function() {
-		var target;
-		vm.attackOptions = [];
-		vm.attackOptions2 = [];
-		
-		for (var i = 0; i < vm.warData.size; i++) {
-			target = 'Attack ' + (i + 1).toString();
-			found = false;
-			for (var w = 0; w < vm.warData.warriors.length; w++) {
-				if ((target) == vm.warData.warriors[w].attack1) {
-					found = true;
-					break;
-				}
+		if (vm.type == 'create') {
+			var target;
+			vm.attackOptions = [];
+			vm.attackOptions2 = [];
+			
+			for (var i = 0; i < vm.warData.size; i++) {
+				target = 'Attack ' + (i + 1).toString();
+				found = false;
+				for (var w = 0; w < vm.warData.warriors.length; w++) {
+					if ((target) == vm.warData.warriors[w].attack1) {
+						found = true;
+						break;
+					}
+				};
+				if (!found) 
+					vm.attackOptions.push(target);
+				vm.attackOptions2.push(target);
 			};
-			if (!found) 
-				vm.attackOptions.push(target);
-			vm.attackOptions2.push(target);
-		};
+		}
 	};
 
 	vm.adjustUsers = function() {

@@ -1,30 +1,31 @@
-@font-face{
+@font-face {
 	font-family: "Supercell-magic";
 	src: url('../fonts/Supercell-magic-webfont.ttf') format('truetype');
 }
-@font-face{
+@font-face {
 	font-family: "QuincyCF-Light";
 	src: url('../fonts/QuincyCF-Light-webfont.ttf');
 }
-@font-face{
+@font-face {
 	font-family: "QuincyCF-Regular";
 	src: url('../fonts/QuincyCF-Regular-webfont.ttf');
 }
-@font-face{
+@font-face {
 	font-family: "QuincyCF-Black";
 	src: url('../fonts/QuincyCF-Black-webfont.ttf') format('truetype');
 }
 
-h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
+.font1, h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
 #warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton,
-.updateButton, .member-panel h6, #username
+.updateButton, #username, .modal-header
 {
     font-family: "Supercell-Magic" !important;
     color: black;
 }
 
-#clan-description, #about-section, #rules-section, .member-panel, .panel-group, .help-tip, 
-#band a, #band button, #warriorStats .attacks, #warStatsOverall, #heroStats
+.font2, #clan-description, #about-section, #rules-section, .panel-group, .help-tip, 
+#band a, #band button, #warriorStats .attacks, #warStatsOverall, #heroStats, .modal-body,
+.memberType
 {
 	font-family: "QuincyCF-Black" !important;
 }

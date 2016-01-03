@@ -3,6 +3,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 .controller('mainController', function($rootScope, $location, Auth, User, War) {
 	var vm = this;
 
+	// These are assigned here mainly to save clutter in the HTML page
 	vm.authSizing = 'col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4';
 	vm.mainPageSizing = 'col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3';
 	vm.buttonRoutingSizing = 'col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4';
@@ -149,6 +150,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	$rootScope.$on('$routeChangeStart', function () {
 		routeChange();
 	});
+
+	vm.viewProfile = function(name) {
+		console.log("HERE");
+		if (vm.loggedIn)
+			$location.path('/users/profile/' + name);
+	}
 	
 	vm.currentWar = function(start) {
 		$location.path('/wars/view/' + Number(start).toString());

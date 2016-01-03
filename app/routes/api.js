@@ -359,7 +359,12 @@ module.exports = function(app, express, $http) {
 				});
 			} else {
 				// Convert all the values to non-object values
-				data = convertData(data.Items[0])
+				data = convertData(data.Items[0]);
+
+				data.size = Number(data.size);
+				data.exp = Number(data.exp);
+				data.ourDest = Number(data.ourDest);
+				data.theirDest = Number(data.theirDest);
 
 				// Collect all the warriors into a single array
 				data.warriors = [];
@@ -569,8 +574,6 @@ module.exports = function(app, express, $http) {
 					return (Number(a.start) > Number(b.start)) ? -1 : (Number(a.start) < Number(b.start)) ? 1 : 0;
 				});
 
-				console.log(data);
-
 				res.json({
 					success: true,
 					message: 'Successfully returned user',
@@ -583,8 +586,6 @@ module.exports = function(app, express, $http) {
 	// update the user with this id
 	// (accessed at PUT http://localhost:8080/api/users/profile/:user_id) 
 	.put(function(req, res) {
-
-		console.log(req.body);
 
 		dynamodbDoc.update({
 			TableName: 'Users',

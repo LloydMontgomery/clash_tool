@@ -1,7 +1,37 @@
-.nav, .pagination, .carousel, .panel-title, a { cursor: pointer; cursor: hand; }
+.nav, .pagination, .carousel, .panel-title, a { 
+	cursor: pointer; 
+	cursor: hand; 
+}
 
+/* Make room for the navbar */
 main { 
 	padding-top: 50px;
+}
+
+/* Set the element to horizontally center itself */
+.hCenter {
+	display: inline-block;
+	margin: 0 auto;
+}
+
+.textCenter {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Remove the up and down selectors on number inputs */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+	-webkit-appearance: none; 
+	margin: 0; 
 }
 
 #content-views {
@@ -19,6 +49,13 @@ main {
 
 	margin: 15px 0 15px 0;
 }
+
+.navigationButton {
+	display: inline-flex;
+	margin: 10px;
+}
+
+
 
 /*.page-scroll, .navbar
 {
@@ -53,6 +90,12 @@ main {
 	color: #0680AF;
 }*/
 
+
+hr.accentBlue {
+	height: 2px !important;
+	width: 80%;
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #0680AF, rgba(0, 0, 0, 0));
+}
 
 
 
