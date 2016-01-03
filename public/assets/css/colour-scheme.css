@@ -1,12 +1,12 @@
 /* Background is the Accent Colour */
 #login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover,
-.navbar .active, .icon-bar 
+.navbar .active, .icon-bar, #warPage > button
 {
 	background-color: #0680AF !important;
 }
 
 /* Border colour is the Accent Colour */
-#navButton {
+#navButton, .navigationButton {
 	border-color: #0680AF !important;
 }
 
@@ -16,7 +16,7 @@ footer, .updateButton {
 }
 
 /* Text is Black */
-.warButton:hover, #userPage .btn:hover, .imgButton:hover, .active {
+.warButton:hover, #userPage .btn:hover, .imgButton:hover, .active, #warPage > button {
 	color: black !important;
 }
 
