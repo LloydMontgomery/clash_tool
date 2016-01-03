@@ -49,15 +49,16 @@
 				<div id="heroStats" class="infoContainer col-sm-4 col-xs-12">
 					<div class="col-xs-12">
 						<div>
-							<div >
+							<div>
 								Town Hall<br>
-								{{ user.profile.thLvl }}
+								<span class="accentBlue">{{ user.profile.thLvl }}</span>
 							</div>
 							<hr class="accentBlue">
 							<div>
 								Barbarian King<br>
 								<span class="accentBlue">{{ user.profile.kingLvl }}</span>
-								<timer ng-show="user.profile.kingFinishDate" ng-attr-end-time="user.profile.kingFinishDate" max-time-unit="'day'" interval="1000">
+								<timer ng-show="user.profile.kingFinishDate" ng-attr-end-time="user.profile.kingFinishDate" 
+									max-time-unit="'day'" interval="1000">
 									in <span class="accentBlue">{{days}}</span>D <span class="accentBlue">{{hours}}</span>H <span class="accentBlue">{{minutes}}</span>M <span class="accentBlue">{{seconds}}</span>S
 								</timer>
 							</div>

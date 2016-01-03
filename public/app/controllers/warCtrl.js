@@ -63,6 +63,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	];
 
 	vm.attackOptions = [];
+	vm.thLvls = ['11', '10', '9', '8', '7', '6', '5', '4', '3', '2', '1'];
 
 	vm.warData.size = 10;
 	vm.sizeOptions = [	{display: '10 vs 10', value: 10},
@@ -193,6 +194,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 			for (var w = 0; w < vm.warData.warriors.length; w++) {
 				if (vm.warData.warriors[w].name === vm.warData.users[u].name) {
 					found = true;
+					vm.warData.warriors[w].thLvl = vm.warData.users[u].thLvl;  // While we are here...
 					break;
 				}
 			};
@@ -207,6 +209,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 			for (var i = 0; i < change; i++) {
 				vm.warData.warriors.push({
 					name: 'Pick Warrior',
+					thLvl: '0',
 					attack1: 'Pick',
 					attack2: 'Ask',
 					lock1: false,
@@ -215,6 +218,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 					stars2: '0',
 					viewed: false
 				});
+				vm.warData.opposingWarriors.push();
 			};
 		} else if (change < 0) { // Then we need to remove spots
 			for (var i = 0; i < (-change); i++) {
@@ -264,7 +268,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		vm.command = 'Move';  // Reset value to 'Move'
 	};
 
-	vm.genWarriorList = function () {
+	vm.genWarriorList = function() {
 		vm.message = '';
 
 		if (!vm.warData.opponent) {
@@ -286,6 +290,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 						for (var i = 0; i < vm.warData.size; i++) {
 							vm.warData.warriors.push({
 								name: 'Pick Warrior',
+								thLvl: '0',
 								attack1: 'Pick',
 								attack2: 'Ask',
 								lock1: false,
@@ -309,6 +314,16 @@ angular.module('warCtrl', ['warService', 'userService'])
 					// Database Error, decide what to do here
 			}
 		});
+	};
+
+	vm.genOpposingWarriorList = function() {
+		vm.warData.opposingWarriors = [];
+		for (var i = 0; i < vm.warData.size; i++) {
+			vm.warData.opposingWarriors.push({
+				thLvl: vm.warData.warriors[i].thLvl
+			});
+		};
+		vm.opposingWarriorsReady = true;
 	};
 
 	vm.validateFields = function(data) {
@@ -385,7 +400,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.updateUsers = function(warriors) {
 
-		var callbackTime = 0;
 		for (i in warriors) {
 			createdAt = vm.warData.createdAt;
 			temp = {};
@@ -459,7 +473,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		});
 	};
 
-	vm.uploadImg = function () {
+	vm.uploadImg = function() {
 		vm.upload_file = function(file, signed_request, url){
 			var xhr = new XMLHttpRequest();
 			xhr.open("PUT", signed_request);
@@ -497,7 +511,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 	}
 
-	vm.reloadPage = function () {
+	vm.reloadPage = function() {
 		$route.reload();
 	};
 
