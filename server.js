@@ -47,16 +47,17 @@ console.log(__dirname);
 
 // -------------------------- ROUTE CONFIGURATION --------------------------- //
 
-// if (env != 'development') // only redirect in prod  
-// {
-//     app.use(function(req, res, next)
-//     {
-//         if (req.headers['x-forwarded-proto'] != 'https')
-//             res.redirect(['https://', req.get('Host'), req.url].join(''));
-//         else
-//             next();
-//     });
-// }
+if (__dirname == '/app') // only redirect in heroku deployment
+{
+	console.log('Using SSL Redirects!')
+    app.use(function(req, res, next)
+    {
+        if (req.headers['x-forwarded-proto'] != 'https')
+            res.redirect(['https://', req.get('Host'), req.url].join(''));
+        else
+            next();
+    });
+}
 
 
 // API ROUTES ------------------------
