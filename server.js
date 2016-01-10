@@ -43,9 +43,21 @@ mongoose.connect(DATABASE_CONNECT, options);
 // set static files location
 // set the public folder to serve public assets such as HTML, CSS, and JS files
 app.use(express.static(__dirname + '/public'));
-
+console.log(__dirname);
 
 // -------------------------- ROUTE CONFIGURATION --------------------------- //
+
+// if (env != 'development') // only redirect in prod  
+// {
+//     app.use(function(req, res, next)
+//     {
+//         if (req.headers['x-forwarded-proto'] != 'https')
+//             res.redirect(['https://', req.get('Host'), req.url].join(''));
+//         else
+//             next();
+//     });
+// }
+
 
 // API ROUTES ------------------------
 var apiRoutes = require('./app/routes/api')(app, express); 
