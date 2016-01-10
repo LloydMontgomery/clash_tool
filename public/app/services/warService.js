@@ -1,38 +1,38 @@
 angular.module('warService', []) 
-.factory('War', function($http) {
+.factory('War', function($https) {
 	// create a new object
 	var warFactory = {};
 	// get a single war
 	warFactory.get = function(id) { 
-		return $http.get('/api/wars/' + id);
+		return $https.get('/api/wars/' + id);
 	};
 	// get all wars
 	warFactory.partial = function() { 
-		return $http.get('/api/partialWars/');
+		return $https.get('/api/partialWars/');
 	};
 	// get all wars
 	warFactory.last = function() { 
-		return $http.get('/api/lastWar/');
+		return $https.get('/api/lastWar/');
 	};
 	// get all wars
 	warFactory.all = function() { 
-		return $http.get('/api/wars/');
+		return $https.get('/api/wars/');
 	};
 	// create a war
 	warFactory.create = function(warData) { 
-		return $http.post('/api/wars/', warData);
+		return $https.post('/api/wars/', warData);
 	};
 	// update a war
 	warFactory.update = function(id, warData) { 
-		return $http.put('/api/wars/' + id, warData);
+		return $https.put('/api/wars/' + id, warData);
 	};
 	// delete a war
 	warFactory.delete = function(id) { 
-		return $http.delete('/api/wars/' + id);
+		return $https.delete('/api/wars/' + id);
 	};
 	// upload a war photo to S3
 	warFactory.upload = function(data) {
-		return $http.get('/api/sign_s3?file_name=' + data.lastModifiedDate + '&file_type=' + data.type);
+		return $https.get('/api/sign_s3?file_name=' + data.lastModifiedDate + '&file_type=' + data.type);
 	};
 	// return our entire warFactory object
 	return warFactory;
