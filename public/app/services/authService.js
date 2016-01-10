@@ -12,7 +12,7 @@ angular.module('authService', [])
 	// log a user in
 	authFactory.login = function(name, password) {
 		// return the promise object and its data
-		return $https.post('/api/authenticate', { 
+		return $http.post('/api/authenticate', { 
 			name: name,
 			password: password
 		})
@@ -37,7 +37,7 @@ angular.module('authService', [])
 	// get the logged in user
 	authFactory.getUser = function() { 
 		if (AuthToken.getToken())
-			return $https.get('/api/me'); 
+			return $http.get('/api/me'); 
 		else
 			return $q.reject({ message: 'User has no token.' }); 
 	};
