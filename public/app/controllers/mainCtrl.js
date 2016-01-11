@@ -32,6 +32,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				setActive('navHome');
 				$location.path('/');
 			} else {  // User is not logged in, let them go there
+				console.log("here");
 				setActive('navProfile');
 			}
 			return;

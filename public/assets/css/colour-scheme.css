@@ -1,27 +1,62 @@
-/* Background is the Accent Colour */
-#login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover,
+
+/*#login-container button, .warButton:hover, #userPage .btn:hover, .imgButton:hover,
 .navbar .active, .icon-bar, #warPage > button
 {
 	background-color: #0680AF !important;
 }
 
-/* Border colour is the Accent Colour */
 #nav-button, .navigationButton {
 	border-color: #0680AF !important;
 }
 
-/* Background is Black */
 footer, .updateButton {
-	background-color: black !important;
+	background-color: #eaeaea !important;
 }
 
-/* Text is Black */
 .warButton:hover, #userPage .btn:hover, .imgButton:hover, .active, #warPage > button {
 	color: black !important;
 }
 
-/* Text is the Accent Colour */
 footer a, .accentBlue, nav a, .updateButton {
 	color: #0680AF !important;
+}*/
+
+/* ================================ NEW CODE ================================ */
+
+/* Accent Colour - Background */
+.accent-background-colour, .icon-bar
+{
+	background-color: #337ab7 !important;
 }
+
+/* Accent Colour - Text */
+.accent-text-colour, .dropdown a, #splash-title
+{
+	color: #337ab7 !important;
+}
+
+/* Accent Colour - Border */
+.accent-border-colour, #nav-button
+{
+	border-color: #0680AF !important;
+}
+
+/* Secondary Colour - Background */
+.navbar
+{
+	background-color: #f8f8f8 !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,173 +1,105 @@
 <div>
-	<!-- Intro Section -->
-	<section id="intro-section" class="col-xs-12">
-		<div class="col-xs-12" ng-class="main.mainPageSizing">
-			<div class="col-xs-12">
-				<a href="http://fav.me/d25xjwq" target="_blank">
-					<img id="gf-logo" src="assets/imgs/spacemonkey_transparant.png">
-					<div class="row" style="font-size:10px">
-					©2009-2015 designMS
-					</div>
-				</a>
-			</div>
-			<div id="clan-description" class="col-xs-12">
-				<div class="col-xs-12">
-					Fight Club was the beginning, now it's moved out of the basement, it's called Project Mayhem. Like a monkey, ready to be shot into space. Space monkey! Ready to sacrifice himself for the greater good.
-				</div>
-				<div class="col-xs-12">
-					<div class="hCenter">
-						<div ng-if="main.loggedIn && !main.wars[main.wars.length-1].outcome" class="routeButton textCenter">
-							<a ng-href="/wars/view/{{ main.wars[main.wars.length-1].createdAt }}" >
-								<h5>Current<br>War</h5>
-							</a>
-						</div>
-					</div>
-				</div>
+	<!-- Introduction -->
+	<div id="intro" class="row">
+		<div class="textCenter col-xs-12">
+			<span>
+				
+			</span>
+			<div>
+				Clan Management - Made Easy
 			</div>
 		</div>
-	</section>
+	</div>
 
-	<!-- About Section -->
-	<section id="about-section" class="col-xs-12">
-		<div ng-class="main.mainPageSizing">
-			<h1 class="title">About</h1>
-			<div class="text-container" class="col-xs-12">
-				<h4 class="accentBlue"> The Clan </h4>
-				Established on November 1st, 2015, Space Monkeys is a brand new fair-play clan dedicated to wars, winning, and improving together. When fully functional, clan wars will consist of town hall levels 8-10 with varying strategies that give the best opportunities for 3 stars. We are not an elite level clan, but we aim for this clan to do so in the near future.
-			</div>
-			<div class="text-container" class="col-xs-12">
-				<h4 class="accentBlue"> The Leaders </h4>
-				The leaders of this clan are experienced war veterans that are dedicated to improving individually as well as a team. We can offer advice at any town hall level and will help in any way that we can. Recently coming from a highly skilled war clan that just met some inactivity, we are ready to lead and win wars ultimately!
-			</div>
-		</div>
-	</section>
 
-	<!-- Rules Section -->
-	<section id="rules-section" class="col-xs-12">
-		<div ng-class="main.mainPageSizing">
-			<h1 class="title">Rules</h1>
-			<div class="text-container" class="col-xs-12">
-				<h4 class="accentBlue"> Personal Requirements </h4>
-				Adults Only (18+)
-				<br> Adaptable and Dedicated
-				<br> No Egos
-			</div>
-			<div class="text-container" class="col-xs-12">
-				<h4 class="accentBlue"> Clan </h4>
-				No Donate Ratio - Donate Before You Request
-				<br> Elder is Earned, Not Given
-				<br> Co-Leader is Owned, Not Earned
-				<br> Don't Ask About Promotions
-			</div>
-			<div class="text-container" class="col-xs-12">
-				<h4 class="accentBlue"> War </h4>
-				Fair Play War Clan
-				<br> Back-to-Back Wars
-				<br> Both Attacks are Manditory
-				<br> 3-Star Strategies Only
-				<br> Leaders Donate to War CCs
-				<br> Leaders Plan War Strategy
-			</div>
-		</div>
-	</section>
-
-	<!-- Members Section -->
-	<section id="members-section" class="col-xs-12">
-		<div ng-class="main.mainPageSizing">
-			<div class="row">
-				<h1 class="title">The Space Monkeys</h1>
-				<h2 class="memberType accentBlue">Leaders</h2>
-				<div id="member-panel-main-container">
-					<!-- Leader Panel -->
-					<div ng-repeat="person in main.leaders" ng-click="main.viewProfile(person.name)"
-						class="member-panel-container font2 col-lg-3 col-xs-4">
-						<div>
-							<div class="font1 textCenter"> 
-								<h6>{{ person.name }}</h6>
-							</div>
-							{{ person.title }} <br>
-							{{ person.dateJoined.toDateString().substr(4) }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<h2 class="memberType accentBlue">Elders</h2>
-				<div id="member-panel-main-container">
-					<!-- Elder Panel -->
-					<div ng-repeat="person in main.elders" ng-click="main.viewProfile(person.name)" 
-						class="member-panel-container font2 col-lg-3 col-xs-4">
-						<div>
-							<div class="font1 textCenter"> 
-								<h6>{{ person.name }}</h6>
-							</div>
-							{{ person.title }} <br>
-							{{ person.dateJoined.toDateString().substr(4) }}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<h2 class="memberType accentBlue">Members</h2>
-				<div id="member-panel-main-container">
-					<!-- Member Panel -->
-					<div ng-repeat="person in main.members" ng-click="main.viewProfile(person.name)"
-						class="member-panel-container font2 col-lg-3 col-xs-4">
-						<div>
-							<div class="font1 textCenter"> 
-								<h6>{{ person.name }}</h6>
-							</div>
-							{{ person.title }} <br>
-							{{ person.dateJoined.toDateString().substr(4) }}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- War History Section -->
-	<section id="history-section" class="col-xs-12">
-		<div ng-class="main.mainPageSizing">
-			<h1 class="title">War History</h1>
-			<div id="history-main-container">
-				<div class="history-container col-xs-12">
-					<!-- War Entry -->
-					 <uib-accordion close-others="true">
-						<uib-accordion-group ng-repeat="war in main.wars" ng-if="war.outcome && war.img" class="warEntry">
-							<uib-accordion-heading>
-								<div class="warLeft"> {{ war.start.toString().substr(0,10) }} </div>
-								<div class="warRight"> +{{ war.exp }} Exp </div>
-								<div class="warCenter" ng-class="war.outcome">
-									{{ war.ourScore }} - {{ war.theirScore }}
-								</div>
-							</uib-accordion-heading>
-							<img ng-src="{{war.img}}" style="width:100%">
-						</uib-accordion-group>
-					</uib-accordion>
-					<span class="help-tip"> (Did ya try clicking one?) </span>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Collaboration Section -->
-	<section id="collaboration-section" class="col-xs-12">
-		<div ng-class="main.mainPageSizing">
-			<h1 class="title"> Apps </h1>
-			<div class="hCenter">
-				<div class="routeButton textCenter pull-left">
-					<a href="https://groupme.com/join_group/17586299/qlSTbS" target="_blank">
-						<h5> GroupMe </h5>
-					</a>
-				</div>
-				<div class="routeButton textCenter pull-left">
-					<a href="https://evernote.com/skitch/" target="_blank">
-						<h5> Skitch </h5>
-					</a>
-				</div>
-			</div>
-			<div class="help-tip"> (Seriously, click one) </div>
-		</div>
-	</section>
+<!--             <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">26</div>
+                                    <div>New Comments!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-tasks fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">12</div>
+                                    <div>New Tasks!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-shopping-cart fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">124</div>
+                                    <div>New Orders!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-support fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">13</div>
+                                    <div>Support Tickets!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div> -->
 </div>

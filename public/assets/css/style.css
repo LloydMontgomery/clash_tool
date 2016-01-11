@@ -5,7 +5,12 @@
 
 /* Make room for the navbar */
 main { 
-	padding-top: 50px;
+	padding: 65px 15px 0 15px;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
 }
 
 /* Set the element to horizontally center itself */
@@ -65,50 +70,27 @@ input[type=number]::-webkit-outer-spin-button {
 	color: black !important;
 }*/
 
-
-/* ===================== NAVBAR ===================== */
-/*.navbar {
-	height: 50px !important;
-}
-.navbar-header {
-	width: 250px;
-}
-.navbar-brand {
-	color: #0680AF !important;
-}
-#navbar-links {
-	position: absolute;
-	height: 50px;
-	top: 0px;
-	right: 0px;
-	padding: 15px;
-}
-#navbar-links span {
-	margin: 0 5px 0 5px;
-}
-#navbar-links a {
-	color: #0680AF;
-}*/
-
-
 hr.accentBlue {
 	height: 2px !important;
 	width: 80%;
 	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #0680AF, rgba(0, 0, 0, 0));
 }
 
-
-
-#navigation-buttons .btn
-{
-	margin: 5px 0px 5px 0px;
-
-	width: 100%;
-}
-
 .greyedOutText {
 	color: #eaeaea !important;
 }
+
+/* ===================== NAVBAR ===================== */
+
+.navbar {
+	border-color: #e7e7e7;
+}
+
+#navigation-buttons .btn {
+	margin: 5px 0px 5px 0px;
+	width: 100%;
+}
+
 
 
 
