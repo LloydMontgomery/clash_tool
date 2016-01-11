@@ -1,6 +1,6 @@
 angular.module('mainCtrl', ['ui.bootstrap'])
 
-.controller('mainController', function($rootScope, $location, Auth, User, War) {
+.controller('mainController', function($rootScope, $location, $window, Auth, User, War) {
 	var vm = this;
 
 	// These are assigned here mainly to save clutter in the HTML page
@@ -222,5 +222,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		vm.userInfo = {}; 
 		$location.path('/login');
 	};
+
+	// var forceSSL = function () {
+	// 	if ($location.protocol() !== 'https') {
+	// 		$window.location.href = $location.absUrl().replace('http', 'https');
+	// 	}
+	// };
+	// forceSSL();
 
 });

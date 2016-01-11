@@ -205,7 +205,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		vm.updating = true;
 
 		console.log(vm.profile);
-		if (!vm.profile.thLvl || !vm.profile.kingLvl || !vm.profile.queenLvl) {
+		if (!vm.profile.thLvl || (vm.profile.kingLvl === null)  || (vm.profile.queenLvl === null)) {
 			vm.error = 'Missing Town Hall, Barb King, or Queen Information'
 			vm.updating = false;
 			return;
@@ -232,7 +232,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 			vm.updating = false;
 		});
 	}
-
 
 	/* ============================ MODAL LOGIC ============================ */
 
@@ -292,8 +291,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		} else {
 			vm.profile.kingFinishDate = 0;
 		}
-
-		console.log(vm.profile.kingFinishDate);
 
 		if (!vm.queenTimerDisable) {
 			// Add the time together

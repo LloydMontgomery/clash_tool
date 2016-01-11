@@ -5,7 +5,8 @@ angular.module('userService', [])
 
 	// get a single user profile
 	userFactory.getProfile = function(id) { 
-		return $http.get('/api/users/profile/' + id);
+		return $http.get('api/users/profile/' + id);
+		// return $http.get('http://clash.solutions/api/users/profile/' + id);
 	};
 	// get a single user profile
 	userFactory.setProfile = function(id, userData) {

@@ -199,7 +199,7 @@ module.exports = function(app, express, $http) {
 
 		dynamodb.scan({
 			TableName : "Users",
-			ProjectionExpression: "#n, title, dateJoined, inClan",
+			ProjectionExpression: "#n, title, dateJoined, inClan, thLvl",
 			FilterExpression: "inClan = :jut",
 			ExpressionAttributeNames: {
 				"#n": "name"

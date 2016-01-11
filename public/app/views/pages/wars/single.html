@@ -277,6 +277,23 @@
 					</div>
 				</div>
 			</div>
+			<!-- Opposing Clan Stats -->
+			<div ng-show="war.opposingWarriorsReady" id="warriorStats" class="col-xs-12">
+				<div class="col-xs-12">
+					<!-- Warrior Template -->
+					<div ng-repeat="warrior in war.warData.opposingWarriors" id="warriorTemplate" class="row excludeAnimation">
+						<div class="col-sm-6 col-xs-12 warriorNames">
+							{{warrior.thLvl}}
+							<select ng-model="warrior.thLvl" 
+								ng-options="option for option in war.thLvls">
+							</select>
+						</div>
+						<div ng-if="!$last" class="col-xs-12">
+							<hr class="accentBlue hCenter">
+						</div>
+					</div>
+				</div>
+			</div>
 			<!-- Message Div -->
 			<div class="row show-hide-message" ng-show="war.message">
 				<div class="col-sm-4 col-sm-offset-4 col-xs-12">
@@ -291,8 +308,12 @@
 				<div ng-click="war.genWarriorList()" ng-if="war.type == 'create'" ng-hide="war.showWarriors">
 					<button class="btn btn-lg btn-block warButton">Warrior List</button>
 				</div>
+				<!-- Button to Show Opposing Warriors -->
+				<div ng-click="war.genOpposingWarriorList()" ng-if="war.type == 'create'" ng-hide="!war.showWarriors || war.opposingWarriorsReady">
+					<button class="btn btn-lg btn-block warButton">Opposing Warriors</button>
+				</div>
 				<!-- Button to Submit War or Update War -->
-				<div ng-show="war.showWarriors && war.warriorsReady">
+				<div ng-show="war.showWarriors && war.warriorsReady && war.opposingWarriorsReady">
 					<button ng-click="war.saveWar()" class="btn btn-lg btn-block warButton" ng-if="war.type == 'create'">Create War</button>
 					<button ng-click="war.updateWar(false, war.warData)" class="btn btn-lg btn-block warButton" ng-if="war.type != 'create'">Update War</button>
 				</div>

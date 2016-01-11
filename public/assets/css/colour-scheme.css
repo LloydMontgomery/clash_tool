@@ -6,7 +6,7 @@
 }
 
 /* Border colour is the Accent Colour */
-#navButton, .navigationButton {
+#nav-button, .navigationButton {
 	border-color: #0680AF !important;
 }
 
