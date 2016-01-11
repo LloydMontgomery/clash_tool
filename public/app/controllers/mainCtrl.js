@@ -21,10 +21,23 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	}
 
 	var checkRoutePermission = function(route) {
-
 		/* Routes that anyone can go to */
+		if (route == '/splash') {
+			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
+				setActive('navHome');
+				$location.path('/');
+			} else {  // User is not logged in, let them go there
+				$location.path('/splash');
+			}
+			return;
+		}
 		if (route == '/') {  // home
-			setActive('navHome');
+			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
+				setActive('navHome');
+				$location.path('/');
+			} else {  // User is not logged in, let them go there
+				$location.path('/splash');
+			}
 			return;
 		}
 		if (route == '/login') {
@@ -32,7 +45,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				setActive('navHome');
 				$location.path('/');
 			} else {  // User is not logged in, let them go there
-				console.log("here");
 				setActive('navProfile');
 			}
 			return;

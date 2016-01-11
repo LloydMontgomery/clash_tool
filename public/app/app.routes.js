@@ -5,17 +5,18 @@ angular.module('app.routes', ['ngRoute'])
 	$routeProvider
 	// home page route
 	.when('/', {
-		templateUrl : 'app/views/pages/splash.html',
-		css			: 'assets/css/splash.css'
+		templateUrl : 'app/views/pages/home.html',
+		css			: 'assets/css/home.css'
 	})
-	// .when('/', {
-	// 	templateUrl : 'app/views/pages/home.html',
-	// 	css			: 'assets/css/home.css'
-	// })
+	// splash page
+	.when('/splash', {
+		templateUrl : 'app/views/pages/splash.html',
+		// css			: 'assets/css/splash.css'
+	})
 	// login page
 	.when('/login', {
 		templateUrl : 'app/views/pages/login.html',
-		css			: 'assets/css/login.css',
+		// css			: 'assets/css/login.css',
 		controller  : 'mainController',
 		controllerAs: 'auth'
 	})

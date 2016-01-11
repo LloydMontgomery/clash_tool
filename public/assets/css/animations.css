@@ -24,6 +24,12 @@
 	animation:zoomIn 0.3s both ease;
 }*/
 
+.bounce {
+	-webkit-animation:pulse 3s both infinite;
+	-moz-animation:pulse 3s both infinite;
+	animation: pulse 3s both infinite;
+}
+
 /*.ng-enter:not(.excludeAnimation) {
 	-webkit-animation:zoomInDown 1.2s both ease-in;
 	-moz-animation:zoomInDown 1.2s both ease-in;

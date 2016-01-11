@@ -19,6 +19,8 @@
 	<link rel="stylesheet" href="assets/css/colour-scheme.css">
 	<link rel="stylesheet" href="assets/css/font-styles.css">
 	<link rel="stylesheet" href="assets/css/animations.css">
+	<link rel="stylesheet" href="assets/css/splash.css">
+	<link rel="stylesheet" href="assets/css/login.css">
 
 	<!-- JS LIBS -->
 	<script src="assets/js/jquery.js"></script>
@@ -48,7 +50,7 @@
 
 <body ng-app="ClashTool" ng-controller="mainController as main">
 	<!-- NAVIGATION -->
-	<nav ng-show="false" class="navbar navbar-fixed-top">
+	<nav ng-show="main.loggedIn" class="navbar navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<button type="button" id="nav-button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navCollapse" aria-expanded="false">
@@ -92,7 +94,7 @@
 		</div>
 	</nav>
 
-	<main> 
+	<main>
 		<!-- ANGULAR VIEWS --> 
 		<div ng-view></div>
 	</main>
