@@ -1,6 +1,9 @@
 #login-container {
 	padding: 15px;
-	background-color: #eee;
+
+	border-radius: 5px;
+	background-color: #f8f8f8;
+	border: 1px solid #e7e7e7;
 }
 
 #register
