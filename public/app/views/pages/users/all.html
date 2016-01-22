@@ -13,11 +13,42 @@
 
 		<!-- Users Container -->
 		<div>
+			<div ng-repeat="person in user.users" class="user-container col-lg-3 col-md-6 col-xs-12">
+				<div class="user-content col-xs-12">
+					<div class="user-info col-xs-7">
+						<div>{{person.name}}</div>
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.th}}</span>
+						</span>
+						
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-user accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.bk}}</span>
+						</span>
+
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-woman accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.aq}}</span>
+						</span>
+
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-old-man accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.gw}}</span>
+						</span>
+					</div>
+					<div class="col-xs-5">
+						<button type="button" class="btn btn-primary user-profile-button textCenter col-xs-12">
+							Profile
+						</button>
+					</div>
+				</div>
+			</div>
 			<!-- User Template -->
 			<div ng-repeat="person in user.users" class="user-container row"
 				ng-click="user.profile(person)">
-				<span class="user-header font1">{{person.name}}</span>
-				<span class="user-content pull-right">
+				<div class="user-header ">{{person.name}}</div>
+				<div class="user-content">
 					<span class="user-stat">
 						<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span>
 						<span class="user-stat-number font1">{{person.th}}</span>
@@ -37,7 +68,7 @@
 						<span class="glyphicons glyphicons-old-man accent-text-colour"></span>
 						<span class="user-stat-number font1">{{person.gw}}</span>
 					</span>
-				</span>
+				</div>
 			</div>
 		</div>
 	</div>

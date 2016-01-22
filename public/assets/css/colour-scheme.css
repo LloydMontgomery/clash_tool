@@ -36,9 +36,9 @@ footer a, .accentBlue, nav a, .updateButton {
 }
 
 /* Accent Colour - Border */
-.accent-border-colour, #nav-button
+.accent-border-colour, #nav-button, .user-content
 {
-	border-color: #0680AF !important;
+	border-color: #337ab7 !important;
 }
 
 /* Secondary Colour - Background */
