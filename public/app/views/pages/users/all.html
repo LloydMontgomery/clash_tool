@@ -14,7 +14,24 @@
 		<!-- Users Container -->
 		<div>
 			<!-- User Template -->
-			<div class="user-container row">
+			<div ng-repeat="person in user.users" class="user-container row">
+				<span class="user-header font1">{{person.name}}</span>
+				<span class="user-content pull-right">
+					<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span>
+					<span class="font1">{{person.th}}</span>
+
+					<span class="glyphicons glyphicons-user accent-text-colour"></span>
+					<span class="font1">{{person.bk}}</span>
+
+					<span class="glyphicons glyphicons-woman accent-text-colour"></span>
+					<span class="font1">{{person.aq}}</span>
+
+					<span class="glyphicons glyphicons-old-man accent-text-colour"></span>
+					<span class="font1">{{person.gw}}</span>
+				</span>
+			</div>
+			<!-- User Template -->
+			<!-- <div class="user-container row">
 				<span class="user-header font1">Zephyro</span>
 				<span class="user-content pull-right">
 					<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span><span class="font1">9</span>
@@ -24,23 +41,14 @@
 				</span>
 			</div>
 			<div class="user-container row">
-				<span class="user-header font1">Tensa Zangetsug</span>
+				<span class="user-header font1">Tensa Zangetsu</span>
 				<span class="user-content pull-right">
 					<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span><span class="font1">9</span>
 					<span class="glyphicons glyphicons-user accent-text-colour"></span><span class="font1">20</span>
 					<span class="glyphicons glyphicons-woman accent-text-colour"></span><span class="font1">20</span>
 					<span class="glyphicons glyphicons-old-man accent-text-colour"></span><span class="font1">0</span>
 				</span>
-			</div>
-			<div class="user-container row">
-				<span class="user-header font1">nnnnnnnnnnnnnnn</span>
-				<span class="user-content pull-right">
-					<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span><span class="font1">9</span>
-					<span class="glyphicons glyphicons-user accent-text-colour"></span><span class="font1">20</span>
-					<span class="glyphicons glyphicons-woman accent-text-colour"></span><span class="font1">20</span>
-					<span class="glyphicons glyphicons-old-man accent-text-colour"></span><span class="font1">0</span>
-				</span>
-			</div>
+			</div> -->
 		</div>
 
 
@@ -57,27 +65,20 @@
 			<thead>
 				<tr>
 					<th class="col-xs-4">Name</th> 
-					<th class="hidden-xs">ID</th>
-					<th class="col-xs-4">Title</th>
-					<th class="hidden-xs">Admin</th>
-					<th class="col-sm-4"></th>
+					<th class="col-xs-2">TH</th>
+					<th class="col-xs-2">BK</th>
+					<th class="col-xs-2">AQ</th>
+					<th class="col-xs-2">GW</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!-- LOOP OVER THE USERS -->
-				<tr ng-repeat="person in user.displayUsers" class="excludeAnimation"> 
+				<tr ng-repeat="person in user.users" class="excludeAnimation"> 
 					<td class="col-xs-4">{{ person.name }}</td>
-					<td class="hidden-xs">{{ person.id }}</td>
-					<td class="col-xs-4">{{ person.title }}</td>
-					<td class="hidden-xs">{{ person.admin }}</td>
-					<td class="col-xs-4">
-						<div class="userActions col-xs-12">
-							<a ng-href="/users/profile/{{ person.name }}" id="profileBtn" class="col-sm-6 col-xs-12 btn btn-primary">Profile</a>
-							<a ng-href="/users/{{ person.name }}" class="col-sm-6 col-xs-12 btn btn-danger">Edit</a>
-							<!-- <a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
-								ng-if="main.userInfo.name == 'Zephyro'">Delete</a> -->
-						</div>
-					</td>
+					<td class="col-xs-2">{{ person.th }}</td>
+					<td class="col-xs-2">{{ person.bk }}</td>
+					<td class="col-xs-2">{{ person.aq }}</td>
+					<td class="col-xs-2">{{ person.gw }}</td>
 				</tr>
 			</tbody>
 		</table>

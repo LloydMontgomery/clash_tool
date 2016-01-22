@@ -7,38 +7,80 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	vm.message = '';
 	vm.filter = '0';
 
-	// set a processing variable to show loading things
-	vm.processing = true;
-	// grab all the users at page load
-	User.all().then(function(data) {
-		if (data.data.success) {
+	vm.users = [
+			{
+				name: 'DevilDog9597',
+				th: '11',
+				bk: '40',
+				aq: '40',
+				gw: '11'
+			},
+			{
+				name: 'Ned Kelly',
+				th: '11',
+				bk: '22',
+				aq: '21',
+				gw: '2'
+			},
+			{
+				name: 'd joy',
+				th: '10',
+				bk: '21',
+				aq: '20',
+				gw: '0'
+			},
+			{
+				name: 'Zephyro',
+				th: '9',
+				bk: '20',
+				aq: '20',
+				gw: '0'
+			},
+			{
+				name: 'The Chad',
+				th: '8',
+				bk: '8',
+				aq: '0',
+				gw: '0'
+			}
+		]
 
-			// bind the users that come back to vm.users
-			vm.users = data.data.data;
-			vm.users.sort(function(a, b) {
-				return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
-			});
+	// // set a processing variable to show loading things
+	// vm.processing = true;
+	// // grab all the users at page load
+	// User.all().then(function(data) {
+	// 	if (data.data.success) {
 
-			vm.inClan = [];
-			vm.notInClan = [];
-			vm.admins = [];
+	// 		// bind the users that come back to vm.users
+	// 		vm.users = data.data.data;
+	// 		vm.users.sort(function(a, b) {
+	// 			return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
+	// 		});
 
-			for (var i = 0; i < vm.users.length; i++) {
-				if (vm.users[i].inClan)
-					vm.inClan.push(vm.users[i]);
-				else
-					vm.notInClan.push(vm.users[i]);
-				if (vm.users[i].admin)
-					vm.admins.push(vm.users[i]);
-			};
-			vm.displayUsers = vm.inClan;
+	// 		vm.inClan = [];
+	// 		vm.notInClan = [];
+	// 		vm.admins = [];
 
-			vm.processing = false;
-		} else {
-			vm.message = 'Database Error. Try again another time.'
-			vm.processing = false;
-		}
-	});
+	// 		for (var i = 0; i < vm.users.length; i++) {
+	// 			if (vm.users[i].inClan)
+	// 				vm.inClan.push(vm.users[i]);
+	// 			else
+	// 				vm.notInClan.push(vm.users[i]);
+	// 			if (vm.users[i].admin)
+	// 				vm.admins.push(vm.users[i]);
+	// 		};
+	// 		vm.displayUsers = vm.inClan;
+
+	// 		vm.processing = false;
+
+	// 		console.log(vm.users);
+	// 	} else {
+	// 		vm.message = 'Database Error. Try again another time.'
+	// 		vm.processing = false;
+	// 	}
+
+		
+	// });
 
 	vm.filterList = function () {
 		if (vm.filter == '0')
