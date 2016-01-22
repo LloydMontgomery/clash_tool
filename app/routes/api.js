@@ -23,14 +23,6 @@ var AWS_ACCESS_KEY 	= config.AWS_ACCESS_KEY_ID 		|| process.env.AWS_ACCESS_KEY_I
 
 var AWS = require("aws-sdk");
 
-// Need to try/catch the config setup
-var config = {}; // This is to prevent errors later
-try {
-	config = require('../../config');
-} catch (e) {
-	console.log("Running on Heroku, use Config Vars");
-}
-
 AWS.config.update({
 	"accessKeyId": AWS_ACCESS_KEY,
 	"secretAccessKey": AWS_SECRET_KEY,
@@ -654,7 +646,7 @@ module.exports = function(app, express, $http) {
 			Limit : 1000
 		}, function(err, data) {
 			if (err) { 
-				return res.json({
+				return res.json({   
 					success: false,
 				    message: 'Database Error. Try again later'
 				});
@@ -745,8 +737,6 @@ module.exports = function(app, express, $http) {
 	// update the user with this id
 	// (accessed at PUT http://localhost:8080/api/users/:user_id) 
 	.put(function(req, res) {
-
-		console.log(req.body);
 
 		updateExpression = 'set id = :val1, title = :val2, inClan = :val3, admin = :val4';
 		expressionAttributeValues = {

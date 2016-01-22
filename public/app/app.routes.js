@@ -11,12 +11,12 @@ angular.module('app.routes', ['ngRoute'])
 	// splash page
 	.when('/splash', {
 		templateUrl : 'app/views/pages/splash.html',
-		// css			: 'assets/css/splash.css'
+		css			: 'assets/css/splash.css'
 	})
 	// login page
 	.when('/login', {
 		templateUrl : 'app/views/pages/login.html',
-		// css			: 'assets/css/login.css',
+		css			: 'assets/css/login.css',
 		controller  : 'mainController',
 		controllerAs: 'auth'
 	})

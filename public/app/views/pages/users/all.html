@@ -1,16 +1,8 @@
-<section>
-	<div class="col-xs-12"> 
-		<!-- <a href="/" type="button" class="btn btn-primary navigationButton textCenter">
-			<span class="glyphicons glyphicons-arrow-left"></span>
-			Main Page
-		</a> -->
+<div class="page-container">
+	<div class="col-xs-12">
 		<div class="page-header"> 
 			<h1>
 				Users
-				<a href="/users/create" class="btn btn-default"> 
-					<span class="glyphicon glyphicon-plus"></span>
-					New User
-				</a>
 			</h1>
 		</div>
 		<!-- LOADING MESSAGE -->
@@ -18,6 +10,44 @@
 			<span class="glyphicon glyphicon-repeat spinner"></span>
 			<p>Loading Users...</p>
 		</div>
+
+		<!-- Users Container -->
+		<div>
+			<!-- User Template -->
+			<div class="user-container row">
+				<span class="user-header font1">Zephyro</span>
+				<span class="user-content pull-right">
+					<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span><span class="font1">9</span>
+					<span class="glyphicons glyphicons-user accent-text-colour"></span><span class="font1">20</span>
+					<span class="glyphicons glyphicons-woman accent-text-colour"></span><span class="font1">20</span>
+					<span class="glyphicons glyphicons-old-man accent-text-colour"></span><span class="font1">0</span>
+				</span>
+			</div>
+			<div class="user-container row">
+				<span class="user-header font1">Tensa Zangetsug</span>
+				<span class="user-content pull-right">
+					<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span><span class="font1">9</span>
+					<span class="glyphicons glyphicons-user accent-text-colour"></span><span class="font1">20</span>
+					<span class="glyphicons glyphicons-woman accent-text-colour"></span><span class="font1">20</span>
+					<span class="glyphicons glyphicons-old-man accent-text-colour"></span><span class="font1">0</span>
+				</span>
+			</div>
+			<div class="user-container row">
+				<span class="user-header font1">nnnnnnnnnnnnnnn</span>
+				<span class="user-content pull-right">
+					<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span><span class="font1">9</span>
+					<span class="glyphicons glyphicons-user accent-text-colour"></span><span class="font1">20</span>
+					<span class="glyphicons glyphicons-woman accent-text-colour"></span><span class="font1">20</span>
+					<span class="glyphicons glyphicons-old-man accent-text-colour"></span><span class="font1">0</span>
+				</span>
+			</div>
+		</div>
+
+
+
+
+
+		<!-- OLD CODE -->
 		<div ng-show="user.users" ng-click="user.filterList()" id="userFilter" class="btn-group">
 			<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'0'">In Clan</label>
 			<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'1'">Not In Clan</label>
@@ -52,4 +82,17 @@
 			</tbody>
 		</table>
 	</div>
-</section>
+</div>
+
+<!-- <span class="sprite th-sprite th9">
+	<span class="sprite-level">9</span>
+</span>
+<span class="sprite bk-sprite">
+	<span class="sprite-level">20</span>
+</span>
+<span class="sprite aq-sprite">
+	<span class="sprite-level">20</span>
+</span>
+<span class="sprite gw-sprite">
+	<span class="sprite-level">0</span>
+</span> -->

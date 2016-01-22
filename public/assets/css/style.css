@@ -4,7 +4,7 @@
 }
 
 /* Make room for the navbar */
-main { 
+.page-container { 
 	padding: 65px 15px 0 15px;
 }
 

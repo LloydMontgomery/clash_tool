@@ -1,8 +1,13 @@
-#userPage .btn {
-	background-color: #000;
-	color: #0680AF !important;
+.user-container {
+	margin-bottom: 5px;
+}
 
-	margin: 15px 0 15px 0;
+.user-header {
+	font-size: 12px;
+}
+
+.user-content {
+
 }
 
 #userFilter {
@@ -15,6 +20,10 @@
 
 #profileBtn {
 	margin-bottom: 5px;
+}
+
+.glyphicons {
+	margin: -3px -3px 0 0;
 }
 
 /*.userActions a {

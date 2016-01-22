@@ -1,52 +1,54 @@
-<div ng-class="main.authSizing"> 
-	<div id="login-container">
-		<div>
-			<span ng-show="!auth.isRegistering">Login</span>
-			<span ng-show="auth.isRegistering">Register</span>
-		</div>
-		<form ng-submit="auth.processAuth()">
-			<!-- IN-GAME ID INPUT -->
-			<div class="form-group slideable" id="id">
-				<label>In-Game ID (Check Clash of Clans App)</label>
-				<input type="text" class="form-control" ng-model="auth.loginData.id"> 
+<div class="page-container">
+	<div ng-class="main.authSizing"> 
+		<div id="login-container">
+			<div>
+				<span ng-show="!auth.isRegistering">Login</span>
+				<span ng-show="auth.isRegistering">Register</span>
 			</div>
-			<!-- IN-GAME NAME INPUT -->
-			<div class="form-group">
-				<label>In-Game Name</label>
-				<input type="text" class="form-control" ng-model="auth.loginData.name" required> 
-			</div>
-			<!-- PASSWORD INPUT -->
-			<div class="form-group"> 
-				<label>Password</label>
-				<input type="password" class="form-control" ng-model="auth.loginData.password" required>
-			</div>
-			<!-- PASSWORD INPUT CONFIRM-->
-			<div class="form-group slideable" id="pconfirm"> 
-				<label>Re-Enter Password</label>
-				<input type="password" class="form-control" ng-model="auth.loginData.passwordConfirm">
-			</div>
-			<!-- ERROR MESSAGE -->
-			<div class="alert alert-danger" ng-show="auth.error">
-				{{ auth.error }}
-			</div>
-			<!-- ERROR MESSAGE -->
-			<div class="alert alert-success" ng-show="auth.message">
-				{{ auth.message }}
-			</div>
-			<!-- LOGIN BUTTON -->
-			<button type="submit" class="btn btn-block btn-primary">
-				<span ng-if="!auth.processing && !auth.isRegistering">Login</span>
-				<span ng-if="!auth.processing && auth.isRegistering">Register</span>
-				<span ng-show="auth.processing">
-					<span class="glyphicon glyphicon-repeat spinner"></span> 
-				</span>
-			</button>
-			<div slide-toggle="#id">
-				<div ng-click="auth.isRegistering = !auth.isRegistering" id="register" slide-toggle="#pconfirm"> 
-					<a ng-show="!auth.isRegistering"> Join the Clan </a>
-					<a ng-show="auth.isRegistering"> Back to Login </a>
+			<form ng-submit="auth.processAuth()">
+				<!-- IN-GAME ID INPUT -->
+				<div class="form-group slideable" id="id">
+					<label>In-Game ID (Check Clash of Clans App)</label>
+					<input type="text" class="form-control" ng-model="auth.loginData.id"> 
 				</div>
-			</div>
-		</form>
+				<!-- IN-GAME NAME INPUT -->
+				<div class="form-group">
+					<label>In-Game Name</label>
+					<input type="text" class="form-control" ng-model="auth.loginData.name" required> 
+				</div>
+				<!-- PASSWORD INPUT -->
+				<div class="form-group"> 
+					<label>Password</label>
+					<input type="password" class="form-control" ng-model="auth.loginData.password" required>
+				</div>
+				<!-- PASSWORD INPUT CONFIRM-->
+				<div class="form-group slideable" id="pconfirm"> 
+					<label>Re-Enter Password</label>
+					<input type="password" class="form-control" ng-model="auth.loginData.passwordConfirm">
+				</div>
+				<!-- ERROR MESSAGE -->
+				<div class="alert alert-danger" ng-show="auth.error">
+					{{ auth.error }}
+				</div>
+				<!-- ERROR MESSAGE -->
+				<div class="alert alert-success" ng-show="auth.message">
+					{{ auth.message }}
+				</div>
+				<!-- LOGIN BUTTON -->
+				<button type="submit" class="btn btn-block btn-primary">
+					<span ng-if="!auth.processing && !auth.isRegistering">Login</span>
+					<span ng-if="!auth.processing && auth.isRegistering">Register</span>
+					<span ng-show="auth.processing">
+						<span class="glyphicon glyphicon-repeat spinner"></span> 
+					</span>
+				</button>
+				<div slide-toggle="#id">
+					<div ng-click="auth.isRegistering = !auth.isRegistering" id="register" slide-toggle="#pconfirm"> 
+						<a ng-show="!auth.isRegistering"> Join the Clan </a>
+						<a ng-show="auth.isRegistering"> Back to Login </a>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>

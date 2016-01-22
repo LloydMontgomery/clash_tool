@@ -30,7 +30,7 @@
 	animation: pulse 3s both infinite;
 }
 
-/*.ng-enter:not(.excludeAnimation) {
+.ng-enter:not(.excludeAnimation) {
 	-webkit-animation:zoomInDown 1.2s both ease-in;
 	-moz-animation:zoomInDown 1.2s both ease-in;
 	animation: zoomInDown 1.2s both ease-in;
@@ -40,7 +40,7 @@
 	-webkit-animation:zoomOutDown 0.5s both ease-in;
 	-moz-animation:zoomOutDown 0.5s both ease-in;
 	animation: zoomOutDown 0.5s both ease-in;
-}*/
+}
 
 /*.ng-enter.excludeAnimation {
 	-webkit-animation:fadeIn 1.2s both ease-in;
