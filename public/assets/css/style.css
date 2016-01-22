@@ -3,6 +3,10 @@
 	cursor: hand; 
 }
 
+a:focus, a:hover {
+	color: none;
+}
+
 /* Make room for the navbar */
 .page-container { 
 	padding: 50px 15px 0 15px;

@@ -30,7 +30,7 @@ footer a, .accentBlue, nav a, .updateButton {
 }
 
 /* Accent Colour - Text */
-.accent-text-colour, .dropdown a, #splash-title
+.accent-text-colour, .navbar-brand, .dropdown a, #splash-title
 {
 	color: #337ab7 !important;
 }

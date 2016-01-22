@@ -30,7 +30,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 				gw: '0'
 			},
 			{
-				name: 'Zephyro',
+				name: 'ཬད༼ Zephyro ༽ཌར',
 				th: '9',
 				bk: '20',
 				aq: '20',
@@ -47,6 +47,27 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 				name: 'The Chad',
 				th: '8',
 				bk: '8',
+				aq: '0',
+				gw: '0'
+			},
+			{
+				name: 'NOBLE 3',
+				th: '9',
+				bk: '10',
+				aq: '9',
+				gw: '0'
+			},
+			{
+				name: '~Big Dog~',
+				th: '8',
+				bk: '8',
+				aq: '0',
+				gw: '0'
+			},
+			{
+				name: 'Sir Lancelot',
+				th: '8',
+				bk: '5',
 				aq: '0',
 				gw: '0'
 			}

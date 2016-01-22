@@ -31,16 +31,16 @@
 }
 
 .ng-enter:not(.excludeAnimation) {
-	-webkit-animation:zoomInDown 1.2s both ease-in;
-	-moz-animation:zoomInDown 1.2s both ease-in;
-	animation: zoomInDown 1.2s both ease-in;
+	-webkit-animation:fadeIn 1.5s;
+	-moz-animation:fadeIn 1.5s;
+	animation: fadeIn 1.5s;
 }
 
-.ng-leave:not(.excludeAnimation) {
-	-webkit-animation:zoomOutDown 0.5s both ease-in;
-	-moz-animation:zoomOutDown 0.5s both ease-in;
-	animation: zoomOutDown 0.5s both ease-in;
-}
+/*.ng-leave:not(.excludeAnimation) {
+	-webkit-animation:fadeOut .5s;
+	-moz-animation:fadeOut .5s;
+	animation: fadeOut .5s;
+}*/
 
 /*.ng-enter.excludeAnimation {
 	-webkit-animation:fadeIn 1.2s both ease-in;
