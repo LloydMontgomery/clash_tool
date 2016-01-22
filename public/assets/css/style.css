@@ -5,7 +5,11 @@
 
 /* Make room for the navbar */
 .page-container { 
-	padding: 65px 15px 0 15px;
+	padding: 50px 15px 0 15px;
+}
+
+.page-header {
+	margin-top: 0;
 }
 
 footer {
@@ -60,16 +64,6 @@ input[type=number]::-webkit-outer-spin-button {
 	margin: 10px;
 }
 
-
-
-/*.page-scroll, .navbar
-{
-	background-color: black;
-	color: #0680AF !important;
-	background-color: #0680AF;
-	color: black !important;
-}*/
-
 hr.accentBlue {
 	height: 2px !important;
 	width: 80%;
@@ -89,6 +83,10 @@ hr.accentBlue {
 #navigation-buttons .btn {
 	margin: 5px 0px 5px 0px;
 	width: 100%;
+}
+
+#nav-button {
+	/*margin-right: 5px;*/
 }
 
 

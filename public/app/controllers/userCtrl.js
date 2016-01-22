@@ -2,7 +2,7 @@
 angular.module('userCtrl', ['userService', 'chart.js'])
 // user controller for the main page
 // inject the User factory 
-.controller('userController', function(User) {
+.controller('userController', function($location, User) {
 	var vm = this;
 	vm.message = '';
 	vm.filter = '0';
@@ -34,6 +34,13 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 				th: '9',
 				bk: '20',
 				aq: '20',
+				gw: '0'
+			},
+			{
+				name: 'Tensa Zangetsu',
+				th: '9',
+				bk: '15',
+				aq: '14',
 				gw: '0'
 			},
 			{
@@ -106,6 +113,10 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 					vm.processing = false;
 				});
 		}); 
+	};
+
+	vm.profile = function (person) {
+		$location.path('/users/profile/' + person.name);
 	};
 })
 

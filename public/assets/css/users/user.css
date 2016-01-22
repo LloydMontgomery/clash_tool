@@ -1,5 +1,5 @@
 .user-container {
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
 
 .user-header {
@@ -10,24 +10,17 @@
 
 }
 
-#userFilter {
-	margin-bottom: 20px;
+.user-stat {
+	display: inline-block;
+	width: 40px !important;
 }
 
-.userActions {
-	padding: 10px;
-}
-
-#profileBtn {
-	margin-bottom: 5px;
+.user-stat-number {
+	font-size: 11px;
 }
 
 .glyphicons {
-	margin: -3px -3px 0 0;
+	margin: -3px -8px -10px -10px;
 }
-
-/*.userActions a {
-	width: 100%;
-}*/
 
 
