@@ -36,13 +36,13 @@ footer a, .accentBlue, nav a, .updateButton {
 }
 
 /* Accent Colour - Border */
-.accent-border-colour, #nav-button, .user-content, .war-content
+.accent-border-colour, #nav-button, .user-content, .war-content, #warStats > div > div, #warriorStats > div, #imgUpload > div 
 {
 	border-color: #337ab7 !important;
 }
 
 /* Secondary Colour - Background */
-.navbar
+.navbar, #warStats > div > div, #warStats > div > div > div > div, #warStats > div > div > div > div
 {
 	background-color: #f8f8f8 !important;
 }
