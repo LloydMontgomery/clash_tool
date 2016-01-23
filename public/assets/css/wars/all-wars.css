@@ -1,43 +1,45 @@
-.user-container {
+.war-container {
 	margin: 0px;
 	padding: 0px;
 	/*margin-bottom: 15px;*/
 }
 
-.user-content {
+.war-content {
 	margin-bottom: 10px;
 	padding: 10px;
 
 	background-color: #f8f8f8 !important;
 	font-size: 16px;
-	color: black !important;
+	color: black;
 
 	border: 1px solid;
 	border-radius: 5px;
 }
 
-.user-stat {
+.war-stat {
 }
 
-.user-info {
+.war-info {
 	display: inline-block;
 	padding: 0px;
 }
 
-.user-info > .user-stat > .glyphicons {
+.war-info > .war-stat > .glyphicons {
 	margin-left: -5px;
 }
 
-.user-stat-number {
+.war-stat-number {
 	font-size: 11px;
 }
 
-.user-info .glyphicons {
+.war-info .glyphicons {
 	margin: -3px -10px -10px 0;
 }
 
-.glyphicons-nameplate {
-	margin: -10px;
+.in-progress {
+	font-size: 12px;
 }
 
-
+.testing {
+	font-size: 30px;
+}

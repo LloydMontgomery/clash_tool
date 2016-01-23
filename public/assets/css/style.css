@@ -78,6 +78,10 @@ hr.accentBlue {
 	color: #eaeaea !important;
 }
 
+/* ================== Conditional =================== */
+.war-win { color: green !important }
+.war-loss { color: red }
+
 /* ===================== NAVBAR ===================== */
 
 .navbar {

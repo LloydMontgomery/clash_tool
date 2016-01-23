@@ -21,6 +21,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
 		};
 
+		console.log(vm.wars);
+
 		// when all the wars come back, remove the processing variable
 		vm.processing = false;
 	});

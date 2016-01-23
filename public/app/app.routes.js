@@ -55,7 +55,7 @@ angular.module('app.routes', ['ngRoute'])
 	// show all wars
 	.when('/wars', {
 		templateUrl	: 'app/views/pages/wars/all.html',
-		css			: 'assets/css/war.css',
+		css			: 'assets/css/wars/all-wars.css',
 		controller	: 'warListController',
 		controllerAs: 'war'
 	})
