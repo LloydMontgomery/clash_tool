@@ -1,12 +1,43 @@
 <div class="page-container">
 	<!-- Introduction -->
-	<div>
-		<div class="textCenter col-xs-12">
-			<span>
-				
-			</span>
-			<div>
-				Clan Management - Made Easy
+	<div class="col-xs-12">
+		<div id="clan-stats-container">
+			<div class="col-xs-12">
+				<div class="col-xs-12">
+					<h3 class="font1 textCenter">{{main.clan.name}}</h3>
+				</div>
+				<div id="clan-stats" class="font1">
+					<div class="pull-left">
+						<span class="glyphicons glyphicons-group"></span>
+						<div class="value textCenter">
+							<span>{{main.clan.members}}</span>
+						</div>
+					</div>
+					<div class="pull-left">
+						<span class="glyphicons glyphicons-cup"></span>
+						<div class="value textCenter">
+							<span>{{main.clan.warWins}}</span>
+						</div>
+					</div>
+					<!-- <div class="pull-left">
+						<span class="glyphicons glyphicons-bullets"></span>
+						<div class="value textCenter">
+							<span>{{main.clan.totalAttacks}}</span>
+						</div>
+					</div> -->
+					<div class="pull-left">
+						<span class="glyphicons glyphicons-star"></span>
+						<div class="value textCenter">
+							<span>{{main.clan.totalStars}}</span>
+						</div>
+					</div>
+					<div class="pull-left">
+						<span class="glyphicons glyphicons-fire"></span>
+						<div class="value textCenter">
+							<span>{{main.clan.avDest}}%</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

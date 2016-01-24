@@ -1,0 +1,27 @@
+#clan-stats-container {
+	margin-top: 50px;
+	text-align: center;
+}
+
+#clan-stats-container h3 {
+	margin: 0;
+}
+
+#clan-stats {
+	display: inline-block;
+	margin: 0 auto;
+}
+
+#clan-stats > div {
+	margin: 0 10px;
+}
+
+#clan-stats .glyphicons {
+	color: #337ab7;
+	font-size: 24px;
+}
+
+#clan-stats .value {
+	margin-top: -3px;
+	font-size: 10px;
+}

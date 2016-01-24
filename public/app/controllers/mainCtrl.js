@@ -157,6 +157,15 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					// Do Something
 				}
 			});
+
+			// Load Clan Information
+			vm.clan = {
+				name: "ALLIWANTISWAR",
+				members: "50",
+				warWins: "153",
+				avDest: "91.76",
+				totalStars: "24220"
+			}
 		}
 	};
 
@@ -235,12 +244,4 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		vm.userInfo = {}; 
 		$location.path('/login');
 	};
-
-	// var forceSSL = function () {
-	// 	if ($location.protocol() !== 'https') {
-	// 		$window.location.href = $location.absUrl().replace('http', 'https');
-	// 	}
-	// };
-	// forceSSL();
-
 });
