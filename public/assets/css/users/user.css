@@ -34,6 +34,10 @@
 	margin: -3px -10px -10px 0;
 }
 
+#person-name {
+	background-color: #FF66CC;
+}
+
 .glyphicons-nameplate {
 	margin: -10px;
 
