@@ -44,7 +44,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 				gw: '0'
 			},
 			{
-				name: 'The Chad',
+				name: 'Zephyro',
 				th: '8',
 				bk: '8',
 				aq: '0',

@@ -1,9 +1,9 @@
 <div class="page-container">
 	<div class="col-xs-12">
-		<div class="textCenter font1">
-			<h3>{{ user.profile.name }}'s Profile</h3>
+		<div ng-show="!user.loadingPage" id="profile-header" class="textCenter font1">
+			<h3 ng-show="!user.loadingPage">{{ user.profile.name }}'s Profile</h3>
 		</div>
-		<hr>
+		<hr id="header-horizontal-rule">
 		<!-- LOADING MESSAGE -->
 		<div class="jumbotron text-center" ng-show="user.loadingPage"> 
 			<span class="glyphicon glyphicon-repeat spinner"></span>
@@ -64,7 +64,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="message-container" class="col-xs-12">
+			<div ng-show="user.error || user.message" id="message-container" class="col-xs-12">
 				<!-- ERROR MESSAGE -->
 				<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
 					{{ user.error }}
@@ -86,24 +86,24 @@
 			</div>
 
 			<!-- All Attacks -->
-			<div id="war-attacks" class="col-sm-offset-2 col-sm-8 col-xs-12">
+			<div id="war-attacks" class="col-sm-offset-2 col-sm-8 col-xs-12 font2">
 				<div class="col-xs-12">
-					<table class="table table-bordered table-striped col-xs-12" ng-show="user.profile.wars"> 
+					<table class="table col-xs-12" ng-show="user.profile.wars"> 
 						<thead>
 							<tr>
-								<th>Opponent</th> 
-								<th>You</th>
-								<th>Opp</th>
-								<th>Stars</th>
+								<th class="opponent-name">War</th> 
+								<th class="table-center col-xs-2">You</th>
+								<th class="table-center col-xs-2">Opp</th>
+								<th class="col-xs-3">Stars</th>
 								<!-- <th>%</th> -->
 							</tr>
 						</thead>
 						<tbody>
 							<!-- LOOP OVER THE USERS -->
 							<tr ng-repeat="war in user.profile.wars" class="excludeAnimation"> 
-								<td>{{ war.opponent }}</td>
-								<td>{{ war.you }}</td>
-								<td>{{ war.opp }}</td>
+								<td class="opponent-name">{{ war.opponent }}</td>
+								<td class="table-center">{{ war.you }}</td>
+								<td class="table-center">{{ war.opp }}</td>
 								<td>
 									<div>
 										<span ng-show="war.stars > 0" class="glyphicons glyphicons-star drop"></span>
