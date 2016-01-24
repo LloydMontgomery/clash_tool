@@ -1,20 +1,16 @@
-.infoContainer {
+.info-container {
+	padding: 0 10px 10px 10px;
 	text-align: center;
-	margin-bottom: 15px;
 	font-size: 18px;
 }
 
-.infoContainer > div {
-	padding: 5px;
-}
-
-.infoContainer > div > div {
+.info-container > div {
+	padding: 15px;
 	border: 1px solid;
 	border-radius: 15px;
-	padding: 15px;
 }
 
-.infoContainer > div > div > div > div {
+.infoContainer > div {
 	border-radius: 5px;
 	height: 30px;
 	margin-bottom: 15px;
@@ -39,23 +35,36 @@
 	height: 90%;
 }
 
+#edit-profile {
+	padding: 0 10px 10px 10px;
+}
+
 .updateButton {
+	border-radius: 5px;
 	background-color: #000;
 	color: #0680AF !important;
-
-	margin: 15px 0 15px 0;
 }
 
-#allAttacks {
-	margin-top: 5px;
-	margin-bottom: 20px;
-	padding: 0 20px 0 20px;
+#war-attacks {
+	padding: 0 10px 10px 10px;
 }
 
-#allAttacks > div{
+#war-attacks > div {
+	border: 1px solid;
 	border-radius: 15px;
-	box-shadow: 0px 0px 10px 5px #dadada;
 	padding: 15px 15px 0 15px;
+}
+
+#profile-container {
+	padding: 0;
+}
+
+#message-container {
+	padding: 0 10px 10px 10px;
+}
+
+.alert {
+	margin: 0;
 }
 
 

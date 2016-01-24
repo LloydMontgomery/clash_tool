@@ -56,13 +56,6 @@ input[type=number]::-webkit-outer-spin-button {
 	position: absolute;
 }
 
-.updateButton {
-	background-color: #000;
-	color: #0680AF !important;
-
-	margin: 15px 0 15px 0;
-}
-
 .navigationButton {
 	display: inline-flex;
 	margin: 10px;

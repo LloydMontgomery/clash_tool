@@ -37,13 +37,13 @@ footer a, .accentBlue, nav a, .updateButton {
 
 /* Accent Colour - Border */
 .accent-border-colour, #nav-button, .user-content, .war-content, #warStats > div > div, #warriorStats > div, #imgUpload > div,
-.infoContainer > div > div 
+.info-container > div, #war-attacks > div
 {
 	border-color: #337ab7 !important;
 }
 
 /* Secondary Colour - Background */
-.navbar, #warStats > div > div, #warStats > div > div > div > div, #warStats > div > div > div > div, .infoContainer > div > div
+.navbar, #warStats > div > div, #warStats > div > div > div > div, .info-container > div, #war-attacks > div
 {
 	background-color: #f8f8f8 !important;
 }

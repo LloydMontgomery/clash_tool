@@ -10,76 +10,73 @@
 			<p>Loading Profile...</p>
 		</div>
 		<div ng-show="!user.loadingPage">
-			<div class="col-sm-12">
+			<div id="profile-container" class="col-xs-12">
 				<!-- War Stats Overview -->
-				<div id="warStatsOverall" class="infoContainer col-sm-4 col-xs-12">
-					<div class="col-xs-12">
+				<div id="warStatsOverall" class="info-container col-sm-4 col-xs-12">
+					<div>
 						<div>
-							<div >
-								Wars Fought<br>
-								{{ user.profile.warsFought }}
-							</div>
-							<hr class="accentBlue">
-							<div>
-								Stars Gained<br>
-								{{ user.profile.starsGained }}
-							</div>
-							<hr class="accentBlue">
-							<div>
-								3-Star Rate<br>
-								{{ user.profile.threeStarRate.toFixed(2) }} %
-							</div>
+							Wars Fought<br>
+							{{ user.profile.warsFought }}
+						</div>
+						<hr class="accentBlue">
+						<div>
+							Stars Gained<br>
+							{{ user.profile.starsGained }}
+						</div>
+						<hr class="accentBlue">
+						<div>
+							3-Star Rate<br>
+							{{ user.profile.threeStarRate.toFixed(2) }} %
 						</div>
 					</div>
 				</div>
 				<!-- Attack Stats -->
-				<div id="attackStats" class="infoContainer col-sm-4 col-xs-12">
+				<div id="attackStats" class="info-container col-sm-4 col-xs-12">
 					<div>
-						<div>
-							All War Stars
-							<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
-						</div>
+						All War Stars
+						<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
 					</div>
 				</div>
 				<!-- Hero Stats -->
-				<div id="heroStats" class="infoContainer col-sm-4 col-xs-12">
-					<div class="col-xs-12">
+				<div id="heroStats" class="info-container col-sm-4 col-xs-12">
+					<div>
 						<div>
-							<div>
-								Town Hall<br>
-								<span class="accentBlue">{{ user.profile.thLvl }}</span>
-							</div>
-							<hr class="accentBlue">
-							<div>
-								Barbarian King<br>
-								<span class="accentBlue">{{ user.profile.kingLvl }}</span>
-								<timer ng-show="user.profile.kingFinishDate" ng-attr-end-time="user.profile.kingFinishDate" 
-									max-time-unit="'day'" interval="1000">
-									in <span class="accentBlue">{{days}}</span>D <span class="accentBlue">{{hours}}</span>H <span class="accentBlue">{{minutes}}</span>M <span class="accentBlue">{{seconds}}</span>S
-								</timer>
-							</div>
-							<hr class="accentBlue">
-							<div>
-								Archer Queen<br>
-								<span class="accentBlue">{{ user.profile.queenLvl }}</span>
-								<timer ng-show="user.profile.queenFinishDate" ng-attr-end-time="user.profile.queenFinishDate" max-time-unit="'day'" interval="1000">
-									in <span class="accentBlue">{{days}}</span>D <span class="accentBlue">{{hours}}</span>H <span class="accentBlue">{{minutes}}</span>M <span class="accentBlue">{{seconds}}</span>S
-								</timer>
-							</div>
+							Town Hall<br>
+							<span class="accentBlue">{{ user.profile.thLvl }}</span>
+						</div>
+						<hr class="accentBlue">
+						<div>
+							Barbarian King<br>
+							<span class="accentBlue">{{ user.profile.kingLvl }}</span>
+							<timer ng-show="user.profile.kingFinishDate" ng-attr-end-time="user.profile.kingFinishDate" 
+								max-time-unit="'day'" interval="1000">
+								in <span class="accentBlue">{{days}}</span>D <span class="accentBlue">{{hours}}</span>H <span class="accentBlue">{{minutes}}</span>M <span class="accentBlue">{{seconds}}</span>S
+							</timer>
+						</div>
+						<hr class="accentBlue">
+						<div>
+							Archer Queen<br>
+							<span class="accentBlue">{{ user.profile.queenLvl }}</span>
+							<timer ng-show="user.profile.queenFinishDate" ng-attr-end-time="user.profile.queenFinishDate" max-time-unit="'day'" interval="1000">
+								in <span class="accentBlue">{{days}}</span>D <span class="accentBlue">{{hours}}</span>H <span class="accentBlue">{{minutes}}</span>M <span class="accentBlue">{{seconds}}</span>S
+							</timer>
 						</div>
 					</div>
 				</div>
 			</div>
-
-			<!-- ERROR MESSAGE -->
-			<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
-				{{ user.error }}
+			<div id="message-container" class="col-xs-12">
+				<!-- ERROR MESSAGE -->
+				<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
+					{{ user.error }}
+				</div>
+				<!-- SUCCESS MESSAGE -->
+				<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
+					{{ user.message }}
+				</div>
 			</div>
-			<!-- SUCCESS MESSAGE -->
-			<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
-				{{ user.message }}
-			</div>
-			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" class="col-sm-offset-4 col-sm-4 col-xs-12">
+			<!-- Edit Profile -->
+			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" 
+				id="edit-profile" class="col-sm-offset-4 col-sm-4 col-xs-12">
 				<button ng-click="user.open()" class="btn btn-lg btn-block updateButton">
 					<span ng-show="!user.updating"> Edit Profile </span>
 					<div ng-show="user.updating">
@@ -89,7 +86,7 @@
 			</div>
 
 			<!-- All Attacks -->
-			<div id="allAttacks" class="col-sm-offset-2 col-sm-8 col-xs-12">
+			<div id="war-attacks" class="col-sm-offset-2 col-sm-8 col-xs-12">
 				<div class="col-xs-12">
 					<table class="table table-bordered table-striped col-xs-12" ng-show="user.profile.wars"> 
 						<thead>
