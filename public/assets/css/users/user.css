@@ -1,8 +1,6 @@
 .user-container {
-	position: relative;
 	margin: 0px;
 	padding: 0px;
-	/*margin-bottom: 15px;*/
 }
 
 .user-content {
@@ -17,12 +15,11 @@
 	border-radius: 5px;
 }
 
-.user-stat {
-}
-
 .user-info {
 	display: inline-block;
 	padding: 0px;
+
+	background-color: pink !important;
 }
 
 .user-info > .user-stat > .glyphicons {
@@ -38,7 +35,6 @@
 }
 
 .glyphicons-nameplate {
-	position: relative;
 	margin: -10px;
 }
 
