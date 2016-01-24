@@ -9,7 +9,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 	vm.processing = true;
 	// grab all the wars at page load
 	War.all().then(function(data) {
-		
 		// bind the wars that come back to vm.wars
 		vm.wars = data.data.data;
 		vm.wars.sort(function(a, b) {

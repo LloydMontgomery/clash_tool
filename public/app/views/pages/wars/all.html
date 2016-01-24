@@ -40,12 +40,14 @@
 							</span>
 						</div>
 					</div>
-					<a ng-href="/users/profile/{{person.name}}" class="testing pull-right">
-						<span class="glyphicons glyphicons-settings"></span>
-					</a>
-					<a ng-href="/users/profile/{{person.name}}" class="testing pull-right">
-						<span class="glyphicons glyphicons-eye-open"></span>
-					</a>
+					<div class="navigation pull-right">
+						<a ng-href="/wars/view/{{war.createdAt}}">
+							<span class="glyphicons glyphicons-eye-open"></span>
+						</a>
+						<a ng-href="/wars/edit/{{war.createdAt}}">
+							<span class="glyphicons glyphicons-settings"></span>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>

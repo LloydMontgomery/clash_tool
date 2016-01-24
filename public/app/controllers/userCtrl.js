@@ -23,7 +23,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 				gw: '2'
 			},
 			{
-				name: 'd joy',
+				name: 'Imperial',
 				th: '10',
 				bk: '21',
 				aq: '20',

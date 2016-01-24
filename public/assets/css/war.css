@@ -1,9 +1,4 @@
 /* General War Page CSS */
-#warPage {
-	min-height: 100%;
-	position: absolute;
-}
-
 #warPageTitle {
 	text-align: center;
 }
@@ -110,8 +105,6 @@ hr.accentBlue {
 
 #warriorStats, #imgUpload {
 	margin-bottom: 10px;
-	padding-left: 20px;
-	padding-right: 20px;
 }
 
 #warriorStats > div, #imgUpload > div {
@@ -186,6 +179,10 @@ hr.accentBlue {
 }
 
 #war-message {
+	margin-bottom: 10px;
+}
+
+#confirmation-buttons {
 	margin-bottom: 10px;
 }
 

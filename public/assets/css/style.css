@@ -78,6 +78,10 @@ hr.accentBlue {
 	color: #eaeaea !important;
 }
 
+.jumbotron {
+	border-radius: 5px;
+}
+
 /* ================== Conditional =================== */
 .war-win { color: green !important }
 .war-loss { color: red }

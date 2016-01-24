@@ -24,10 +24,6 @@
 	padding: 0px;
 }
 
-.war-info > .war-stat > .glyphicons {
-	margin-left: -5px;
-}
-
 .war-stat-number {
 	font-size: 11px;
 }
@@ -36,10 +32,15 @@
 	margin: -3px -10px -10px 0;
 }
 
+.glyphicons-cup {
+	margin-right: -20px !important;
+}
+
 .in-progress {
 	font-size: 12px;
 }
 
-.testing {
-	font-size: 30px;
+.navigation {
+	padding-top: 5px;
+	font-size: 24px;
 }
