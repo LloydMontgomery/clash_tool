@@ -34,6 +34,11 @@
 	margin: -3px -10px -10px 0;
 }
 
+#profile-button-container {
+	top: 0px;
+	/*margin-top: -40px;*/
+}
+
 #person-name {
 	background-color: #FF66CC;
 }
