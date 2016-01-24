@@ -151,6 +151,10 @@ hr.accentBlue {
 	text-align: center;
 }
 
+.warriorAttacks .glyphicons {
+	margin: -10px !important;
+}
+
 #warriorStats .warriorLocks {
 	padding: 10px;
 	text-align: center;
