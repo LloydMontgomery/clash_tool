@@ -32,7 +32,7 @@
 
 /* ================================ NEW CODE ================================ */
 
-.accent-font, .user-content, .war-content
+.accent-font, .user-content, .war-content, .panel h4
 {
     font-family: "Supercell-Magic" !important;
 }

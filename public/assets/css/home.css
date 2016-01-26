@@ -25,3 +25,16 @@
 	margin-top: -3px;
 	font-size: 10px;
 }
+
+/* ============================== Navigation =============================== */
+.button-container {
+	margin-top: 30px;
+}
+
+.button-container a {
+
+	background-color: #f8f8f8 !important;
+	border: 1px solid;
+	border-radius: 5px;
+	color: white;
+}
