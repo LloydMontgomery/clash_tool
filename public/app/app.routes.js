@@ -8,6 +8,11 @@ angular.module('app.routes', ['ngRoute'])
 		templateUrl : 'app/views/pages/home.html',
 		css			: 'assets/css/home.css'
 	})
+	// splash page
+	.when('/splash', {
+		templateUrl : 'app/views/pages/splash.html',
+		css			: 'assets/css/splash.css'
+	})
 	// login page
 	.when('/login', {
 		templateUrl : 'app/views/pages/login.html',
@@ -50,7 +55,7 @@ angular.module('app.routes', ['ngRoute'])
 	// show all wars
 	.when('/wars', {
 		templateUrl	: 'app/views/pages/wars/all.html',
-		css			: 'assets/css/war.css',
+		css			: 'assets/css/wars/all-wars.css',
 		controller	: 'warListController',
 		controllerAs: 'war'
 	})

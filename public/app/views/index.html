@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1">
-	<title>Space Monkeys</title>
+	<title>Clash Solutions</title>
 
 	<!-- set the base path for angular routing -->
 	<base href="/">
@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="assets/css/colour-scheme.css">
 	<link rel="stylesheet" href="assets/css/font-styles.css">
 	<link rel="stylesheet" href="assets/css/animations.css">
+	<link rel="stylesheet" href="assets/css/sprites.css">
 
 	<!-- JS LIBS -->
 	<script src="assets/js/jquery.js"></script>
@@ -48,9 +49,8 @@
 
 <body ng-app="ClashTool" ng-controller="mainController as main">
 	<!-- NAVIGATION -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav ng-show="main.loggedIn" class="navbar navbar-fixed-top">
 		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
 				<button type="button" id="nav-button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navCollapse" aria-expanded="false">
 					<span class="sr-only">Toggle navigation</span>
@@ -58,33 +58,57 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/">Space Monkeys</a>
+				<a class="navbar-brand" href="/">Clash Solutions</a>
 			</div>
 
-			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="navCollapse">
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="/" data-toggle="collapse" data-target=".navbar-collapse.in" id="navHome">Home</a></li>
-					<li ng-show="main.userInfo.admin" class="excludeAnimation"><a href="/users" data-toggle="collapse" data-target=".navbar-collapse.in" id="navUsers">Users</a></li>
-					<li ng-show="main.loggedIn" class="excludeAnimation"><a href="/wars" data-toggle="collapse" data-target=".navbar-collapse.in" id="navWars">Wars</a></li>
+					<li ng-show="main.userInfo.admin" class="excludeAnimation">
+						<a href="/users" data-toggle="collapse" data-target=".navbar-collapse.in" id="navUsers">
+							Members
+						</a>
+					</li>
+					<li ng-show="main.loggedIn" class="excludeAnimation">
+						<a href="/wars" data-toggle="collapse" data-target=".navbar-collapse.in" id="navWars">
+							Wars
+						</a>
+					</li>
 					<li class="dropdown">
-						<a id="navProfile" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Account <span class="caret"></span></a>
+						<a id="navProfile" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
+							Account <span class="caret"></span>
+						</a>
 						<ul class="dropdown-menu">
-							<li ng-show="main.loggedIn"><a ng-href="/users/profile/{{ main.userInfo.name }}" data-toggle="collapse" data-target=".navbar-collapse.in">Profile</a></li>
-							<li ng-show="main.loggedIn" role="separator" class="divider"></li>
-							<li ng-show="!main.loggedIn"><a href="/login" data-toggle="collapse" data-target=".navbar-collapse.in">Login</a></li>
-							<li ng-show="main.loggedIn"><a ng-click="main.doLogout()" data-toggle="collapse" data-target=".navbar-collapse.in">Sign Out</a></li>
+							<li ng-show="main.loggedIn">
+								<a ng-href="/users/profile/{{ main.userInfo.name }}" data-toggle="collapse" data-target=".navbar-collapse.in">
+									Profile
+								</a>
+							</li>
+							<li ng-show="!main.loggedIn">
+								<a href="/login" data-toggle="collapse" data-target=".navbar-collapse.in">
+									Login
+								</a>
+							</li>
+							<li ng-show="main.loggedIn">
+								<a ng-click="main.doLogout()" data-toggle="collapse" data-target=".navbar-collapse.in">
+									Sign Out
+								</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
-			</div><!-- /.navbar-collapse -->
-		</div><!-- /.container-fluid -->
+			</div>
+		</div>
 	</nav>
 
-	<main> 
+	<main>
 		<!-- ANGULAR VIEWS --> 
 		<div ng-view></div>
 	</main>
+
+	<!-- <footer>
+		CONTENT
+	</footer> -->
 </body>
 
 </html>

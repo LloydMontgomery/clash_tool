@@ -1,143 +1,40 @@
-/* =========================== GENERAL HOME PAGE =========================== */
-section {
-	min-height: 100vh !important;
-	width: 100vw;
-
-	padding-bottom: 20px;
+#clan-stats-container {
+	margin-top: 50px;
 	text-align: center;
 }
 
-/* Every Other Section Starting with the First One */
-#intro-section, #rules-section, #history-section {
-	background-color: white;
+#clan-stats-container h3 {
+	margin: 0;
 }
 
-/* Every Other Section Starting with the Second One */
-#about-section, #members-section, #collaboration-section {
-	background-color: #eee;
+#clan-stats {
+	display: inline-block;
+	margin: 0 auto;
 }
 
-/* Each section has a title */
-.title {
-	margin: 75px 0 50px 0;
+#clan-stats > div {
+	margin: 0 10px;
 }
 
-/* Buttons that lead to other parts of the site, or outside the site */
-.routeButton {
-	height: 75px;
-	width: 125px;
-
-	margin-left: 5px;
-	margin-right: 5px;
-
-	border-radius: 50% !important;
-	background-color: black;
-	box-shadow: 0px 0px 10px 5px #dadada;
+#clan-stats .glyphicons {
+	color: #337ab7;
+	font-size: 24px;
 }
 
-/* Container with text in it */
-.text-container {
-	margin-bottom: 12px;
-	padding: 10px;
-	padding-bottom: 20px;
-
-	border-radius: 10px;
-
-	box-shadow: 0px 0px 10px 5px #dadada;
-	background-color: white;
+#clan-stats .value {
+	margin-top: -3px;
+	font-size: 10px;
 }
 
-/* ============================= INTRO SECTION ============================= */
-#intro-section {
-	/*padding-top: 75px;	*/
+/* ============================== Navigation =============================== */
+.button-container {
+	margin-top: 30px;
 }
 
-#intro-section #gf-logo {
-	margin-top: 40px;
-	height: 200px;
-}
+.button-container a {
 
-#intro-section #clan-description div {
-	margin-top: 10px;
+	background-color: #f8f8f8 !important;
+	border: 1px solid;
+	border-radius: 5px;
+	color: white;
 }
-#intro-section .intro-spacer {
-	height: 50px;
-}
-
-#currentWarButton {
-	margin-top: 10px auto;
-	padding-top: 0;
-}
-
-/* ============================= ABOUT SECTION ============================= */
-
-
-/* ============================= RULES SECTION ============================= */
-
-
-/* ============================ MEMBERS SECTION ============================ */
-#member-panel-main-container {
-	width: auto;
-	margin: 0 auto 0 auto;
-}
-.member-panel-container {
-	padding: 6px;
-	border-width: 0;
-	background-color: transparent;
-}
-
-.member-panel-container > div {
-	border-radius: 10px;
-
-	background-color: white;
-	box-shadow: 0px 0px 10px #dadada;
-	padding: 5px;
-}
-
-.member-panel-container > div > div {
-	height: 30px;
-	font-size: .75em;
-}
-
-.member-panel-container > div > div > h6 {
-	font-size: 1em;
-}
-
-/* ========================== WAR HISTORY SECTION ========================== */
-#history-section {
-}
-.war-win  { color: green; }
-.war-loss { color: red; }
-
-.panel, .panel-heading{
-	border-radius: 20px !important;
-}
-.panel-default > .panel-heading {
-	background-color: white;
-}
-.panel-default > .panel-heading:hover {
-	background-color: #eee;
-}
-
-.warEntry {
-	box-shadow: 0px 0px 5px 1px #dadada;
-}
-
-.panel-body > img {
-	width: 100%;
-}
-.warCenter {
-	text-align: center;
-}
-.warLeft {
-	width: 90px;
-	float: left;
-}
-.warRight {
-	width: 90px;
-	float: right;
-}
-
-/* ========================== COLLABORATION SECTION ========================== */
-
-

@@ -9,7 +9,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 	vm.processing = true;
 	// grab all the wars at page load
 	War.all().then(function(data) {
-		
 		// bind the wars that come back to vm.wars
 		vm.wars = data.data.data;
 		vm.wars.sort(function(a, b) {
@@ -20,6 +19,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 		for (var i = 0; i < vm.wars.length; i++) {
 			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
 		};
+
+		console.log(vm.wars);
 
 		// when all the wars come back, remove the processing variable
 		vm.processing = false;

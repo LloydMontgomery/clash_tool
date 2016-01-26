@@ -1,0 +1,43 @@
+.war-container {
+	margin: 0px;
+	padding: 0px;
+	/*margin-bottom: 15px;*/
+}
+
+.war-content {
+	margin-bottom: 10px;
+	padding: 10px;
+
+	background-color: #f8f8f8 !important;
+	font-size: 16px;
+	color: black;
+
+	border: 1px solid;
+	border-radius: 5px;
+}
+
+.war-info {
+	display: inline-block;
+	padding: 0px;
+}
+
+.war-stat-number {
+	font-size: 11px;
+}
+
+.war-info .glyphicons {
+	margin: -3px -10px -10px 0;
+}
+
+.glyphicons-cup {
+	margin-right: -20px !important;
+}
+
+.in-progress {
+	font-size: 12px;
+}
+
+.navigation {
+	padding-top: 5px;
+	font-size: 24px;
+}

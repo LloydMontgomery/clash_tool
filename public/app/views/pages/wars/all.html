@@ -1,16 +1,12 @@
-<section>
+<div class="page-container">
 	<div class="col-xs-12">
-		<!-- <a href="/" type="button" class="btn btn-primary navigationButton textCenter">
-			<span class="glyphicons glyphicons-arrow-left"></span>
-			Main Page
-		</a> -->
 		<div class="page-header"> 
 			<h1>
 				Wars
 				<a href="/wars/create" ng-if="main.userInfo.admin" class="btn btn-default"> 
 					<span class="glyphicon glyphicon-plus"></span> 
 					New War Log
-				</a> 
+				</a>
 			</h1>
 		</div>
 		<!-- LOADING MESSAGE -->
@@ -18,27 +14,42 @@
 			<span class="glyphicon glyphicon-repeat spinner"></span>
 			<p>Loading Wars...</p>
 		</div>
-		<table class="table table-bordered table-striped" ng-show="war.wars"> 
-			<thead>
-				<tr>
-					<th>Opponent</th>
-					<th class="hidden-xs">Start</th>
-					<th>Photo</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<!-- LOOP OVER THE WARS -->
-				<tr ng-repeat="battle in war.wars" class="excludeAnimation">
-					<td>{{ battle.opponent }}</td>
-					<td class="hidden-xs">{{ battle.start.toDateString().substr(4) }}</td>
-					<td><a ng-href="{{ battle.img.S }}" target="_blank">Overview</a></td>
-					<td class="col-xm-2">
-						<a ng-href="/wars/view/{{ battle.createdAt }}" class="btn btn-primary">View</a>
-						<a ng-href="/wars/edit/{{ battle.createdAt }}" ng-if="main.userInfo.admin" class="btn btn-danger">Edit</a>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<!-- Wars Container -->
+		<div>
+			<div ng-repeat="war in war.wars" class="war-container col-lg-3 col-md-6 col-xs-12">
+				<div class="war-content col-xs-12">
+					<div class="war-info">
+						<div>{{war.opponent}}</div>
+						<span class="in-progress" ng-if="!war.outcome">
+							In Progress...
+						</span>
+						<div ng-if="war.outcome">
+							<span class="war-stat">
+								<span class="glyphicons glyphicons-cup" ng-class="war.outcome"></span>
+								<span class="war-stat-number font1"></span>
+							</span>
+							
+							<span class="war-stat">
+								<span class="glyphicons glyphicons-star accent-text-colour"></span>
+								<span class="war-stat-number font1">{{war.ourScore}}-{{war.theirScore}}</span>
+							</span>
+
+							<span class="war-stat">
+								<span class="glyphicons glyphicons-group accent-text-colour"></span>
+								<span class="war-stat-number font1">{{war.size}}v{{war.size}}</span>
+							</span>
+						</div>
+					</div>
+					<div class="navigation pull-right">
+						<a ng-href="/wars/view/{{war.createdAt}}">
+							<span class="glyphicons glyphicons-eye-open"></span>
+						</a>
+						<a ng-href="/wars/edit/{{war.createdAt}}">
+							<span class="glyphicons glyphicons-settings"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-</section>
+</div>

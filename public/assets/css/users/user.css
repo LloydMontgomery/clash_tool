@@ -1,24 +1,45 @@
-#userPage .btn {
-	background-color: #000;
-	color: #0680AF !important;
-
-	margin: 15px 0 15px 0;
+.user-container {
+	margin: 0px;
+	padding: 0px;
 }
 
-#userFilter {
-	margin-bottom: 20px;
-}
-
-.userActions {
+.user-content {
+	margin-bottom: 10px;
 	padding: 10px;
+
+	background-color: #f8f8f8 !important;
+	font-size: 16px;
+	color: black !important;
+
+	border: 1px solid;
+	border-radius: 5px;
 }
 
-#profileBtn {
-	margin-bottom: 5px;
+.user-info {
+	display: inline-block;
+	padding: 0px;
 }
 
-/*.userActions a {
-	width: 100%;
-}*/
+.user-info > .user-stat > .glyphicons {
+	margin-left: -5px;
+}
+
+.user-stat-number {
+	font-size: 11px;
+}
+
+.user-info .glyphicons {
+	margin: -3px -10px -10px 0;
+}
+
+#profile-button-container {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+.glyphicons-nameplate {
+	margin: -10px;
+}
 
 

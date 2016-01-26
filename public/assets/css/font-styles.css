@@ -29,3 +29,15 @@
 {
 	font-family: "QuincyCF-Black" !important;
 }
+
+/* ================================ NEW CODE ================================ */
+
+.accent-font, .user-content, .war-content, .panel h4
+{
+    font-family: "Supercell-Magic" !important;
+}
+
+.secondary-font
+{
+	font-family: "QuincyCF-Black" !important;
+}

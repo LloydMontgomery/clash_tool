@@ -1,7 +1,10 @@
 #login-container {
-	margin-top: 50px;
-	padding: 20px;
-	background-color: #eee;
+	margin-top: 30px;
+	padding: 15px;
+
+	border-radius: 5px;
+	background-color: #f8f8f8;
+	border: 1px solid #e7e7e7;
 }
 
 #register

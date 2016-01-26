@@ -1,16 +1,8 @@
-<section>
-	<div class="col-xs-12"> 
-		<!-- <a href="/" type="button" class="btn btn-primary navigationButton textCenter">
-			<span class="glyphicons glyphicons-arrow-left"></span>
-			Main Page
-		</a> -->
+<div class="page-container">
+	<div class="col-xs-12">
 		<div class="page-header"> 
 			<h1>
-				Users
-				<a href="/users/create" class="btn btn-default"> 
-					<span class="glyphicon glyphicon-plus"></span>
-					New User
-				</a>
+				Members
 			</h1>
 		</div>
 		<!-- LOADING MESSAGE -->
@@ -18,38 +10,51 @@
 			<span class="glyphicon glyphicon-repeat spinner"></span>
 			<p>Loading Users...</p>
 		</div>
-		<div ng-show="user.users" ng-click="user.filterList()" id="userFilter" class="btn-group">
-			<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'0'">In Clan</label>
-			<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'1'">Not In Clan</label>
-			<label class="btn btn-default" ng-model="user.filter" uib-btn-radio="'2'">Admins</label>
+
+		<!-- Users Container -->
+		<div>
+			<div ng-repeat="person in user.users" class="user-container col-lg-3 col-md-6 col-xs-12">
+				<div class="user-content col-xs-12">
+					<div class="user-info">
+						<div>{{person.name}}</div>
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-temple-buddhist accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.th}}</span>
+						</span>
+						
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-user accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.bk}}</span>
+						</span>
+
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-woman accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.aq}}</span>
+						</span>
+
+						<span class="user-stat">
+							<span class="glyphicons glyphicons-old-man accent-text-colour"></span>
+							<span class="user-stat-number font1">{{person.gw}}</span>
+						</span>
+					</div>
+					<a ng-href="/users/profile/{{person.name}}" id="profile-button-container" class="pull-right">
+						<span class="glyphicons glyphicons-nameplate x2"></span>
+					</a>
+				</div>
+			</div>
 		</div>
-		<table class="table table-bordered table-striped" ng-show="user.users"> 
-			<thead>
-				<tr>
-					<th class="col-xs-4">Name</th> 
-					<th class="hidden-xs">ID</th>
-					<th class="col-xs-4">Title</th>
-					<th class="hidden-xs">Admin</th>
-					<th class="col-sm-4"></th>
-				</tr>
-			</thead>
-			<tbody>
-				<!-- LOOP OVER THE USERS -->
-				<tr ng-repeat="person in user.displayUsers" class="excludeAnimation"> 
-					<td class="col-xs-4">{{ person.name }}</td>
-					<td class="hidden-xs">{{ person.id }}</td>
-					<td class="col-xs-4">{{ person.title }}</td>
-					<td class="hidden-xs">{{ person.admin }}</td>
-					<td class="col-xs-4">
-						<div class="userActions col-xs-12">
-							<a ng-href="/users/profile/{{ person.name }}" id="profileBtn" class="col-sm-6 col-xs-12 btn btn-primary">Profile</a>
-							<a ng-href="/users/{{ person.name }}" class="col-sm-6 col-xs-12 btn btn-danger">Edit</a>
-							<!-- <a ng-click="user.deleteUser(person.name)" class="btn btn-danger"
-								ng-if="main.userInfo.name == 'Zephyro'">Delete</a> -->
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
 	</div>
-</section>
+</div>
+
+<!-- <span class="sprite th-sprite th9">
+	<span class="sprite-level">9</span>
+</span>
+<span class="sprite bk-sprite">
+	<span class="sprite-level">20</span>
+</span>
+<span class="sprite aq-sprite">
+	<span class="sprite-level">20</span>
+</span>
+<span class="sprite gw-sprite">
+	<span class="sprite-level">0</span>
+</span> -->

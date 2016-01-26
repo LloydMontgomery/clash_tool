@@ -21,10 +21,23 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	}
 
 	var checkRoutePermission = function(route) {
-
 		/* Routes that anyone can go to */
+		if (route == '/splash') {
+			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
+				setActive('navHome');
+				$location.path('/');
+			} else {  // User is not logged in, let them go there
+				$location.path('/splash');
+			}
+			return;
+		}
 		if (route == '/') {  // home
-			setActive('navHome');
+			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
+				setActive('navHome');
+				$location.path('/');
+			} else {  // User is not logged in, let them go there
+				$location.path('/splash');
+			}
 			return;
 		}
 		if (route == '/login') {
@@ -144,6 +157,15 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					// Do Something
 				}
 			});
+
+			// Load Clan Information
+			vm.clan = {
+				name: "ALLIWANTISWAR",
+				members: "50",
+				warWins: "153",
+				avDest: "91.76",
+				totalStars: "24220"
+			}
 		}
 	};
 
@@ -222,12 +244,4 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		vm.userInfo = {}; 
 		$location.path('/login');
 	};
-
-	// var forceSSL = function () {
-	// 	if ($location.protocol() !== 'https') {
-	// 		$window.location.href = $location.absUrl().replace('http', 'https');
-	// 	}
-	// };
-	// forceSSL();
-
 });

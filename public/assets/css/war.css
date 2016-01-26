@@ -1,9 +1,4 @@
 /* General War Page CSS */
-#warPage {
-	min-height: 100%;
-	position: absolute;
-}
-
 #warPageTitle {
 	text-align: center;
 }
@@ -15,28 +10,33 @@
 
 /* War Stats section */
 #warStats {
-	margin-bottom: 15px;
+	padding: 0 10px 0 10px;
 	font-size: 18px;
 }
 
 #warStats > div {
-	padding: 5px;
+	padding: 0 5px 10px 5px;
 	text-align: center;
 }
 
 #warStats > div > div {
-	border-radius: 15px;
-	box-shadow: 0px 0px 10px 5px #dadada;
-	padding: 15px 15px 0 15px;
 	width: 100%;
+
+	border: 1px solid;
+	border-radius: 15px;
+	padding: 15px 15px 0 15px;
+	
 }
 
 #warStats > div > div > div > div {
 	border-radius: 5px;
 	height: 30px;
 	margin-bottom: 15px;
-	background: white;
 	padding-top: 2px;
+}
+
+select, input, select option, #warriorStats > div, #imgUpload > div, #warriorStats > div > div {
+	background-color: #f8f8f8 !important;
 }
 
 #warStats select {
@@ -93,9 +93,8 @@ hr.accentBlue {
 /* Button */
 .warButton {
 	background-color: #000;
+	border-radius: 15px;
 	color: #0680AF !important;
-
-	margin: 15px 0 15px 0;
 }
 
 /* Warrior Stats section */
@@ -106,13 +105,11 @@ hr.accentBlue {
 
 #warriorStats, #imgUpload {
 	margin-bottom: 10px;
-	padding-left: 20px;
-	padding-right: 20px;
 }
 
 #warriorStats > div, #imgUpload > div {
 	border-radius: 15px;
-	box-shadow: 0px 0px 10px 5px #dadada;
+	border: 1px solid;
 	padding: 15px 15px 0 15px;
 	width: 100%;
 }
@@ -154,6 +151,10 @@ hr.accentBlue {
 	text-align: center;
 }
 
+.warriorAttacks .glyphicons {
+	margin: -10px !important;
+}
+
 #warriorStats .warriorLocks {
 	padding: 10px;
 	text-align: center;
@@ -181,13 +182,13 @@ hr.accentBlue {
 	margin: 5px 0 5px 0 !important;
 }
 
+#war-message {
+	margin-bottom: 10px;
+}
 
-
-
-
-
-
-
+#confirmation-buttons {
+	margin-bottom: 10px;
+}
 
 
 
