@@ -309,8 +309,8 @@
 				</div> -->
 				<!-- Button to Submit War or Update War -->
 				<div ng-show="war.showWarriors && war.warriorsReady" id="confirmation-buttons">
-					<button ng-click="war.saveWar()" class="btn btn-lg btn-block warButton" ng-if="war.type == 'create'">Create War</button>
-					<button ng-click="war.updateWar(false, war.warData)" class="btn btn-lg btn-block warButton" ng-if="war.type != 'create'">Update War</button>
+					<button ng-click="war.saveWar()" class="btn btn-lg btn-block main-button" ng-if="war.type == 'create'">Create War</button>
+					<button ng-click="war.updateWar(false, war.warData)" class="btn btn-lg btn-block main-button" ng-if="war.type != 'create'">Update War</button>
 				</div>
 			</div>
 		</form>

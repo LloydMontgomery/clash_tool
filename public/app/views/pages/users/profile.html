@@ -1,9 +1,8 @@
 <div class="page-container">
 	<div class="col-xs-12">
-		<div ng-show="!user.loadingPage" id="profile-header" class="textCenter font1">
-			<h3 ng-show="!user.loadingPage">{{ user.profile.name }}'s Profile</h3>
+		<div ng-show="!user.loadingPage" class="page-header">
+			<h2 ng-show="!user.loadingPage">{{ user.profile.name }}'s Profile</h2>
 		</div>
-		<hr id="header-horizontal-rule">
 		<!-- LOADING MESSAGE -->
 		<div class="jumbotron text-center" ng-show="user.loadingPage"> 
 			<span class="glyphicon glyphicon-repeat spinner"></span>

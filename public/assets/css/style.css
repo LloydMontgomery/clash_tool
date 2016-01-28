@@ -81,13 +81,21 @@ hr.accentBlue {
 
 /* =========================== Generic Elements ============================ */
 .page-header {
+	margin-top: 0;
 	text-align: center;
+}
+.page-header h1 {
+	font-size: 4em;
 }
 
 .form-header {
-	margin: -10px 0 20px 0;
+	margin-bottom: 20px;
 	text-align: center;
 }
+.form-header h1 {
+	font-size: 4em;
+}
+
 
 .main-button {
 	background-color: #000;

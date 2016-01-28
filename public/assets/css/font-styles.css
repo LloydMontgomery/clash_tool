@@ -33,15 +33,14 @@
 /* ================================ NEW CODE ================================ */
 
 .accent-font, .user-content, .war-content, .panel h4,
-
-.main-button, .page-header
+.main-button
 {
     font-family: "Supercell-Magic" !important;
 }
 
-.form-header
+.page-header, .form-header
 {
-	ffont-family: Verdana, Geneva, sans-serif;
+	font-family: Verdana, Geneva, sans-serif;
 }
 
 .secondary-font
