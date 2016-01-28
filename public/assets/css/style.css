@@ -12,10 +12,6 @@ a:focus, a:hover {
 	padding-top: 50px;
 }
 
-.page-header {
-	margin-top: 0;
-}
-
 footer {
 	position: absolute;
 	bottom: 0;
@@ -74,6 +70,42 @@ hr.accentBlue {
 .jumbotron {
 	border-radius: 5px;
 }
+
+#nav-button {
+	box-shadow: 1.5px 1.5px #0680AF;
+}
+#nav-button:active {
+	box-shadow: 0 2px 4px -2px black inset;
+}
+
+
+/* =========================== Generic Elements ============================ */
+.page-header {
+	text-align: center;
+}
+
+.form-header {
+	margin: -10px 0 20px 0;
+	text-align: center;
+}
+
+.main-button {
+	background-color: #000;
+	border-radius: 5px;
+	color: #0680AF !important;
+
+	background-color: #f8f8f8 !important;
+	border: 1px solid;
+
+	box-shadow: 1.5px 1.5px;
+}
+.main-button:active {
+	box-shadow: 0 2px 4px -2px black inset;
+}
+.main-button:focus {
+	outline: none !important;
+}
+
 
 /* ================== Conditional =================== */
 .war-win { color: green !important }

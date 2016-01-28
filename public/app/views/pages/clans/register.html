@@ -1,0 +1,42 @@
+<div class="page-container">
+	<!-- Introduction -->
+	<div ng-class="main.authSizing">
+		<div id="register-container">
+			<div class="form-header">
+				<h1 class="">New Clan</h1>
+			</div>
+	 		<form class="form-horizontal" ng-submit="clan.registerClan()">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Clan Name</label>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" ng-model="clan.clanData.name">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"># Wars Fought</label>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" ng-model="clan.clanData.totalWars">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"># Wars Won</label>
+					<div class="col-sm-6">
+						<input type="text" class="form-control" ng-model="clan.clanData.warsWon">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-6">
+						<button type="submit" class="btn btn-lg btn-block main-button">Register</button>
+					</div>
+				</div>
+			</form>
+			<div class="row show-hide-message" ng-show="user.message">
+				<div class="col-sm-6 col-sm-offset-2">
+					<div class="alert alert-info"> 
+						{{ user.message }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

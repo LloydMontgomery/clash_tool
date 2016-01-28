@@ -86,6 +86,15 @@ angular.module('app.routes', ['ngRoute'])
 		css			: 'assets/css/war.css',
 		controller	: 'warManipulationController',
 		controllerAs: 'war'
+	})
+
+	// CLAN //
+	// Register a Clan
+	.when('/clans/register', {
+		templateUrl	: 'app/views/pages/clans/register.html',
+		css			: 'assets/css/clans/register.css',
+		controller	: 'clanRegisterController',
+		controllerAs: 'clan'
 	});
 	// get rid of the hash in the URL
 	$locationProvider.html5Mode(true);

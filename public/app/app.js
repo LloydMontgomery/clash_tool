@@ -7,6 +7,7 @@ angular.module('ClashTool', [
 	'mainCtrl',
 	'userCtrl',
 	'warCtrl',
+	'clanCtrl',
 	'timer',
 	'chart.js', 
 	'ui.bootstrap',
