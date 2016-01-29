@@ -1,8 +1,18 @@
 #register-container {
-	margin-top: 30px;
+	margin-top: 45px;
 	padding: 15px;
 
 	border-radius: 5px;
 	background-color: #f8f8f8;
 	border: 1px solid #e7e7e7;
+}
+
+#register-button-container {
+	margin-top: 25px;
+	margin-bottom: 0;
+}
+
+.invalid-field {
+	border-color: rgba(255, 0, 0, 0.3);
+	box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
 }

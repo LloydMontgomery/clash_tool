@@ -11,20 +11,31 @@ angular.module('clanCtrl', [])
 
 	vm.type = 'register';
 
+	// Style Data
+	vm.styles = {};
+
 	// Initialize Form Data
 	vm.clanData = {}  // Object will be filled by the page
+
+	vm.resetClass = function(className) {
+		vm.styles[className] = '';
+	}
 
 	vm.registerClan = function() { 
 		vm.processing = true;
 		vm.message = '';
-		
-		// // Cleanse the data before passing to the database
-		// var warDataCleansed = vm.validateFields(vm.warData);
-		// if (!warDataCleansed)
-		// 	return;
 
-		// if (warDataCleansed.inProgress)
-		// 	vm.updateUsers(warDataCleansed.warriors);
+		// Field Validation
+		if (!vm.clanData.name)
+			vm.styles.name = 'invalid-field';
+		if (!vm.clanData.totalWars)
+			vm.styles.totalWars = 'invalid-field';
+		if (!vm.clanData.warsWon)
+			vm.styles.warsWon = 'invalid-field';
+		if (vm.styles.name || vm.styles.totalWars || vm.styles.warsWon)
+			return;
+
+		console.log('All Fields Filled In');
 
 		// // call the userService function to update
 		// War.create(warDataCleansed)

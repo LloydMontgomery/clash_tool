@@ -1,37 +1,37 @@
 <div class="page-container">
-	<!-- Introduction -->
 	<div ng-class="main.authSizing">
 		<div id="register-container">
 			<div class="form-header">
 				<h1 class="">New Clan</h1>
 			</div>
-	 		<form class="form-horizontal" ng-submit="clan.registerClan()">
+	 		<form name="regForm" class="form-horizontal" ng-submit="clan.registerClan()">
 				<div class="form-group">
-					<label class="col-sm-2 control-label">Clan Name</label>
-					<div class="col-sm-6">
-						<input type="text" class="form-control" ng-model="clan.clanData.name">
+					<label class="col-xs-12 control-label">Clan Name</label>
+					<div class="col-xs-12">
+						<input type="text" class="form-control" ng-class="clan.styles.name" 
+							ng-model="clan.clanData.name" ng-change="clan.resetClass('name')">
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-2 control-label"># Wars Fought</label>
-					<div class="col-sm-6">
-						<input type="text" class="form-control" ng-model="clan.clanData.totalWars">
+					<div class="col-xs-6">
+						<label class="control-label">Total Wars</label>
+						<input type="text" class="form-control" ng-class="clan.styles.totalWars" 
+							ng-model="clan.clanData.totalWars" ng-change="clan.resetClass('totalWars')">
+					</div>
+					<div class="col-xs-6">
+						<label class="control-label">Wars Won</label>
+						<input type="text" class="form-control" ng-class="clan.styles.warsWon" 
+							ng-model="clan.clanData.warsWon" ng-change="clan.resetClass('warsWon')">
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label"># Wars Won</label>
-					<div class="col-sm-6">
-						<input type="text" class="form-control" ng-model="clan.clanData.warsWon">
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-6">
-						<button type="submit" class="btn btn-lg btn-block main-button">Register</button>
+				<div id="register-button-container" class="form-group">
+					<div class="col-xs-12">
+						<button type="submit" class="btn btn-block main-button">Register</button>
 					</div>
 				</div>
 			</form>
 			<div class="row show-hide-message" ng-show="user.message">
-				<div class="col-sm-6 col-sm-offset-2">
+				<div class="col-xs-6 col-xs-offset-2">
 					<div class="alert alert-info"> 
 						{{ user.message }}
 					</div>
