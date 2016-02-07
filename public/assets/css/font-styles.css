@@ -15,7 +15,7 @@
 	src: url('../fonts/QuincyCF-Black-webfont.ttf') format('truetype');
 }
 
-.font1, h1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
+.font1, .navbar, #navigation-buttons, .routeButton, .userButton, #warStats, .warButton, 
 #warriorStats #warriorName, #warPageTitle, #userPage .btn, .warriorNames, .imgButton,
 .updateButton, #username, .modal-header
 {
@@ -32,9 +32,15 @@
 
 /* ================================ NEW CODE ================================ */
 
-.accent-font, .user-content, .war-content, .panel h4
+.accent-font, .user-content, .war-content, .panel h4,
+.main-button
 {
     font-family: "Supercell-Magic" !important;
+}
+
+.page-header, .form-header
+{
+	font-family: Verdana, Geneva, sans-serif;
 }
 
 .secondary-font

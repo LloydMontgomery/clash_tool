@@ -1,0 +1,47 @@
+<div class="page-container">
+	<div ng-class="main.authSizing">
+		<div id="register-container">
+			<div class="form-header">
+				<h1 class="">New Clan</h1>
+			</div>
+	 		<form name="regForm" class="form-horizontal" ng-submit="clan.registerClan()">
+				<div class="form-group">
+					<label class="col-xs-12 control-label">Clan Name</label>
+					<div class="col-xs-12">
+						<input type="text" class="form-control" ng-class="clan.styles.name" 
+							ng-model="clan.clanData.name" ng-change="clan.resetClass('name')">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-6">
+						<label class="control-label">Total Wars</label>
+						<input type="number" class="form-control" ng-class="clan.styles.totalWars" 
+							ng-model="clan.clanData.totalWars" ng-change="clan.resetClass('totalWars')">
+					</div>
+					<div class="col-xs-6">
+						<label class="control-label">Wars Won</label>
+						<input type="number" class="form-control" ng-class="clan.styles.warsWon" 
+							ng-model="clan.clanData.warsWon" ng-change="clan.resetClass('warsWon')">
+					</div>
+				</div>
+				<div id="register-button-container" class="form-group">
+					<div class="col-xs-12">
+						<button type="submit" class="btn btn-block main-button" ng-disabled="clan.processing">
+							<span ng-hide="clan.processing"> Register </span>
+							<span ng-show="clan.processing">
+								<span class="glyphicon glyphicon-repeat spinner"></span> 
+							</span>
+						</button>
+					</div>
+				</div>
+			</form>
+			<div class="row show-hide-message" ng-show="user.message">
+				<div class="col-xs-6 col-xs-offset-2">
+					<div class="alert alert-info"> 
+						{{ user.message }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,15 +1,15 @@
 <div class="page-container">
 	<div ng-class="main.authSizing"> 
 		<div id="login-container">
-			<div>
-				<span ng-show="!auth.isRegistering">Login</span>
-				<span ng-show="auth.isRegistering">Register</span>
+			<div class="form-header">
+				<h1 ng-show="!auth.isRegistering">Login</h1>
+				<h1 ng-show="auth.isRegistering">Register</h1>
 			</div>
 			<form ng-submit="auth.processAuth()">
 				<!-- IN-GAME ID INPUT -->
 				<div class="form-group slideable" id="id">
 					<label>In-Game ID (Check Clash of Clans App)</label>
-					<input type="text" class="form-control" ng-model="auth.loginData.id"> 
+					<input type="text" class="form-control" ng-model="auth.loginData.id" placeholder="#A1B2B3C4"> 
 				</div>
 				<!-- IN-GAME NAME INPUT -->
 				<div class="form-group">
@@ -35,9 +35,9 @@
 					{{ auth.message }}
 				</div>
 				<!-- LOGIN BUTTON -->
-				<button type="submit" class="btn btn-block btn-primary">
-					<span ng-if="!auth.processing && !auth.isRegistering">Login</span>
-					<span ng-if="!auth.processing && auth.isRegistering">Register</span>
+				<button type="submit" class="btn btn-block btn-primary main-button">
+					<span ng-show="!auth.processing && !auth.isRegistering">Login</span>
+					<span ng-show="!auth.processing && auth.isRegistering">Register</span>
 					<span ng-show="auth.processing">
 						<span class="glyphicon glyphicon-repeat spinner"></span> 
 					</span>

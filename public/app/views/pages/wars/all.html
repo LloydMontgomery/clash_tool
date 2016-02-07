@@ -3,10 +3,12 @@
 		<div class="page-header"> 
 			<h1>
 				Wars
-				<a href="/wars/create" ng-if="main.userInfo.admin" class="btn btn-default"> 
-					<span class="glyphicon glyphicon-plus"></span> 
-					New War Log
-				</a>
+				<button type="button" class="btn btn-primary main-button">
+					<a href="/wars/create" ng-if="main.userInfo.admin"> 
+						<span class="glyphicon glyphicon-plus"></span> 
+						New War Log
+					</a>
+				</button>
 			</h1>
 		</div>
 		<!-- LOADING MESSAGE -->

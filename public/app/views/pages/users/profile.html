@@ -1,9 +1,8 @@
 <div class="page-container">
 	<div class="col-xs-12">
-		<div ng-show="!user.loadingPage" id="profile-header" class="textCenter font1">
-			<h3 ng-show="!user.loadingPage">{{ user.profile.name }}'s Profile</h3>
+		<div ng-show="!user.loadingPage" class="page-header">
+			<h2 ng-show="!user.loadingPage">{{ user.profile.name }}'s Profile</h2>
 		</div>
-		<hr id="header-horizontal-rule">
 		<!-- LOADING MESSAGE -->
 		<div class="jumbotron text-center" ng-show="user.loadingPage"> 
 			<span class="glyphicon glyphicon-repeat spinner"></span>
@@ -77,7 +76,7 @@
 			<!-- Edit Profile -->
 			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" 
 				id="edit-profile" class="col-sm-offset-4 col-sm-4 col-xs-12">
-				<button ng-click="user.open()" class="btn btn-lg btn-block updateButton">
+				<button ng-click="user.open()" class="btn btn-lg btn-block main-button">
 					<span ng-show="!user.updating"> Edit Profile </span>
 					<div ng-show="user.updating">
 						<span class="glyphicon glyphicon-repeat spinner"></span> 

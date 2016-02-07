@@ -1,5 +1,4 @@
 angular.module('mainCtrl', ['ui.bootstrap'])
-
 .controller('mainController', function($rootScope, $location, $window, Auth, User, War) {
 	var vm = this;
 

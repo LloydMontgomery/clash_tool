@@ -1,6 +1,4 @@
 var express	= require('express'),			// Express simplifies Node
-	User 	= require('../models/user'),	// User Schema
-	War 	= require('../models/war'),		// War Schema
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
 	aws 	= require('aws-sdk'),			// This is for uploading to S3
 	bcrypt	= require('bcrypt-nodejs'),
@@ -134,6 +132,137 @@ module.exports = function(app, express, $http) {
 				}
 			}
 		});
+	});
+
+	// Clans //
+	apiRouter.route('/clans')
+	// create a clan (accessed at POST http://clan.solutions/api/clans)
+	.post(function(req, res) {
+
+		// Check to see if the client has provided all necessary information
+		if (req.body.name && 
+			req.body.totalWars && 
+			req.body.warsWon) {
+			;  // Do nothing
+		} else {
+			return res.json({ 
+				success: false,
+				message: 'Missing necessary attributes of Clan'
+			});
+		}
+
+		// Query the database to get all the taken IDs
+		dynamodb.query({
+			TableName : 'RandomData',
+			KeyConditionExpression: '#1 = :1',
+			ExpressionAttributeNames: {
+				'#1': 'name'
+			},
+			ExpressionAttributeValues: {
+				':1': { 'S': 'takenIDs' }
+			},
+		}, function(err, data) {
+			if (err) {
+				console.log(err.message);
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: err
+				});
+			}
+
+			ids = []
+			if (data.Count == 0)
+				;  // Then there are no IDs, and therefore no exist clans :(
+			else
+				ids = convertData(data.Items[0]).ids;
+
+			// Randomly generate a Hexidecimal ID, 4 characters long
+			var id = '#'+ ('0000' + Math.floor(Math.random()*65536).toString(16).toUpperCase()).slice(-4);
+
+			// Check the generated ID against all existing IDs
+			while (ids[id]) {
+				// If we are here, then we have a conflict, incrememnt the ID and check again
+				var newIDNum = parseInt(id.slice(-4), 16) + 1;
+				if (newIDNum > 65535)
+					newIDNum = 0;
+				id = '#' + ('0000' + newIDNum.toString(16).toUpperCase()).slice(-4);
+			}
+
+			// Update the ID list with the new ID
+			dynamodbDoc.update({
+				TableName: 'RandomData',
+				Key:{
+					'name': 'takenIDs'
+				},
+				UpdateExpression: 'set ids.#1 = :1',
+				ExpressionAttributeNames: {
+					'#1' : id
+				},
+				ExpressionAttributeValues: {
+					':1' : true
+				}
+			}, function(err, data) {
+				if (err) {
+					console.error("Unable to change ID status. Error JSON:", JSON.stringify(err, null, 2));
+					return res.json({ 
+						success: false, 
+						message: err.message
+					}); 
+				} else {
+
+					// Now that a unique ID has been chosen, we can add this clan to the list
+					var clan = {
+						TableName: 'Clans',
+						Item: {
+							wars : {},
+							users : {},
+							notInClan: {}
+						},
+						Expected: {
+							"id" : { "Exists" : false},
+						}
+					};
+					
+					// Load attributes given by the client
+					clan.Item.id = id;
+					clan.Item.name = req.body.name;
+					clan.Item.totalWars = req.body.totalWars;
+					clan.Item.warsWon = req.body.warsWon;
+
+					dynamodbDoc.put(clan, function(err, data) {
+						if (err) {
+							console.error("Unable to create clan. Error JSON:", JSON.stringify(err, null, 2));
+							return res.json({ 
+								success: false, 
+								message: err.message
+							}); 
+						} else {
+							res.json({ 
+								success: true,
+								message: 'Clan created!' 
+							});
+						}
+					});
+				}
+			});
+		});
+
+
+		// dynamodbDoc.put(clan, function(err, data) {
+		// 	if (err) {
+		// 		console.error("Unable to add clan. Error JSON:", JSON.stringify(err, null, 2));
+		// 		return res.json({ 
+		// 			success: false, 
+		// 			message: err.message
+		// 		}); 
+		// 	} else {
+		// 		res.json({ 
+		// 			success: true,
+		// 			message: 'User created!' 
+		// 		});
+		// 	}
+		// });
 	});
 
 	// USERS //
