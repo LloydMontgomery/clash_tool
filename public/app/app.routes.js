@@ -95,6 +95,13 @@ angular.module('app.routes', ['ngRoute'])
 		css			: 'assets/css/clans/register.css',
 		controller	: 'clanRegisterController',
 		controllerAs: 'clan'
+	})
+	// Join a Clan
+	.when('/clans/join', {
+		templateUrl	: 'app/views/pages/clans/join.html',
+		css			: 'assets/css/clans/join.css',
+		controller	: 'clanJoinController',
+		controllerAs: 'clan'
 	});
 	// get rid of the hash in the URL
 	$locationProvider.html5Mode(true);

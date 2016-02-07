@@ -47,6 +47,15 @@ angular.module('clanCtrl', [])
 		});
 	};
 
+})
+
+.controller('clanJoinController', function($location, Auth, Clan) {
+
+	var vm = this;
+
+	vm.searchForClan = function() {
+		console.log('Here');
+	}
 });
 
 
