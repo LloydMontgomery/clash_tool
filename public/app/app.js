@@ -4,6 +4,7 @@ angular.module('ClashTool', [
 	'app.routes',
 	'authService',
 	'userService',
+	'clanService',
 	'mainCtrl',
 	'userCtrl',
 	'warCtrl',

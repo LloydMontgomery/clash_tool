@@ -6,7 +6,7 @@ angular.module('clanCtrl', [])
 
 // })
 
-.controller('clanRegisterController', function($location, Auth, War) {
+.controller('clanRegisterController', function($location, Auth, Clan) {
 	var vm = this;
 
 	vm.type = 'register';
@@ -37,14 +37,24 @@ angular.module('clanCtrl', [])
 
 		console.log('All Fields Filled In');
 
-		// // call the userService function to update
-		// War.create(warDataCleansed)
-		// 	.then(function(data) {
-		// 		vm.processing = false; // clear the form
-		// 		// bind the message from our API to vm.message
-		// 		vm.message = data.data.message;
-		// 		$location.path('/wars');
-		// });
+		console.log(vm.clanData);
+
+		// call the userService function to update
+		Clan.create(vm.clanData)
+			.then(function(data) {
+				vm.processing = false; // clear the form
+				// bind the message from our API to vm.message
+				vm.message = data.data.message;
+				console.log(data.data);
+				// $location.path('/wars');
+		});
 	};
 
 });
+
+
+
+
+
+
+
