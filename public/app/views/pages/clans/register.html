@@ -26,7 +26,12 @@
 				</div>
 				<div id="register-button-container" class="form-group">
 					<div class="col-xs-12">
-						<button type="submit" class="btn btn-block main-button">Register</button>
+						<button type="submit" class="btn btn-block main-button" ng-disabled="clan.processing">
+							<span ng-hide="clan.processing"> Register </span>
+							<span ng-show="clan.processing">
+								<span class="glyphicon glyphicon-repeat spinner"></span> 
+							</span>
+						</button>
 					</div>
 				</div>
 			</form>

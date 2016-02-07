@@ -21,7 +21,8 @@ angular.module('clanCtrl', [])
 		vm.styles[className] = '';
 	}
 
-	vm.registerClan = function() { 
+	vm.registerClan = function() {
+
 		vm.processing = true;
 		vm.message = '';
 
@@ -35,10 +36,6 @@ angular.module('clanCtrl', [])
 		if (vm.styles.name || vm.styles.totalWars || vm.styles.warsWon)
 			return;
 
-		console.log('All Fields Filled In');
-
-		console.log(vm.clanData);
-
 		// call the userService function to update
 		Clan.create(vm.clanData)
 			.then(function(data) {
@@ -46,7 +43,7 @@ angular.module('clanCtrl', [])
 				// bind the message from our API to vm.message
 				vm.message = data.data.message;
 				console.log(data.data);
-				// $location.path('/wars');
+				$location.path('/wars');
 		});
 	};
 

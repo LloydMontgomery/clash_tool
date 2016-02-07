@@ -214,18 +214,21 @@ module.exports = function(app, express, $http) {
 					// Now that a unique ID has been chosen, we can add this clan to the list
 					var clan = {
 						TableName: 'Clans',
-						Item: {},
+						Item: {
+							wars : {},
+							users : {},
+							notInClan: {}
+						},
 						Expected: {
 							"id" : { "Exists" : false},
 						}
 					};
 					
+					// Load attributes given by the client
 					clan.Item.id = id;
 					clan.Item.name = req.body.name;
 					clan.Item.totalWars = req.body.totalWars;
 					clan.Item.warsWon = req.body.warsWon;
-
-					console.log(clan.Item);
 
 					dynamodbDoc.put(clan, function(err, data) {
 						if (err) {

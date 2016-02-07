@@ -1,7 +1,15 @@
 <div class="page-container">
 	<div class="col-xs-12">
 		<div class="page-header"> 
-			<h1> Members </h1>
+			<h1> 
+				Members 
+				<button type="button" class="btn btn-primary main-button">
+					<a href="" ng-if="main.userInfo.admin"> 
+						<span class="glyphicon glyphicon-plus"></span> 
+						Add Member
+					</a>
+				</button>
+			</h1>
 		</div>
 		<!-- LOADING MESSAGE -->
 		<div class="jumbotron text-center" ng-show="user.processing"> 
