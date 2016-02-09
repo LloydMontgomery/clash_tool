@@ -159,7 +159,7 @@ module.exports = function(app, express, $http) {
 				'#1': 'name'
 			},
 			ExpressionAttributeValues: {
-				':1': { 'S': 'takenIDs' }
+				':1': { 'S': 'takenRefs' }
 			},
 		}, function(err, data) {
 			if (err) {
@@ -171,33 +171,33 @@ module.exports = function(app, express, $http) {
 				});
 			}
 
-			ids = []
+			refs = []
 			if (data.Count == 0)
 				;  // Then there are no IDs, and therefore no exist clans :(
 			else
-				ids = convertData(data.Items[0]).ids;
+				refs = convertData(data.Items[0]).refs;
 
 			// Randomly generate a Hexidecimal ID, 4 characters long
-			var id = '#'+ ('0000' + Math.floor(Math.random()*65536).toString(16).toUpperCase()).slice(-4);
+			var ref = '@'+ ('0000' + Math.floor(Math.random()*65536).toString(16).toUpperCase()).slice(-4);
 
 			// Check the generated ID against all existing IDs
-			while (ids[id]) {
+			while (refs[ref]) {
 				// If we are here, then we have a conflict, incrememnt the ID and check again
-				var newIDNum = parseInt(id.slice(-4), 16) + 1;
-				if (newIDNum > 65535)
-					newIDNum = 0;
-				id = '#' + ('0000' + newIDNum.toString(16).toUpperCase()).slice(-4);
+				var newRefNum = parseInt(ref.slice(-4), 16) + 1;
+				if (newRefNum > 65535)
+					newRefNum = 0;
+				ref = '@' + ('0000' + newRefNum.toString(16).toUpperCase()).slice(-4);
 			}
 
 			// Update the ID list with the new ID
 			dynamodbDoc.update({
 				TableName: 'RandomData',
 				Key:{
-					'name': 'takenIDs'
+					'name': 'takenRefs'
 				},
-				UpdateExpression: 'set ids.#1 = :1',
+				UpdateExpression: 'set refs.#1 = :1',
 				ExpressionAttributeNames: {
-					'#1' : id
+					'#1' : ref
 				},
 				ExpressionAttributeValues: {
 					':1' : true
@@ -208,7 +208,7 @@ module.exports = function(app, express, $http) {
 					return res.json({ 
 						success: false, 
 						message: err.message
-					}); 
+					});
 				} else {
 
 					// Now that a unique ID has been chosen, we can add this clan to the list
@@ -217,15 +217,16 @@ module.exports = function(app, express, $http) {
 						Item: {
 							wars : {},
 							users : {},
-							notInClan: {}
+							notInClan: {},
+							totalMembers: 1
 						},
 						Expected: {
-							"id" : { "Exists" : false},
+							"ref" : { "Exists" : false },
 						}
 					};
 					
 					// Load attributes given by the client
-					clan.Item.id = id;
+					clan.Item.ref = ref;
 					clan.Item.name = req.body.name;
 					clan.Item.totalWars = req.body.totalWars;
 					clan.Item.warsWon = req.body.warsWon;
@@ -262,6 +263,70 @@ module.exports = function(app, express, $http) {
 		// 			message: 'User created!' 
 		// 		});
 		// 	}
+		// });
+	});
+	
+	apiRouter.route('/clans/:clan_ref')
+	// Search for clans (accessed at GET http://clan.solutions/api/clans)
+	.get(function(req, res) {
+		ref = '@' + req.params.clan_ref;
+		console.log(ref);
+		
+		dynamodb.query({
+			TableName : 'Clans',
+			KeyConditionExpression: '#1 = :1',
+			ExpressionAttributeNames: {
+				'#1': 'ref'
+			},
+			ExpressionAttributeValues: {
+				':1': { 'S': ref }
+			}
+		}, function(err, data) {
+			if (err) { 
+				console.log(err.message);
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: err
+				});
+			}
+
+			if (data.Count == 0) {  // Then the reference must have been incorrect
+				return res.json({
+					success: false,
+					message: 'Query Failed. War not found.'
+				});
+			} else {
+				// Convert all the values to non-object values
+				data = convertData(data.Items[0]);
+
+				console.log(data);
+
+				// data.size = Number(data.size);
+				// data.exp = Number(data.exp);
+				// data.ourDest = Number(data.ourDest);
+				// data.theirDest = Number(data.theirDest);
+
+				// // Collect all the warriors into a single array
+				// data.warriors = [];
+				// for (var i = 0; data[i] != null; i++) {
+				// 	data.warriors.push(data[i]);
+				// 	delete data[i];
+				// };
+
+				return res.json({
+					success: true,
+					message: 'Successfully returned all Wars',
+					data: data
+				});
+			}
+		});
+
+
+		// return res.json({ 
+		// 	success: true,
+		// 	message: 'Just starting',
+		// 	data: 'Nothing Yet'
 		// });
 	});
 

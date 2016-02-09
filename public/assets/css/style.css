@@ -119,6 +119,11 @@ hr.accentBlue {
 .war-win { color: green !important }
 .war-loss { color: red }
 
+.invalid-field {
+	border-color: rgba(255, 0, 0, 0.3);
+	box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
 /* ===================== NAVBAR ===================== */
 
 .navbar {

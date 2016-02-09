@@ -1,5 +1,6 @@
 #register-container {
 	margin-top: 45px;
+	margin-bottom: 15px;
 	padding: 15px;
 
 	border-radius: 5px;
@@ -8,11 +9,50 @@
 }
 
 #register-button-container {
-	margin-top: 25px;
+	margin-top: 15px;
 	margin-bottom: 0;
 }
 
-.invalid-field {
-	border-color: rgba(255, 0, 0, 0.3);
-	box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+.input-group {
+	/*margin-left: 15px;*/
+}
+
+.alert {
+	margin: 0;
+}
+
+/* ===== SEARCH RESULTS ===== */
+.clan-container {
+	margin: 0px;
+	padding: 0px;
+}
+
+.clan-content {
+	margin-bottom: 10px;
+	padding: 10px;
+
+	background-color: #f8f8f8 !important;
+	font-size: 16px;
+	color: black;
+
+	border: 1px solid;
+	border-radius: 5px;
+}
+
+.clan-info {
+	display: inline-block;
+	padding: 0px;
+}
+
+.clan-stat-number {
+	font-size: 11px;
+}
+
+.clan-info .glyphicons {
+	margin: -3px -5px -10px 0;
+}
+
+.join-clan {
+	margin-top: 4px;
+	padding: 0;
 }

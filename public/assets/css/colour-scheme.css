@@ -37,7 +37,7 @@ footer a, .accentBlue, nav a, .updateButton {
 
 /* Accent Colour - Border */
 .accent-border-colour, #nav-button, .user-content, .war-content, #warStats > div > div, #warriorStats > div, #imgUpload > div,
-.info-container > div, #war-attacks > div, .button-container a
+.info-container > div, #war-attacks > div, .button-container a, .clan-content
 {
 	border-color: #0680AF !important;
 }

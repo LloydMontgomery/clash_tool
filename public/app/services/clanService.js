@@ -15,13 +15,20 @@ angular.module('clanService', [])
 	// 	return $http.get('/api/lastWar/');
 	// };
 	// // get all wars
-	// clanFactory.all = function() { 
-	// 	return $http.get('/api/wars/');
-	// };
-	// create a war
-	clanFactory.create = function(clanData) { 
+
+	// Create a Clan
+	clanFactory.create = function(clanData) {
 		return $http.post('/api/clans/', clanData);
 	};
+	// Find the clan with the given Reference
+	clanFactory.find = function(clanRef) {
+		return $http.get('/api/clans/' + clanRef);
+	};
+	// Join a clan
+	// clanFactory.join = function(username) {
+	// 	return $http.put('/api/clans/join', username);
+	// };
+
 	// // update a war
 	// clanFactory.update = function(id, warData) { 
 	// 	return $http.put('/api/wars/' + id, warData);

@@ -5,19 +5,30 @@
 				<h1 class="">Join Clan</h1>
 			</div>
 	 		<form name="regForm" class="form-horizontal" ng-submit="clan.searchForClan()">
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label class="col-xs-12 control-label">Clan Name</label>
 					<div class="col-xs-12">
 						<input type="text" class="form-control" ng-class="clan.styles.name" ng-disabled="clan.nameLock"
 							ng-model="clan.name" ng-change="clan.name? clan.idLock = true : clan.idLock = false">
 					</div>
 				</div>
-				<label class="col-xs-12 textCenter">OR</label>
+				<label class="col-xs-12 textCenter">OR</label> -->
 				<div class="form-group">
-					<label class="col-xs-12 control-label">Clan ID</label>
+					<label class="col-xs-12 control-label">Clan Reference</label>
 					<div class="col-xs-12">
-						<input type="text" class="form-control" ng-class="clan.styles.name" ng-disabled="clan.idLock"
-							ng-model="clan.id" ng-change="clan.id? clan.nameLock = true : clan.nameLock = false">
+						<div class="input-group">
+							<span class="input-group-addon">@</span>
+							<input type="text" class="form-control" ng-class="clan.styles.ref" ng-change="clan.styles.ref = ''"
+								ng-model="clan.ref" style="text-transform:uppercase" maxlength="4">
+							<!-- OLD CODE: ng-change="clan.id? clan.nameLock = true : clan.nameLock = false"  ng-disabled="clan.idLock"-->
+						</div>
+					</div>
+				</div>
+				<div class="row show-hide-message" ng-show="clan.message">
+					<div class="col-xs-12">
+						<div class="alert alert-danger"> 
+							{{ clan.message }}
+						</div>
 					</div>
 				</div>
 				<div id="register-button-container" class="form-group">
@@ -31,11 +42,30 @@
 					</div>
 				</div>
 			</form>
-			<div class="row show-hide-message" ng-show="user.message">
-				<div class="col-xs-6 col-xs-offset-2">
-					<div class="alert alert-info"> 
-						{{ user.message }}
+		</div>
+		<div ng-repeat="oneClan in clan.clans" class="clan-container col-lg-3 col-md-6 col-xs-12 excludeAnimation">
+			<div class="clan-content col-xs-12">
+				<div class="clan-info">
+					<div class="font1">{{oneClan.name}}</div>
+					<div>
+ 						<span class="glyphicons glyphicons-group accent-text-colour"></span>
+						<span class="clan-stat-number font1">{{oneClan.totalMembers}}</span>
+<!--
+						<span class="glyphicons glyphicons-star accent-text-colour"></span>
+						<span class="clan-stat-number font1">{{war.ourScore}}{{war.theirScore}}</span>
+
+						<span class="glyphicons glyphicons-group accent-text-colour"></span>
+						<span class="clan-stat-number font1">{{war.size}}{{war.size}}</span> -->
 					</div>
+				</div>
+				<div class="col-xs-3 pull-right join-clan">
+					<button type="button" class="btn btn-block main-button" ng-disabled="clan.joinProcessing"
+						ng-click="clan.joinClan(oneClan.ref)">
+						<span ng-hide="clan.joinProcessing"> Join </span>
+						<span ng-show="clan.joinProcessing">
+							<span class="glyphicon glyphicon-repeat spinner"></span> 
+						</span>
+					</button>
 				</div>
 			</div>
 		</div>

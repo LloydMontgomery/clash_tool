@@ -11,7 +11,7 @@ angular.module('clanCtrl', [])
 
 	vm.type = 'register';
 
-	// Style Data
+	// Style Data, used for red outlines
 	vm.styles = {};
 
 	// Initialize Form Data
@@ -40,10 +40,7 @@ angular.module('clanCtrl', [])
 		Clan.create(vm.clanData)
 			.then(function(data) {
 				vm.processing = false; // clear the form
-				// bind the message from our API to vm.message
-				vm.message = data.data.message;
-				console.log(data.data);
-				$location.path('/wars');
+				$location.path('/');
 		});
 	};
 
@@ -53,8 +50,59 @@ angular.module('clanCtrl', [])
 
 	var vm = this;
 
+	// Style Data, used for red outlines
+	vm.styles = {};
+
+	vm.clans = [
+		// { 'name' : 'Lloyd',
+		//   'ref' : '@1338',
+		//   'warsWon' : 138
+		// }
+	];
+
 	vm.searchForClan = function() {
-		console.log('Here');
+		vm.processing = true;
+		vm.message = '';
+
+		// Validate that the field is actually filled in
+		if (vm.ref && vm.ref.length == 4) {
+			;  // Everything is fine
+		} else {
+			vm.message = 'Please Enter Exactly 4 Characters';
+			vm.styles.ref = 'invalid-field';
+			vm.processing = false;
+			return;
+		}
+
+		var ref = vm.ref.toUpperCase()
+
+		// Do a Scan for all clans with this name
+		Clan.find(ref)
+			.then(function(data) {
+				if (data.data.success) {
+					data = data.data.data;
+
+					// Reset clans data, and push the new data on
+					vm.clans = [];
+					vm.clans.push(data)  // This only works because I am currently only returning a single clan
+					
+				} else {
+					vm.message = 'Clan Reference: @' + ref + ' not found';
+				}
+
+				vm.processing = false
+		})
+	}
+
+	vm.joinClan = function(clanRef) {
+		vm.joinProcessing = true;
+		console.log(clanRef);
+
+		// Add code to actually join a clan here.
+		// Currently not possible, need to improve user model first
+
+		// vm.joinProcessing = false;
+
 	}
 });
 

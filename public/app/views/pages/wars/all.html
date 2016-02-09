@@ -26,20 +26,13 @@
 							In Progress...
 						</span>
 						<div ng-if="war.outcome">
-							<span class="war-stat">
-								<span class="glyphicons glyphicons-cup" ng-class="war.outcome"></span>
-								<span class="war-stat-number font1"></span>
-							</span>
-							
-							<span class="war-stat">
-								<span class="glyphicons glyphicons-star accent-text-colour"></span>
-								<span class="war-stat-number font1">{{war.ourScore}}-{{war.theirScore}}</span>
-							</span>
+							<span class="glyphicons glyphicons-cup" ng-class="war.outcome"></span>
 
-							<span class="war-stat">
-								<span class="glyphicons glyphicons-group accent-text-colour"></span>
-								<span class="war-stat-number font1">{{war.size}}v{{war.size}}</span>
-							</span>
+							<span class="glyphicons glyphicons-star accent-text-colour"></span>
+							<span class="war-stat-number font1">{{war.ourScore}}-{{war.theirScore}}</span>
+
+							<span class="glyphicons glyphicons-group accent-text-colour"></span>
+							<span class="war-stat-number font1">{{war.size}}v{{war.size}}</span>
 						</div>
 					</div>
 					<div class="navigation pull-right">
