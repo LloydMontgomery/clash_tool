@@ -62,8 +62,8 @@ module.exports = function(app, express, $http) {
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	apiRouter.post('/authenticate', function(req, res) {
 		// find the user
-		// select the name username and password explicitly 
-
+		// select the username and password explicitly 
+		console.log(req.body);
 		dynamodb.query({
 			TableName : "Users",
 			ProjectionExpression: "username, password",
@@ -266,7 +266,6 @@ module.exports = function(app, express, $http) {
 	// Search for clans (accessed at GET http://clan.solutions/api/clans)
 	.get(function(req, res) {
 		ref = '@' + req.params.clan_ref;
-		console.log(ref);
 		
 		dynamodb.query({
 			TableName : 'Clans',
@@ -325,6 +324,53 @@ module.exports = function(app, express, $http) {
 		// 	data: 'Nothing Yet'
 		// });
 	});
+	
+	apiRouter.route('/partialClan/:clan_ref')
+	// Get the clan information for display purposes (accessed at GET http://localhost:8080/api/partialClan)
+	.get(function(req, res) {
+		ref = '@' + req.params.clan_ref;
+		console.log(ref);
+
+		dynamodb.query({
+			TableName : 'Clans',
+			ProjectionExpression: '#1, #2, totalWars, warsWon, totalMembers',
+			KeyConditionExpression: '#1 = :1',
+			ExpressionAttributeNames: {
+				'#1' : 'ref',
+				'#2' : 'name'
+			},
+			ExpressionAttributeValues: {
+				':1': { 'S': ref }
+			}
+		}, function(err, data) {
+			if (err) { 
+				console.log(err.message);
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+					data: err
+				});
+			}
+
+			if (data.Count == 0) {  // Then the reference must have been incorrect
+				return res.json({
+					success: false,
+					message: 'Query Failed. Clan not found.'
+				});
+			} else {
+				// Convert all the values to non-object values
+				data = convertData(data.Items[0]);
+
+				console.log(data);
+
+				return res.json({
+					success: true,
+					message: 'Successfully returned a partial Clan',
+					data: data
+				});
+			}
+		});
+	});
 
 	// USERS //
 	apiRouter.route('/users')
@@ -349,7 +395,7 @@ module.exports = function(app, express, $http) {
 		user.Item.dateJoinedSite = now.getTime();
 
 		// Set their current clan
-		user.Item.clan = null;
+		user.Item.clan = 'null';
 
 		// user.Item.admin = false;  // Default to false
 		// user.Item.inClan = false; // Default to false

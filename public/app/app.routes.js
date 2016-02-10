@@ -89,6 +89,11 @@ angular.module('app.routes', ['ngRoute'])
 	})
 
 	// CLAN //
+	// View a Clan
+	.when('/@/:clan_ref', {
+		templateUrl : 'app/views/pages/home.html',
+		css			: 'assets/css/home.css'
+	})
 	// Register a Clan
 	.when('/clans/register', {
 		templateUrl	: 'app/views/pages/clans/register.html',
@@ -102,6 +107,10 @@ angular.module('app.routes', ['ngRoute'])
 		css			: 'assets/css/clans/join.css',
 		controller	: 'clanJoinController',
 		controllerAs: 'clan'
+	})
+	// Catch-All, send them to the splash page
+	.otherwise({
+		redirectTo: '/splash'
 	});
 	// get rid of the hash in the URL
 	$locationProvider.html5Mode(true);

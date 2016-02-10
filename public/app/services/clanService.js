@@ -16,6 +16,10 @@ angular.module('clanService', [])
 	// };
 	// // get all wars
 
+	// get all wars
+	clanFactory.partial = function(clanRef) { 
+		return $http.get('/api/partialClan/' + clanRef);
+	};
 	// Create a Clan
 	clanFactory.create = function(clanData) {
 		return $http.post('/api/clans/', clanData);

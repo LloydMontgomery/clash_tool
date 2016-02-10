@@ -1,5 +1,5 @@
 angular.module('mainCtrl', ['ui.bootstrap'])
-.controller('mainController', function($rootScope, $location, $window, Auth, User, War) {
+.controller('mainController', function($rootScope, $location, $routeParams, $window, Auth, User, War, Clan) {
 	var vm = this;
 
 	// These are assigned here mainly to save clutter in the HTML page
@@ -15,6 +15,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	
 	vm.loginData = {};
 
+	vm.clanRef = "";
+
 	// Keeps the proper Navbar option highlighted; reflects the page currently visiting
 	var setActive = function(active) {
 		document.getElementById('navUsers').className = '';
@@ -25,41 +27,46 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	}
 
 	var checkRoutePermission = function(route) {
-		/* Routes that anyone can go to */
+
+		/* Routes that anyone can go to, general public */
+		console.log(route);
+		// Some Clan home page
+		if (route.indexOf('/@/') == 0) {
+			console.log('HERE');
+			vm.clanRef = route.substring(3).toUpperCase();
+			if (vm.clanRef.length == 4) {
+				setActive('navHome');
+				loadPage();
+			} else {
+				$location.path('/splash');
+			}
+			return;
+		}
+		// The splash page
 		if (route == '/splash') {
-			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
-				setActive('navHome');
-				$location.path('/');
-			} else {  // User is not logged in, let them go there
-				$location.path('/splash');
-			}
+			setActive('navHome');
 			return;
 		}
-		if (route == '/') {  // home
-			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
-				setActive('navHome');
-				$location.path('/');
-			} else {  // User is not logged in, let them go there
-				$location.path('/splash');
-			}
-			return;
-		}
+		// Login page
 		if (route == '/login') {
-			if (vm.loggedIn){  // If a user is already logged in, don't let them go to the login page via "back"
+			if (vm.loggedIn) {  // If they are logged in, they can't be here
 				setActive('navHome');
-				$location.path('/');
-			} else {  // User is not logged in, let them go there
+				$location.path('/splash');
+			} else {
 				setActive('navProfile');
 			}
 			return;
-		} 
+		}
 
-		/* Logged In Authentication */
+		/* Routes that require Login */
+
 		if (!vm.loggedIn){
 			setActive('navHome');
-			$location.path('/');
+			$location.path('/splash');
 			return;
 		}
+
+		// All of the following need adjustment for the re-factor
 
 		/* Routes that only people who are logged in can go to */
 		if (route == '/wars') {
@@ -90,7 +97,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			setActive('navUsers');
 			return;
 		}
-		
 	}
 	
 	// check to see if a user is logged in on every request
@@ -107,78 +113,95 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		} else {
 			checkRoutePermission($location.path());
 		}
+	};
 
-		// Grab all users & wars if routing to main page
-		if ($location.path() == '/') {
-			User.partial().then(function(data) {
-				if (data.data.success) {
+	var loadPage = function() {
+		// Grab the Clan information for the specified clan
+		if ($location.path().indexOf('/@/') > -1) {
 
-					// bind the users that come back to vm.users
-					vm.users = data.data.data;
-					vm.users.sort(function(a, b) {
-						return (a.dateJoined < b.dateJoined) ? -1 : (a.dateJoined > b.dateJoined) ? 1 : 0;
-					});
+			console.log(vm.clanRef);
 
-					for (var i = 0; i < vm.users.length; i++) {
-						vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined)); // Convert milliseconds to date object
-					};
+			Clan.partial(vm.clanRef)
+				.then(function(data) {
+					if (data.data.success) {
+						console.log('SUCCESS');
+						console.log(data.data.data);
 
-					vm.leaders = [];
-					vm.elders  = [];
-					vm.members = [];
+						vm.clan = data.data.data;
+					} else {
+						console.log('ERROR');
+					}
+			});
 
-					for (var i = 0; i < vm.users.length; i++) {
-						if (vm.users[i].title.indexOf('Leader') > -1)
-							vm.leaders.push(vm.users[i]);
-						else if (vm.users[i].title == 'Elder')
-							vm.elders.push(vm.users[i]);
-						else
-							vm.members.push(vm.users[i]);
-					};
+			// User.partial().then(function(data) {
+			// 	if (data.data.success) {
 
-					delete vm.users;
+			// 		// bind the users that come back to vm.users
+			// 		vm.users = data.data.data;
+			// 		vm.users.sort(function(a, b) {
+			// 			return (a.dateJoined < b.dateJoined) ? -1 : (a.dateJoined > b.dateJoined) ? 1 : 0;
+			// 		});
+
+			// 		for (var i = 0; i < vm.users.length; i++) {
+			// 			vm.users[i].dateJoined = new Date(Number(vm.users[i].dateJoined)); // Convert milliseconds to date object
+			// 		};
+
+			// 		vm.leaders = [];
+			// 		vm.elders  = [];
+			// 		vm.members = [];
+
+			// 		for (var i = 0; i < vm.users.length; i++) {
+			// 			if (vm.users[i].title.indexOf('Leader') > -1)
+			// 				vm.leaders.push(vm.users[i]);
+			// 			else if (vm.users[i].title == 'Elder')
+			// 				vm.elders.push(vm.users[i]);
+			// 			else
+			// 				vm.members.push(vm.users[i]);
+			// 		};
+
+			// 		delete vm.users;
 					
-				} else {
-					// Do Something
-				}
-			});
-			War.partial().then(function(data) {
-				if (data.data.success) {
+			// 	} else {
+			// 		// Do Something
+			// 	}
+			// });
+			// War.partial().then(function(data) {
+			// 	if (data.data.success) {
 
-					// Bind the wars that come back to vm.wars
-					vm.wars = data.data.data;
+			// 		// Bind the wars that come back to vm.wars
+			// 		vm.wars = data.data.data;
 
-					vm.wars.sort(function(a, b) {
-						return (a.start < b.start) ? -1 : (a.start > b.start) ? 1 : 0;
-					});
+			// 		vm.wars.sort(function(a, b) {
+			// 			return (a.start < b.start) ? -1 : (a.start > b.start) ? 1 : 0;
+			// 		});
 
-					now = new Date();
-					for (var i = 0; i < vm.wars.length; i++) {
-						vm.wars[i].start = new Date(Number(vm.wars[i].start - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
-					};
+			// 		now = new Date();
+			// 		for (var i = 0; i < vm.wars.length; i++) {
+			// 			vm.wars[i].start = new Date(Number(vm.wars[i].start - (now.getTimezoneOffset() * 60000))); // Convert milliseconds to date object
+			// 		};
 
-				} else {
-					// Do Something
-				}
-			});
+			// 	} else {
+			// 		// Do Something
+			// 	}
+			// });
 
 			// Load Clan Information
-			vm.clan = {
-				name: "ALLIWANTISWAR",
-				members: "50",
-				warWins: "153",
-				avDest: "91.76",
-				totalStars: "24220"
-			}
+			// vm.clan = {
+			// 	name: "ALLIWANTISWAR",
+			// 	members: "50",
+			// 	warWins: "153",
+			// 	avDest: "91.76",
+			// 	totalStars: "24220"
+			// }
 		}
 	};
+
 
 	$rootScope.$on('$routeChangeStart', function () {
 		routeChange();
 	});
 
 	vm.viewProfile = function(name) {
-		console.log("HERE");
 		if (vm.loggedIn)
 			$location.path('/users/profile/' + name);
 	}
@@ -241,9 +264,9 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				User.create(vm.loginData)
 					.then(function(data) {
 						if (data.data.success) {
+							login();
 							vm.loginData.password = '';  // Clear password
 							vm.loginData.passwordConfirm = '';  // Clear password
-							login();
 						} else {
 							vm.loginData.password = '';  // Clear password
 							vm.loginData.passwordConfirm = '';  // Clear password
