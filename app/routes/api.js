@@ -66,13 +66,10 @@ module.exports = function(app, express, $http) {
 
 		dynamodb.query({
 			TableName : "Users",
-			ProjectionExpression: "#n, password, id, inClan, admin",
-			KeyConditionExpression: "#n = :nameVal",
-			ExpressionAttributeNames: {
-				"#n": "name"
-			},
+			ProjectionExpression: "username, password",
+			KeyConditionExpression: "username = :1",
 			ExpressionAttributeValues: {
-				":nameVal": {'S': req.body.name}
+				":1": {'S': req.body.username}
 			},
 			Limit : 1000
 		}, function(err, data) {
@@ -91,12 +88,12 @@ module.exports = function(app, express, $http) {
 				});
 			} else {
 
-				if (!data.Items[0].inClan.BOOL) {
-					return res.json({
-						success: false,
-						message: 'Waiting on Admin to Approve'
-					});
-				}
+				// if (!data.Items[0].inClan.BOOL) {
+				// 	return res.json({
+				// 		success: false,
+				// 		message: 'Waiting on Admin to Approve'
+				// 	});
+				// }
 
 				// check if password matches
 				var validPassword = bcrypt.compareSync(req.body.password, data.Items[0].password.S);
@@ -112,9 +109,8 @@ module.exports = function(app, express, $http) {
 					// if user is found and password is right
 					// create a token
 					var token = jwt.sign({
-						name: data.name,
-						inClan: data.inClan,
-						admin: data.admin
+						username: data.username,
+						name: data.name
 					}, TOKEN_SECRET,
 					{ expiresIn: 172800 // expires in 2 days 
 					// { expiresIn: 720 // expires in 2 hours 
@@ -344,24 +340,28 @@ module.exports = function(app, express, $http) {
 		};
 
 		// set the users information (comes from the request)
+		user.Item.username = req.body.username;
 		user.Item.name = req.body.name;
-		user.Item.id = req.body.id;
-		now = new Date();
-		user.Item.dateJoined = now.getTime();
-
 		user.Item.password = bcrypt.hashSync(req.body.password);
 
-		user.Item.admin = false;  // Default to false
-		user.Item.inClan = false; // Default to false
-		// If the request comes from the "Create User" page, then we can set these
-		if (req.headers.referer.indexOf("/users") > -1) {
-			user.Item.admin = req.body.admin;
-			user.Item.inClan = req.body.inClan;
-		}
+		// Generate Unique ID
+		now = new Date();
+		user.Item.dateJoinedSite = now.getTime();
 
-		user.Item.title = "Member";  // Default to "Member"
-		if (req.body.title)
-			user.Item.title = req.body.title;
+		// Set their current clan
+		user.Item.clan = null;
+
+		// user.Item.admin = false;  // Default to false
+		// user.Item.inClan = false; // Default to false
+		// // If the request comes from the "Create User" page, then we can set these
+		// if (req.headers.referer.indexOf("/users") > -1) {
+		// 	user.Item.admin = req.body.admin;
+		// 	user.Item.inClan = req.body.inClan;
+		// }
+
+		// user.Item.title = "Member";  // Default to "Member"
+		// if (req.body.title)
+		// 	user.Item.title = req.body.title;
 
 		dynamodbDoc.put(user, function(err, data) {
 			if (err) {

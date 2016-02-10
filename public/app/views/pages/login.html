@@ -6,25 +6,29 @@
 				<h1 ng-show="auth.isRegistering">Register</h1>
 			</div>
 			<form ng-submit="auth.processAuth()">
-				<!-- IN-GAME ID INPUT -->
-				<div class="form-group slideable" id="id">
-					<label>In-Game ID (Check Clash of Clans App)</label>
-					<input type="text" class="form-control" ng-model="auth.loginData.id" placeholder="#A1B2B3C4"> 
+				<!-- IN-GAME NAME INPUT -->
+				<div class="form-group slideable" id="name">
+					<label>In-Game Name</label>
+					<input type="text" class="form-control" ng-class="auth.styles.name"
+						ng-model="auth.loginData.name" ng-change="auth.styles.name = ''"> 
 				</div>
 				<!-- IN-GAME NAME INPUT -->
 				<div class="form-group">
-					<label>In-Game Name</label>
-					<input type="text" class="form-control" ng-model="auth.loginData.name" required> 
+					<label>Username</label>
+					<input type="text" class="form-control" ng-class="auth.styles.username"
+						ng-model="auth.loginData.username" ng-change="auth.styles.username = ''">
 				</div>
 				<!-- PASSWORD INPUT -->
 				<div class="form-group"> 
 					<label>Password</label>
-					<input type="password" class="form-control" ng-model="auth.loginData.password" required>
+					<input type="password" class="form-control" ng-class="auth.styles.password"
+						ng-model="auth.loginData.password" ng-change="auth.styles.password = ''">
 				</div>
 				<!-- PASSWORD INPUT CONFIRM-->
 				<div class="form-group slideable" id="pconfirm"> 
 					<label>Re-Enter Password</label>
-					<input type="password" class="form-control" ng-model="auth.loginData.passwordConfirm">
+					<input type="password" class="form-control" ng-class="auth.styles.passwordConfirm"
+						ng-model="auth.loginData.passwordConfirm" ng-change="auth.styles.passwordConfirm = ''">
 				</div>
 				<!-- ERROR MESSAGE -->
 				<div class="alert alert-danger" ng-show="auth.error">
@@ -42,9 +46,9 @@
 						<span class="glyphicon glyphicon-repeat spinner"></span> 
 					</span>
 				</button>
-				<div slide-toggle="#id">
+				<div slide-toggle="#name">
 					<div ng-click="auth.isRegistering = !auth.isRegistering" id="register" slide-toggle="#pconfirm"> 
-						<a ng-show="!auth.isRegistering"> Join the Clan </a>
+						<a ng-show="!auth.isRegistering"> Register for Site </a>
 						<a ng-show="auth.isRegistering"> Back to Login </a>
 					</div>
 				</div>

@@ -10,6 +10,11 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
 
+	// Style attribute space for red borders
+	vm.styles = {};
+	
+	vm.loginData = {};
+
 	// Keeps the proper Navbar option highlighted; reflects the page currently visiting
 	var setActive = function(active) {
 		document.getElementById('navUsers').className = '';
@@ -186,8 +191,31 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	vm.processAuth = function() {
 		vm.processing = true;
 
-		login = function() {
-			Auth.login(vm.loginData.name, vm.loginData.password)
+		// clear the error
+		vm.error = '';
+		vm.message = '';
+
+		if (!vm.loginData.username)
+			vm.styles.username = 'invalid-field';
+		if (!vm.loginData.password)
+			vm.styles.password = 'invalid-field';
+		if (vm.isRegistering) {
+			if (!vm.loginData.name)
+				vm.styles.name = 'invalid-field';
+			if (!vm.loginData.passwordConfirm)
+				vm.styles.passwordConfirm = 'invalid-field';
+		} else {
+			vm.styles.name = '';
+			vm.styles.passwordConfirm = '';
+		}
+		if (vm.styles.username || vm.styles.password || vm.styles.name || vm.styles.passwordConfirm) {
+			vm.error = 'Please fill in all fields';
+			vm.processing = false;
+			return;
+		}
+
+		var login = function() {
+			Auth.login(vm.loginData.username, vm.loginData.password)
 				.then(function(data) {
 					vm.processing = false;
 					// if a user successfully logs in, redirect to users page
@@ -202,36 +230,28 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			});
 		}
 
-		// clear the error
-		vm.error = '';
-		vm.message = '';
 		if (!vm.isRegistering) {  // Then user is trying to log in
 			login();
-		} else if (vm.loginData.id && vm.loginData.passwordConfirm) {
+		} else {
 			if (vm.loginData.password != vm.loginData.passwordConfirm){
 				vm.error = 'Passwords do not match';
 				vm.processing = false;
-			} else {  // Passwords match
+			} else {
 				// use the create function in the userService
 				User.create(vm.loginData)
 					.then(function(data) {
-						vm.processing = false;
 						if (data.data.success) {
-							vm.message = 'Registration Complete: Waiting on Admin to Approve';
 							vm.loginData.password = '';  // Clear password
 							vm.loginData.passwordConfirm = '';  // Clear password
-							vm.processing = false;
+							login();
 						} else {
 							vm.loginData.password = '';  // Clear password
 							vm.loginData.passwordConfirm = '';  // Clear password
 							vm.error = data.data.message;
-							vm.processing = false;
-						}	
+						}
+						vm.processing = false;
 				});
 			}
-		} else {  // The user has left out some piece of information
-			vm.error = 'Please fill in all fields';
-			vm.processing = false;
 		}
 	};
 
