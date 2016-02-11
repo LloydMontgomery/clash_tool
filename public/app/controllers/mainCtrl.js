@@ -29,10 +29,20 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 	var checkRoutePermission = function(route) {
 
 		/* Routes that anyone can go to, general public */
-		console.log(route);
+			
+		// Re-route people from / to their clan home page, or the join clan page if they don't have one
+		if (route == '/') {
+			console.log(vm.userInfo);
+			if (vm.userInfo.clan != 'null') {
+				$location.path('/@/' + vm.userInfo.clan.slice(-4));
+			} else {
+				console.log('here');
+				// Still need to code the page to hold 'Join Clan' and 'register clan' links
+			}
+			return;
+		}
 		// Some Clan home page
 		if (route.indexOf('/@/') == 0) {
-			console.log('HERE');
 			vm.clanRef = route.substring(3).toUpperCase();
 			if (vm.clanRef.length == 4) {
 				setActive('navHome');
@@ -51,7 +61,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		if (route == '/login') {
 			if (vm.loggedIn) {  // If they are logged in, they can't be here
 				setActive('navHome');
-				$location.path('/splash');
+				$location.path('/');
 			} else {
 				setActive('navProfile');
 			}

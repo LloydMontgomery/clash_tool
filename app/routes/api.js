@@ -66,7 +66,7 @@ module.exports = function(app, express, $http) {
 		console.log(req.body);
 		dynamodb.query({
 			TableName : "Users",
-			ProjectionExpression: "username, password",
+			ProjectionExpression: "username, gamename, password, clan",
 			KeyConditionExpression: "username = :1",
 			ExpressionAttributeValues: {
 				":1": {'S': req.body.username}
@@ -88,13 +88,6 @@ module.exports = function(app, express, $http) {
 				});
 			} else {
 
-				// if (!data.Items[0].inClan.BOOL) {
-				// 	return res.json({
-				// 		success: false,
-				// 		message: 'Waiting on Admin to Approve'
-				// 	});
-				// }
-
 				// check if password matches
 				var validPassword = bcrypt.compareSync(req.body.password, data.Items[0].password.S);
 
@@ -108,14 +101,17 @@ module.exports = function(app, express, $http) {
 
 					// if user is found and password is right
 					// create a token
+					console.log(data);
 					var token = jwt.sign({
 						username: data.username,
-						name: data.name
+						gamename: data.gamename,
+						clan: data.clan
 					}, TOKEN_SECRET,
 					{ expiresIn: 172800 // expires in 2 days 
 					// { expiresIn: 720 // expires in 2 hours 
 					// { expiresIn: 10 // expires in 10 seconds (This is for debugging)
 					});
+
 					// Save this for later
 					req.decoded = jwt.decode(token);
 
@@ -387,7 +383,7 @@ module.exports = function(app, express, $http) {
 
 		// set the users information (comes from the request)
 		user.Item.username = req.body.username;
-		user.Item.name = req.body.name;
+		user.Item.gamename = req.body.name;
 		user.Item.password = bcrypt.hashSync(req.body.password);
 
 		// Generate Unique ID
