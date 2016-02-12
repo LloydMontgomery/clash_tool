@@ -13,6 +13,11 @@ angular.module('app.routes', ['ngRoute'])
 		templateUrl : 'app/views/pages/splash.html',
 		css			: 'assets/css/splash.css'
 	})
+	// splash page
+	.when('/info', {
+		templateUrl : 'app/views/pages/info.html',
+		css			: 'assets/css/info.css'
+	})
 	// login page
 	.when('/login', {
 		templateUrl : 'app/views/pages/login.html',

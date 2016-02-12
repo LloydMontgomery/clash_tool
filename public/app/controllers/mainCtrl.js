@@ -52,6 +52,10 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			}
 			return;
 		}
+		// Not sure what this page means yet
+		if (route == '/info') {
+			return;
+		}
 		// The splash page
 		if (route == '/splash') {
 			setActive('navHome');
@@ -69,16 +73,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		}
 
 		/* Routes that require Login */
-
 		if (!vm.loggedIn){
 			setActive('navHome');
 			$location.path('/splash');
 			return;
 		}
 
-		// All of the following need adjustment for the re-factor
-
-		/* Routes that only people who are logged in can go to */
 		if (route == '/wars') {
 			setActive('navWars');
 			return;
@@ -89,6 +89,12 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		}
 		if (route.indexOf('/users/profile') > -1) {
 			setActive('navProfile');
+			return;
+		}
+		if (route == '/clans/register') {
+			return;
+		}
+		if (route == '/clans/join') {
 			return;
 		}
 
