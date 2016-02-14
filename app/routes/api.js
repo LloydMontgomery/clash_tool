@@ -212,15 +212,7 @@ module.exports = function(app, express, $http) {
 
 					// if user is found and password is right
 					// create a token
-					var token = jwt.sign({
-						username: data.username,
-						gamename: data.gamename,
-						clan: data.clan
-					}, TOKEN_SECRET,
-					{ expiresIn: 172800 // expires in 2 days 
-					// { expiresIn: 720 // expires in 2 hours 
-					// { expiresIn: 10 // expires in 10 seconds (This is for debugging)
-					});
+					token = createToken(data);
 
 					// Save this for later
 					req.decoded = jwt.decode(token);
@@ -265,7 +257,6 @@ module.exports = function(app, express, $http) {
 			}
 		}, function(err, data) {
 			if (err) {
-				console.log(err.message);
 				return res.json({
 					success: false,
 					message: 'Database Error. Try again later.',
@@ -314,8 +305,6 @@ module.exports = function(app, express, $http) {
 				} else {
 					// The clan ref has been reserved, now we can create the clan.
 					// First, grab the information of the user who is creating this clan
-					console.log(req.body);
-
 					dynamodb.query({
 						TableName : 'Users',
 						KeyConditionExpression: '#1 = :val',
@@ -435,20 +424,6 @@ module.exports = function(app, express, $http) {
 				// Convert all the values to non-object values
 				data = convertData(data.Items[0]);
 
-				console.log(data);
-
-				// data.size = Number(data.size);
-				// data.exp = Number(data.exp);
-				// data.ourDest = Number(data.ourDest);
-				// data.theirDest = Number(data.theirDest);
-
-				// // Collect all the warriors into a single array
-				// data.warriors = [];
-				// for (var i = 0; data[i] != null; i++) {
-				// 	data.warriors.push(data[i]);
-				// 	delete data[i];
-				// };
-
 				return res.json({
 					success: true,
 					message: 'Successfully returned all Wars',
@@ -456,13 +431,6 @@ module.exports = function(app, express, $http) {
 				});
 			}
 		});
-
-
-		// return res.json({ 
-		// 	success: true,
-		// 	message: 'Just starting',
-		// 	data: 'Nothing Yet'
-		// });
 	});
 	
 	apiRouter.route('/partialClan/:clan_ref')

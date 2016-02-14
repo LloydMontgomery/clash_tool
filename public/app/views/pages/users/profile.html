@@ -10,32 +10,6 @@
 		</div>
 		<div ng-show="!user.loadingPage">
 			<div id="profile-container" class="col-xs-12">
-				<!-- War Stats Overview -->
-				<div id="warStatsOverall" class="info-container col-sm-4 col-xs-12">
-					<div>
-						<div>
-							Wars Fought<br>
-							{{ user.profile.warsFought }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							Stars Gained<br>
-							{{ user.profile.starsGained }}
-						</div>
-						<hr class="accentBlue">
-						<div>
-							3-Star Rate<br>
-							{{ user.profile.threeStarRate.toFixed(2) }} %
-						</div>
-					</div>
-				</div>
-				<!-- Attack Stats -->
-				<div id="attackStats" class="info-container col-sm-4 col-xs-12">
-					<div>
-						All War Stars
-						<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
-					</div>
-				</div>
 				<!-- Hero Stats -->
 				<div id="heroStats" class="info-container col-sm-4 col-xs-12">
 					<div>
@@ -63,16 +37,6 @@
 					</div>
 				</div>
 			</div>
-			<div ng-show="user.error || user.message" id="message-container" class="col-xs-12">
-				<!-- ERROR MESSAGE -->
-				<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
-					{{ user.error }}
-				</div>
-				<!-- SUCCESS MESSAGE -->
-				<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
-					{{ user.message }}
-				</div>
-			</div>
 			<!-- Edit Profile -->
 			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" 
 				id="edit-profile" class="col-sm-offset-4 col-sm-4 col-xs-12">
@@ -83,39 +47,77 @@
 					</div>
 				</button>
 			</div>
-
-			<!-- All Attacks -->
-			<div id="war-attacks" class="col-sm-offset-2 col-sm-8 col-xs-12 font2">
-				<div class="col-xs-12">
-					<table class="table col-xs-12" ng-show="user.profile.wars"> 
-						<thead>
-							<tr>
-								<th class="opponent-name">War</th> 
-								<th class="table-center col-xs-2">You</th>
-								<th class="table-center col-xs-2">Opp</th>
-								<th class="col-xs-3">Stars</th>
-								<!-- <th>%</th> -->
-							</tr>
-						</thead>
-						<tbody>
-							<!-- LOOP OVER THE USERS -->
-							<tr ng-repeat="war in user.profile.wars" class="excludeAnimation"> 
-								<td class="opponent-name">{{ war.opponent }}</td>
-								<td class="table-center">{{ war.you }}</td>
-								<td class="table-center">{{ war.opp }}</td>
-								<td>
-									<div>
-										<span ng-show="war.stars > 0" class="glyphicons glyphicons-star drop"></span>
-										<span ng-show="war.stars > 1" class="glyphicons glyphicons-star drop"></span>
-										<span ng-show="war.stars > 2" class="glyphicons glyphicons-star drop"></span>
-										<span ng-hide="war.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
-										<span ng-hide="war.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
-										<span ng-hide="war.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+			<div ng-if="main.userInfo.clan != 'null'">
+				<h3> {{}} </h3>
+				<!-- War Stats Overview -->
+				<div id="warStatsOverall" class="info-container col-sm-4 col-xs-12">
+					<div>
+						<div>
+							Wars Fought<br>
+							{{ user.profile.warsFought }}
+						</div>
+						<hr class="accentBlue">
+						<div>
+							Stars Gained<br>
+							{{ user.profile.starsGained }}
+						</div>
+						<hr class="accentBlue">
+						<div>
+							3-Star Rate<br>
+							{{ user.profile.threeStarRate.toFixed(2) }} %
+						</div>
+					</div>
+				</div>
+				<!-- Attack Stats -->
+				<div id="attackStats" class="info-container col-sm-4 col-xs-12">
+					<div>
+						All War Stars
+						<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
+					</div>
+				</div>
+				<div ng-show="user.error || user.message" id="message-container" class="col-xs-12">
+					<!-- ERROR MESSAGE -->
+					<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
+						{{ user.error }}
+					</div>
+					<!-- SUCCESS MESSAGE -->
+					<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
+						{{ user.message }}
+					</div>
+				</div>
+				<!-- All Attacks -->
+				<div id="war-attacks" class="col-sm-offset-2 col-sm-8 col-xs-12 font2">
+					<div class="col-xs-12">
+						<table class="table col-xs-12" ng-show="user.profile.wars"> 
+							<thead>
+								<tr>
+									<th class="opponent-name">War</th> 
+									<th class="table-center col-xs-2">You</th>
+									<th class="table-center col-xs-2">Opp</th>
+									<th class="col-xs-3">Stars</th>
+									<!-- <th>%</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<!-- LOOP OVER THE USERS -->
+								<tr ng-repeat="war in user.profile.wars" class="excludeAnimation"> 
+									<td class="opponent-name">{{ war.opponent }}</td>
+									<td class="table-center">{{ war.you }}</td>
+									<td class="table-center">{{ war.opp }}</td>
+									<td>
+										<div>
+											<span ng-show="war.stars > 0" class="glyphicons glyphicons-star drop"></span>
+											<span ng-show="war.stars > 1" class="glyphicons glyphicons-star drop"></span>
+											<span ng-show="war.stars > 2" class="glyphicons glyphicons-star drop"></span>
+											<span ng-hide="war.stars > 0" class="glyphicons glyphicons-star-empty drop"></span>
+											<span ng-hide="war.stars > 1" class="glyphicons glyphicons-star-empty drop"></span>
+											<span ng-hide="war.stars > 2" class="glyphicons glyphicons-star-empty drop"></span>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -137,7 +139,7 @@
 				<h3>Barbarian King Level</h3>
 				<div class="innerModalContainer">
 					<div>
-						<span ng-hide="user.kingTimerDisable">Will be level: </span>
+						<span ng-hide="user.kingTimerDisable"> Will be level: </span>
 						<select ng-change="user.setBarbUpgradeTime()" ng-model="user.profile.kingLvl" 
 							ng-options="option for option in user.kingLvls">
 						</select>
