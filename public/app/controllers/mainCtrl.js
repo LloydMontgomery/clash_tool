@@ -36,8 +36,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			if (vm.userInfo && vm.userInfo.clan != 'null') {
 				$location.path('/@/' + vm.userInfo.clan.slice(-4));
 			} else {
-				console.log('here');
-				// Still need to code the page to hold 'Join Clan' and 'register clan' links
+				$location.path('/about');
 			}
 			return;
 		}
@@ -124,6 +123,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		// get user information on route change
 		if (vm.loggedIn) {
 			Auth.getUser().then(function(data) {
+				console.log('Getting User Data');
+				console.log(data.data);
 				vm.userInfo = data.data;
 				checkRoutePermission($location.path());
 			});

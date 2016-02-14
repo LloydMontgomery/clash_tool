@@ -6,7 +6,7 @@ angular.module('clanCtrl', [])
 
 // })
 
-.controller('clanRegisterController', function($location, Auth, Clan) {
+.controller('clanRegisterController', function($location, Auth, AuthToken, Clan) {
 	var vm = this;
 
 	Auth.getUser().then(function(data) {
@@ -45,6 +45,9 @@ angular.module('clanCtrl', [])
 		// call the userService function to update
 		Clan.create(vm.clanData)
 			.then(function(data) {
+				console.log('Token?');
+				console.log(data.data.token);
+				AuthToken.setToken(data.data.token);
 				vm.processing = false; // clear the form
 				$location.path('/');
 		});

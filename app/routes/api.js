@@ -31,6 +31,8 @@ var dynamodb = new AWS.DynamoDB();
 
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
+/* ============================ HELPER FUNCTIONS ============================ */
+
 var convertData = function(data) {
 	if (Array.isArray(data)) {
 		for (i in data)
@@ -46,6 +48,114 @@ var convertData = function(data) {
 	}
 	return data;
 };
+
+var createToken = function (data) {
+	if (!data.username || !data.gamename || !data.clan)
+		return false;
+
+	// Create a token
+	var token = jwt.sign({
+		username: data.username,
+		gamename: data.gamename,
+		clan: data.clan
+	}, TOKEN_SECRET,
+	{ expiresIn: 172800 // expires in 2 days 
+	// { expiresIn: 720 // expires in 2 hours 
+	// { expiresIn: 10 // expires in 10 seconds (This is for debugging)
+	});
+
+	return token;
+}
+
+/* ======================== AMAZON DYNAMODB QUERIES ======================== */
+
+var updateUser = function(username, data) {
+	console.log(username);
+	console.log(data);
+
+	// Initialize and assign attributes to be written to DynamoDB
+	updateExp = 'set';
+	expAttNames = {};
+	expAttVals = {};
+
+	// Only update the values the server is passed, 
+	// and don't try to update things that do not exist
+	if (data.clan) {
+		updateExp += ' #name1 = :val1,';
+		expAttNames['#name1'] = 'clan';
+		expAttVals[':val1'] = data.clan;
+	} 
+	// if (data.size) {
+	// 	updateExp += ' #name2 = :val2,';
+	// 	expAttNames['#name2'] = 'size';
+	// 	expAttVals[':val2'] = data.size;
+	// } if (data.start) {
+	// 	updateExp += ' #name3 = :val3,';
+	// 	expAttNames['#name3'] = 'start';
+	// 	expAttVals[':val3'] = data.start;
+	// } if (data.exp) {
+	// 	updateExp += ' #name4 = :val4,';
+	// 	expAttNames['#name4'] = 'exp';
+	// 	expAttVals[':val4'] = data.exp;
+	// } if (data.ourDest) {
+	// 	updateExp += ' #name5 = :val5,';
+	// 	expAttNames['#name5'] = 'ourDest';
+	// 	expAttVals[':val5'] = data.ourDest;
+	// } if (data.theirDest) {
+	// 	updateExp += ' #name6 = :val6,';
+	// 	expAttNames['#name6'] = 'theirDest';
+	// 	expAttVals[':val6'] = data.theirDest;
+	// } if (data.ourScore) {
+	// 	updateExp += ' #name7 = :val7,';
+	// 	expAttNames['#name7'] = 'ourScore';
+	// 	expAttVals[':val7'] = data.ourScore;
+	// } if (data.theirScore) {
+	// 	updateExp += ' #name8 = :val8,';
+	// 	expAttNames['#name8'] = 'theirScore';
+	// 	expAttVals[':val8'] = data.theirScore;
+	// } if (data.outcome) {
+	// 	updateExp += ' #name9 = :val9,';
+	// 	expAttNames['#name9'] = 'outcome';
+	// 	expAttVals[':val9'] = data.outcome;
+	// } if (data.img) {
+	// 	updateExp += ' #name10 = :val10,';
+	// 	expAttNames['#name10'] = 'img';
+	// 	expAttVals[':val10'] = data.img;
+	// }
+
+	// if (data.password) {  // Then we need to change the password
+	// 	updateExpression = updateExpression + ', password = :val5';
+	// 	expressionAttributeValues[':val5'] = bcrypt.hashSync(data.password);
+	// }
+
+	// Cut off the last ',' in the list
+	updateExp = updateExp.slice(0, -1);
+
+	dynamodbDoc.update({
+		TableName: 'Users',
+		Key: {
+			'username': username
+		},
+		UpdateExpression: updateExp,
+		ExpressionAttributeNames: expAttNames,
+		ExpressionAttributeValues: expAttVals
+	}, function(err, data) {
+		if (err) {
+			console.log(err);
+			return {
+				success: false,
+				message: err.message
+			};
+		} else {
+			return {
+				success: true,
+				message: 'Successfully Updated User'
+			};
+		}
+	});
+};
+
+/* ================================ ROUTING ================================ */
 
 module.exports = function(app, express, $http) {
 
@@ -102,7 +212,6 @@ module.exports = function(app, express, $http) {
 
 					// if user is found and password is right
 					// create a token
-					console.log(data);
 					var token = jwt.sign({
 						username: data.username,
 						gamename: data.gamename,
@@ -251,6 +360,7 @@ module.exports = function(app, express, $http) {
 							};
 
 							clan.Item.users[req.body.username] = userData;
+							clan.Item.users[req.body.username].position = 'Leader';
 							
 							// Load attributes given by the client
 							clan.Item.ref = ref;
@@ -268,36 +378,28 @@ module.exports = function(app, express, $http) {
 								} else {
 
 									// Clan was successfully created, update the user who created the clan
+									updateUser(req.body.username, {
+										clan: ref
+									});
 
+									token = createToken({
+										username: userData.username,
+										gamename: userData.gamename,
+										clan: ref
+									});
 
 									res.json({ 
 										success: true,
-										message: 'Clan created!' 
+										message: 'Clan created!',
+										token: token
 									});
 								}
 							});
 						}
 					});
-
 				}
 			});
 		});
-
-
-		// dynamodbDoc.put(clan, function(err, data) {
-		// 	if (err) {
-		// 		console.error("Unable to add clan. Error JSON:", JSON.stringify(err, null, 2));
-		// 		return res.json({ 
-		// 			success: false, 
-		// 			message: err.message
-		// 		}); 
-		// 	} else {
-		// 		res.json({ 
-		// 			success: true,
-		// 			message: 'User created!' 
-		// 		});
-		// 	}
-		// });
 	});
 	
 	apiRouter.route('/clans/:clan_ref')
@@ -417,9 +519,17 @@ module.exports = function(app, express, $http) {
 
 		var user = {
 			TableName: 'Users',
-			Item: {},
+			Item: {
+				'thLvl' : 1,
+				'kingLvl' : 0,
+				'queenLvl' : 0,
+				'wardenLvl' : 0,
+				'kingFinishDate' : 0,
+				'queenFinishDate' : 0,
+				'wardenFinishDate' : 0
+			},
 			Expected: {
-				"name" : { "Exists" : false},
+				"username" : { "Exists" : false },
 			}
 		};
 
@@ -434,18 +544,6 @@ module.exports = function(app, express, $http) {
 
 		// Set their current clan
 		user.Item.clan = 'null';
-
-		// user.Item.admin = false;  // Default to false
-		// user.Item.inClan = false; // Default to false
-		// // If the request comes from the "Create User" page, then we can set these
-		// if (req.headers.referer.indexOf("/users") > -1) {
-		// 	user.Item.admin = req.body.admin;
-		// 	user.Item.inClan = req.body.inClan;
-		// }
-
-		// user.Item.title = "Member";  // Default to "Member"
-		// if (req.body.title)
-		// 	user.Item.title = req.body.title;
 
 		dynamodbDoc.put(user, function(err, data) {
 			if (err) {
@@ -464,7 +562,7 @@ module.exports = function(app, express, $http) {
 	});
 
 	apiRouter.route('/partialWars')
-	// get all the users (accessed at GET http://localhost:8080/api/users)
+	// get all the wars for a clan (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
 
 		dynamodb.scan({

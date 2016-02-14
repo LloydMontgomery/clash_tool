@@ -281,7 +281,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		vm.message = '';
 		vm.updating = true;
 
-		console.log(vm.profile);
 		if (!vm.profile.thLvl || (vm.profile.kingLvl === null)  || (vm.profile.queenLvl === null)) {
 			vm.error = 'Missing Town Hall, Barb King, or Queen Information'
 			vm.updating = false;
