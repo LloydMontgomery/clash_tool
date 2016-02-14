@@ -2,7 +2,8 @@ var express	= require('express'),			// Express simplifies Node
 	jwt 	= require('jsonwebtoken'),		// This is the package we will use for tokens
 	aws 	= require('aws-sdk'),			// This is for uploading to S3
 	bcrypt	= require('bcrypt-nodejs'),
-	http 	= require('http');
+	http 	= require('http'),
+	Promise = require('bluebird');
 
 // Need to try/catch the config setup
 var config = {}; // This is to prevent errors later
@@ -65,9 +66,42 @@ var createToken = function (data) {
 	});
 
 	return token;
-}
+};
 
 /* ======================== AMAZON DYNAMODB QUERIES ======================== */
+
+// USER QUERIES
+var getUser = function(username) {
+	return new Promise(function(resolve, reject) {
+		dynamodb.query({
+			TableName : "Users",
+			KeyConditionExpression: "username = :1",
+			ExpressionAttributeValues: {
+				":1": { 'S': username }
+			}
+		}, function(err, data) {
+			if (err) {
+				reject ({
+					success: false,
+					message: 'Database Error. Try again later.',
+					err: err
+				});
+			} else {
+				if (data.Count == 0) {
+					reject ({
+						success: false,
+						message: 'Query Failed. User not found.'
+					});
+				} else {
+					console.log('Found the User');
+					resolve (
+						convertData(data.Items[0])
+					);
+				}
+			}
+		});
+	});
+};
 
 var updateUser = function(username, data) {
 	console.log(username);
@@ -155,95 +189,53 @@ var updateUser = function(username, data) {
 	});
 };
 
-/* ================================ ROUTING ================================ */
+// CLAN QUERIES
 
-module.exports = function(app, express, $http) {
+var createClan = function(data) {
 
-	// Get an instance of the express router
-	var apiRouter = express.Router();
+	return new Promise(function(resolve, reject) {
 
-	apiRouter.use(function(req, res, next) {
+		// Create the user in their own clan
+		users = {}
+		users[data.userData.username] = data.userData;
+		users[data.userData.username].position = 'Leader';
 
-		console.log('Request to API: ' + req.path);
-		next();
-	});
-
-	// ============================ PUBLIC APIS ============================ //
-
-	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
-	apiRouter.post('/authenticate', function(req, res) {
-		// find the user
-		// select the username and password explicitly 
-		console.log(req.body);
-		dynamodb.query({
-			TableName : "Users",
-			ProjectionExpression: "username, gamename, password, clan",
-			KeyConditionExpression: "username = :1",
-			ExpressionAttributeValues: {
-				":1": {'S': req.body.username}
+		dynamodbDoc.put({
+			TableName: 'Clans',
+			Item: {
+				ref : data.ref,
+				name : data.name,
+				totalWars : data.totalWars,
+				warsWon : data.warsWon,
+				wars : {},
+				users : users,
+				notInClan : {},
+				totalMembers : 1
 			},
-			Limit : 1000
+			Expected: {
+				'ref' : { 'Exists' : false },
+			}
 		}, function(err, data) {
 			if (err) {
-				return res.json({
-					success: false,
-					message: 'Database Error. Try again later.',
-					data: data
-				});
-			}
-
-			if (data.Count == 0) {  // Then the username must have been incorrect
-				return res.json({
-					success: false,
-					message: 'Authentication failed.'
-				});
+				reject ({ 
+					success: false, 
+					message: err
+				}); 
 			} else {
-
-				// check if password matches
-				var validPassword = bcrypt.compareSync(req.body.password, data.Items[0].password.S);
-
-				if (!validPassword) {
-					res.json({
-						success: false,
-						message: 'Authentication failed.'
-					});
-				} else {
-					data = convertData(data.Items[0]);
-
-					// if user is found and password is right
-					// create a token
-					token = createToken(data);
-
-					// Save this for later
-					req.decoded = jwt.decode(token);
-
-					// return the information including token as JSON
-					res.json({
-						success: true,
-						message: 'Enjoy your token!', 
-						token: token
-					});
-				}
+				resolve ({ 
+					success: true,
+					message: 'Clan created!'
+				});
 			}
 		});
 	});
+};
 
-	// Clans //
-	apiRouter.route('/clans')
-	// create a clan (accessed at POST http://clan.solutions/api/clans)
-	.post(function(req, res) {
 
-		// Check to see if the client has provided all necessary information
-		if (req.body.name && 
-			req.body.totalWars && 
-			req.body.warsWon) {
-			;  // Do nothing
-		} else {
-			return res.json({ 
-				success: false,
-				message: 'Missing necessary attributes of Clan'
-			});
-		}
+// RANDOMDATA QUERIES
+
+var getRandomData = function (name) {
+	return new Promise(function(resolve, reject) {
 
 		// Query the database to get all the taken IDs
 		dynamodb.query({
@@ -253,142 +245,200 @@ module.exports = function(app, express, $http) {
 				'#1': 'name'
 			},
 			ExpressionAttributeValues: {
-				':1': { 'S': 'takenRefs' }
+				':1': { 'S': name }
 			}
 		}, function(err, data) {
 			if (err) {
-				return res.json({
+				reject ({
 					success: false,
-					message: 'Database Error. Try again later.',
-					data: err
+					message: 'Database Error. Try again later.'
+				});
+			} else {
+				resolve({
+					success: true,
+					message: 'RandomData Returned',
+					data: convertData(data.Items[0])
 				});
 			}
+		});
+	});
+};
 
-			refs = []
-			if (data.Count == 0)
-				;  // Then there are no IDs, and therefore no exist clans :(
-			else
-				refs = convertData(data.Items[0]).refs;
+var updateRandomDataRef = function (ref) {
+	console.log('Updating Ref: ' + String(ref));
+	return new Promise(function(resolve, reject) {
 
-			// Randomly generate a Hexidecimal ID, 4 characters long
-			var ref = '@'+ ('0000' + Math.floor(Math.random()*65536).toString(16).toUpperCase()).slice(-4);
-
-			// Check the generated ID against all existing IDs
-			while (refs[ref]) {
-				// If we are here, then we have a conflict, incrememnt the ID and check again
-				var newRefNum = parseInt(ref.slice(-4), 16) + 1;
-				if (newRefNum > 65535)
-					newRefNum = 0;
-				ref = '@' + ('0000' + newRefNum.toString(16).toUpperCase()).slice(-4);
+		dynamodbDoc.update({
+			TableName: 'RandomData',
+			Key:{
+				'name': 'takenRefs'
+			},
+			UpdateExpression: 'set refs.#1 = :1',
+			ExpressionAttributeNames: {
+				'#1' : ref
+			},
+			ExpressionAttributeValues: {
+				':1' : true
 			}
+		}, function(err, data) {
+			if (err) {
+				console.error("Unable to change ID status. Error JSON:", JSON.stringify(err, null, 2));
+				reject ({
+					success: false, 
+					message: err.message
+				});
+			} else {
+				console.log('Ref successfully added');
+				resolve ({
+					success: true, 
+					message: "Added the new Clan Reference to the database"
+				});
+			}
+		});
+	});
+};
 
-			// Update the ID list with the new ID
-			dynamodbDoc.update({
-				TableName: 'RandomData',
-				Key:{
-					'name': 'takenRefs'
-				},
-				UpdateExpression: 'set refs.#1 = :1',
-				ExpressionAttributeNames: {
-					'#1' : ref
-				},
-				ExpressionAttributeValues: {
-					':1' : true
-				}
-			}, function(err, data) {
-				if (err) {
-					console.error("Unable to change ID status. Error JSON:", JSON.stringify(err, null, 2));
-					return res.json({ 
-						success: false, 
-						message: err.message
+
+/* ================================ ROUTING ================================ */
+
+module.exports = function(app, express, $http) {
+
+	// Get an instance of the express router
+	var apiRouter = express.Router();
+
+	apiRouter.use(function(req, res, next) {
+		console.log('Request to API: ' + req.path);
+		next();
+	});
+
+	// ============================ PUBLIC APIS ============================ //
+
+	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
+	apiRouter.post('/authenticate', function(req, res) {
+		// find the user
+		getUser(req.body.username)
+			.then(function(user) {
+
+				// check if password matches
+				var validPassword = bcrypt.compareSync(req.body.password, user.password);
+
+				if (!validPassword) {
+					return res.json({
+						success: false,
+						message: 'Incorrect Password'
 					});
 				} else {
-					// The clan ref has been reserved, now we can create the clan.
-					// First, grab the information of the user who is creating this clan
-					dynamodb.query({
-						TableName : 'Users',
-						KeyConditionExpression: '#1 = :val',
-						ExpressionAttributeNames: {
-							'#1': 'username'
-						},
-						ExpressionAttributeValues: {
-							':val': { 'S': req.body.username }
-						}
-					}, function(err, userData) {
+					// create a token
+					token = createToken(user);
 
-						if (err) {
-							return res.json({
-								success: false,
-								message: 'Database Error. Try again later.',
-								data: err
-							});
-						}
+					// Save this for later
+					req.decoded = jwt.decode(token);
 
-						if (userData.Count == 0) {
-							return res.json({
-								success: false,
-								message: 'Query Failed. User not found.'
-							});
-						} else {
-
-							// Convert Data before sending it back to client
-							userData = convertData(userData.Items[0]);
-							delete userData.password; // This is important... Well, it's hashed, but still
-
-							var clan = {
-								TableName: 'Clans',
-								Item: {
-									wars : {},
-									users : {},
-									notInClan: {},
-									totalMembers: 1
-								},
-								Expected: {
-									"ref" : { "Exists" : false },
-								}
-							};
-
-							clan.Item.users[req.body.username] = userData;
-							clan.Item.users[req.body.username].position = 'Leader';
-							
-							// Load attributes given by the client
-							clan.Item.ref = ref;
-							clan.Item.name = req.body.name;
-							clan.Item.totalWars = req.body.totalWars;
-							clan.Item.warsWon = req.body.warsWon;
-
-							dynamodbDoc.put(clan, function(err, data) {
-								if (err) {
-									console.error("Unable to create clan. Error JSON:", JSON.stringify(err, null, 2));
-									return res.json({ 
-										success: false, 
-										message: err.message
-									}); 
-								} else {
-
-									// Clan was successfully created, update the user who created the clan
-									updateUser(req.body.username, {
-										clan: ref
-									});
-
-									token = createToken({
-										username: userData.username,
-										gamename: userData.gamename,
-										clan: ref
-									});
-
-									res.json({ 
-										success: true,
-										message: 'Clan created!',
-										token: token
-									});
-								}
-							});
-						}
+					// return the information including token as JSON
+					return res.json({
+						success: true,
+						message: 'Successfully logged in', 
+						token: token
 					});
 				}
+			})
+			.catch(function(err) {
+				return res.json({
+					success: false,
+					message: 'Could not find that username'
+				});
 			});
-		});
+	});
+
+	// Clans //
+	apiRouter.route('/clans')
+	// create a clan (accessed at POST http://clan.solutions/api/clans)
+	.post(function(req, res) {
+
+		// Check to see if the client has provided all necessary information
+		if (!req.body.name || !req.body.totalWars || !req.body.warsWon) {
+			return res.json({ 
+				success: false,
+				message: 'Missing necessary attributes of Clan'
+			});
+		}
+
+		// Create a high-level scope for these variables
+		ref = null;
+		userData = null;
+
+		getRandomData('takenRefs')
+			// Generate a random reference, checking against all refs just pulled from the database
+			.then(function(data) {
+
+				refs = data.data.refs;
+
+				// Randomly generate a Hexidecimal ID, 4 characters long
+				ref = '@'+ ('0000' + Math.floor(Math.random()*65536).toString(16).toUpperCase()).slice(-4);
+
+				// Check the generated ID against all existing IDs
+				while (refs[ref]) {
+					// If we are here, then we have a conflict, incrememnt the ID and check again
+					var newRefNum = parseInt(ref.slice(-4), 16) + 1;
+					if (newRefNum > 65535)
+						newRefNum = 0;
+					ref = '@' + ('0000' + newRefNum.toString(16).toUpperCase()).slice(-4);
+				}
+				console.log('New Ref Found: ' + String(ref));
+				return ref;
+			})
+			// Now that a unique reference has been generated, push it back to the database
+			.then(function(ref) {
+				return updateRandomDataRef(ref)
+			})
+			// Grab the current user from the database so we can write their information to the new clan
+			.then(function() {
+				return getUser(req.body.username);
+			})
+			// Create the new clan with the reference from earlier and the userData we just got
+			.then(function(data) {
+				userData = data;  // Expand the scope of userData
+
+				// Modify userData slightly before passing it to createClan
+				delete userData.password;
+				delete userData.dateJoinedSite;
+				now = new Date();
+				userData.dateJoinedClan = now.getTime();
+
+				data = {
+					userData : userData,
+					ref : ref,
+					name : req.body.name,
+					totalWars : req.body.totalWars,
+					warsWon : req.body.warsWon
+				};
+				return createClan(data);
+			})
+			.then(function() {
+				// Clan was successfully created, update the user who created the clan
+				updateUser(userData.username, {
+					clan: ref
+				});
+
+				token = createToken({
+					username: userData.username,
+					gamename: userData.gamename,
+					clan: ref
+				});
+
+				return res.json({
+					success : true,
+					message : 'Clan Successfully Created',
+					token : token
+				});
+			})
+			.catch(function(err) {
+				console.error('Failed to create clan. Error JSON:', JSON.stringify(err, null, 2));
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.'
+				});
+			});
 	});
 	
 	apiRouter.route('/clans/:clan_ref')
@@ -437,7 +487,6 @@ module.exports = function(app, express, $http) {
 	// Get the clan information for display purposes (accessed at GET http://localhost:8080/api/partialClan)
 	.get(function(req, res) {
 		ref = '@' + req.params.clan_ref;
-		console.log(ref);
 
 		dynamodb.query({
 			TableName : 'Clans',
@@ -468,8 +517,6 @@ module.exports = function(app, express, $http) {
 			} else {
 				// Convert all the values to non-object values
 				data = convertData(data.Items[0]);
-
-				console.log(data);
 
 				return res.json({
 					success: true,
@@ -529,35 +576,6 @@ module.exports = function(app, express, $http) {
 		});
 	});
 
-	apiRouter.route('/partialWars')
-	// get all the wars for a clan (accessed at GET http://localhost:8080/api/users)
-	.get(function(req, res) {
-
-		dynamodb.scan({
-			TableName : "Wars",
-			ProjectionExpression: "createdAt, #1, outcome, ourScore, theirScore, exp, img",
-			ExpressionAttributeNames: {
-				"#1": "start"
-			},
-			Limit : 1000
-		}, function(err, data) {
-			if (err) { 
-				return res.json({
-					success: false,
-					message: 'Database Error. Try again later',
-				});
-			} else {
-				data = convertData(data.Items);
-
-				res.json({
-					success: true,
-					message: 'Successfully returned all Wars',
-					data: data
-				});
-			}
-		});
-	});
-
 	// ======================== BASIC AUTHENTICATION ======================== //
 
 	// route middleware to verify a token
@@ -598,6 +616,35 @@ module.exports = function(app, express, $http) {
 	// API endpoint to get user information
 	apiRouter.get('/me', function(req, res) {
 		res.send(req.decoded);
+	});
+
+	apiRouter.route('/partialWars')
+	// get all the wars for a clan (accessed at GET http://localhost:8080/api/users)
+	.get(function(req, res) {
+
+		dynamodb.scan({
+			TableName : "Wars",
+			ProjectionExpression: "createdAt, #1, outcome, ourScore, theirScore, exp, img",
+			ExpressionAttributeNames: {
+				"#1": "start"
+			},
+			Limit : 1000
+		}, function(err, data) {
+			if (err) { 
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later',
+				});
+			} else {
+				data = convertData(data.Items);
+
+				res.json({
+					success: true,
+					message: 'Successfully returned all Wars',
+					data: data
+				});
+			}
+		});
 	});
 
 	apiRouter.route('/partialUsers')

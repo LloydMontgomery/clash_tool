@@ -104,7 +104,9 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		// 	$location.path('/');
 		// 	return;
 		// }
-
+		if (route == '/clan/manage') {
+			return;
+		}
 		if (route.indexOf('/wars/edit') > -1) {
 			setActive('navWars');
 			return;
@@ -261,6 +263,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 					vm.processing = false;
 					// if a user successfully logs in, redirect to users page
 					if (data.data.success) {
+						console.log(data);
 						$location.path('/');
 					}
 					else {

@@ -112,6 +112,12 @@ angular.module('app.routes', ['ngRoute'])
 		css			: 'assets/css/clans/join.css',
 		controller	: 'clanJoinController',
 		controllerAs: 'clan'
+	})// Join a Clan
+	.when('/clan/manage', {
+		templateUrl	: 'app/views/pages/clans/manage.html',
+		css			: 'assets/css/clans/manage.css',
+		controller	: 'clanManageController',
+		controllerAs: 'clan'
 	})
 	// Catch-All, send them to the splash page
 	.otherwise({

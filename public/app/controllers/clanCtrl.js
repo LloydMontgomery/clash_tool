@@ -113,6 +113,12 @@ angular.module('clanCtrl', [])
 		// vm.joinProcessing = false;
 
 	}
+})
+
+.controller('clanManageController', function($location, Auth, Clan) {
+	console.log('HELLO');
+
+
 });
 
 
