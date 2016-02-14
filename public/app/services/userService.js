@@ -4,13 +4,13 @@ angular.module('userService', [])
 	var userFactory = {};
 
 	// get a single user profile
-	userFactory.getProfile = function(id) { 
-		return $http.get('api/users/profile/' + id);
-		// return $http.get('http://clash.solutions/api/users/profile/' + id);
+	userFactory.getProfile = function(username) { 
+		return $http.get('api/users/profile/' + username);
+		// return $http.get('http://clash.solutions/api/users/profile/' + username);
 	};
 	// get a single user profile
-	userFactory.setProfile = function(id, userData) {
-		return $http.put('/api/users/profile/' + id, userData);
+	userFactory.setProfile = function(username, userData) {
+		return $http.put('/api/users/profile/' + username, userData);
 	};
 	// get a single user
 	userFactory.get = function(id) { 

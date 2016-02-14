@@ -33,7 +33,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		// Re-route people from / to their clan home page, or the join clan page if they don't have one
 		if (route == '/') {
 			console.log(vm.userInfo);
-			if (vm.userInfo.clan != 'null') {
+			if (vm.userInfo && vm.userInfo.clan != 'null') {
 				$location.path('/@/' + vm.userInfo.clan.slice(-4));
 			} else {
 				console.log('here');
@@ -53,7 +53,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			return;
 		}
 		// Not sure what this page means yet
-		if (route == '/info') {
+		if (route == '/about') {
 			return;
 		}
 		// The splash page
@@ -88,6 +88,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			return;
 		}
 		if (route.indexOf('/users/profile') > -1) {
+			console.log('here');
 			setActive('navProfile');
 			return;
 		}
@@ -99,11 +100,11 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		}
 
 		/* Admin In Authentication */
-		if (!vm.userInfo.admin){
-			setActive('navHome');
-			$location.path('/');
-			return;
-		}
+		// if (!vm.userInfo.admin){
+		// 	setActive('navHome');
+		// 	$location.path('/');
+		// 	return;
+		// }
 
 		if (route.indexOf('/wars/edit') > -1) {
 			setActive('navWars');
@@ -135,13 +136,13 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		// Grab the Clan information for the specified clan
 		if ($location.path().indexOf('/@/') > -1) {
 
-			console.log(vm.clanRef);
+			// console.log(vm.clanRef);
 
 			Clan.partial(vm.clanRef)
 				.then(function(data) {
 					if (data.data.success) {
-						console.log('SUCCESS');
-						console.log(data.data.data);
+						// console.log('SUCCESS');
+						// console.log(data.data.data);
 
 						vm.clan = data.data.data;
 					} else {

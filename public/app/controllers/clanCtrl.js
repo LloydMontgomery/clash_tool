@@ -9,6 +9,10 @@ angular.module('clanCtrl', [])
 .controller('clanRegisterController', function($location, Auth, Clan) {
 	var vm = this;
 
+	Auth.getUser().then(function(data) {
+		vm.userInfo = data.data;
+	});
+
 	vm.type = 'register';
 
 	// Style Data, used for red outlines
@@ -35,6 +39,8 @@ angular.module('clanCtrl', [])
 			vm.styles.warsWon = 'invalid-field';
 		if (vm.styles.name || vm.styles.totalWars || vm.styles.warsWon)
 			return;
+
+		vm.clanData.username = vm.userInfo.username;
 
 		// call the userService function to update
 		Clan.create(vm.clanData)

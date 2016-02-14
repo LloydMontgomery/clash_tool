@@ -14,9 +14,9 @@ angular.module('app.routes', ['ngRoute'])
 		css			: 'assets/css/splash.css'
 	})
 	// splash page
-	.when('/info', {
-		templateUrl : 'app/views/pages/info.html',
-		css			: 'assets/css/info.css'
+	.when('/about', {
+		templateUrl : 'app/views/pages/about.html',
+		css			: 'assets/css/about.css'
 	})
 	// login page
 	.when('/login', {

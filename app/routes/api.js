@@ -53,6 +53,7 @@ module.exports = function(app, express, $http) {
 	var apiRouter = express.Router();
 
 	apiRouter.use(function(req, res, next) {
+
 		console.log('Request to API: ' + req.path);
 		next();
 	});
@@ -152,7 +153,7 @@ module.exports = function(app, express, $http) {
 			},
 			ExpressionAttributeValues: {
 				':1': { 'S': 'takenRefs' }
-			},
+			}
 		}, function(err, data) {
 			if (err) {
 				console.log(err.message);
@@ -202,41 +203,82 @@ module.exports = function(app, express, $http) {
 						message: err.message
 					});
 				} else {
+					// The clan ref has been reserved, now we can create the clan.
+					// First, grab the information of the user who is creating this clan
+					console.log(req.body);
 
-					// Now that a unique ID has been chosen, we can add this clan to the list
-					var clan = {
-						TableName: 'Clans',
-						Item: {
-							wars : {},
-							users : {},
-							notInClan: {},
-							totalMembers: 1
+					dynamodb.query({
+						TableName : 'Users',
+						KeyConditionExpression: '#1 = :val',
+						ExpressionAttributeNames: {
+							'#1': 'username'
 						},
-						Expected: {
-							"ref" : { "Exists" : false },
+						ExpressionAttributeValues: {
+							':val': { 'S': req.body.username }
 						}
-					};
-					
-					// Load attributes given by the client
-					clan.Item.ref = ref;
-					clan.Item.name = req.body.name;
-					clan.Item.totalWars = req.body.totalWars;
-					clan.Item.warsWon = req.body.warsWon;
+					}, function(err, userData) {
 
-					dynamodbDoc.put(clan, function(err, data) {
 						if (err) {
-							console.error("Unable to create clan. Error JSON:", JSON.stringify(err, null, 2));
-							return res.json({ 
-								success: false, 
-								message: err.message
-							}); 
+							return res.json({
+								success: false,
+								message: 'Database Error. Try again later.',
+								data: err
+							});
+						}
+
+						if (userData.Count == 0) {
+							return res.json({
+								success: false,
+								message: 'Query Failed. User not found.'
+							});
 						} else {
-							res.json({ 
-								success: true,
-								message: 'Clan created!' 
+
+							// Convert Data before sending it back to client
+							userData = convertData(userData.Items[0]);
+							delete userData.password; // This is important... Well, it's hashed, but still
+
+							var clan = {
+								TableName: 'Clans',
+								Item: {
+									wars : {},
+									users : {},
+									notInClan: {},
+									totalMembers: 1
+								},
+								Expected: {
+									"ref" : { "Exists" : false },
+								}
+							};
+
+							clan.Item.users[req.body.username] = userData;
+							
+							// Load attributes given by the client
+							clan.Item.ref = ref;
+							clan.Item.name = req.body.name;
+							clan.Item.totalWars = req.body.totalWars;
+							clan.Item.warsWon = req.body.warsWon;
+
+							dynamodbDoc.put(clan, function(err, data) {
+								if (err) {
+									console.error("Unable to create clan. Error JSON:", JSON.stringify(err, null, 2));
+									return res.json({ 
+										success: false, 
+										message: err.message
+									}); 
+								} else {
+
+									// Clan was successfully created, update the user who created the clan
+
+
+									res.json({ 
+										success: true,
+										message: 'Clan created!' 
+									});
+								}
 							});
 						}
 					});
+
 				}
 			});
 		});
@@ -421,47 +463,6 @@ module.exports = function(app, express, $http) {
 		});
 	});
 
-	apiRouter.route('/partialUsers')
-	// get all the users (accessed at GET http://localhost:8080/api/users)
-	.get(function(req, res) {
-
-		dynamodb.scan({
-			TableName : "Users",
-			ProjectionExpression: "#n, title, dateJoined, inClan, thLvl",
-			FilterExpression: "inClan = :jut",
-			ExpressionAttributeNames: {
-				"#n": "name"
-			},
-			ExpressionAttributeValues: {
-				":jut": {'BOOL': true},
-			},
-			Limit : 1000
-		}, function(err, data) {
-			if (err) { 
-				return res.json({
-					success: false,
-					message: 'Database Error. Try again later.',
-					data: data.Items
-				});
-			}
-
-			if (data.Count == 0) {  // Then the query came back empty
-				return res.json({
-					success: false,
-					message: 'Query Failed.'
-				});
-			} else {
-				data = convertData(data.Items);
-
-				res.json({
-					success: true,
-					message: 'Successfully returned all Users',
-					data: data
-				});
-			}
-		});
-	});
-
 	apiRouter.route('/partialWars')
 	// get all the users (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
@@ -531,6 +532,49 @@ module.exports = function(app, express, $http) {
 	// API endpoint to get user information
 	apiRouter.get('/me', function(req, res) {
 		res.send(req.decoded);
+	});
+
+	apiRouter.route('/partialUsers')
+	// get all the users (accessed at GET http://localhost:8080/api/users)
+	.get(function(req, res) {
+		ref = req.decoded.clan.slice(-4);
+		console.log(ref);
+		dynamodb.query({
+			TableName : 'Clans',
+			ProjectionExpression: '#1, #2',
+			KeyConditionExpression: '#1 = :1',
+			ExpressionAttributeNames: {
+				'#1' : 'ref',
+				'#2' : 'users',
+			},
+			ExpressionAttributeValues: {
+				':1': { 'S': ref }
+			}
+		}, function(err, data) {
+			if (err) { 
+				console.log(err);
+				return res.json({
+					success: false,
+					message: 'Database Error. Try again later.',
+				});
+			}
+
+			if (data.Count == 0) {  // Then the query came back empty
+				return res.json({
+					success: false,
+					message: 'Query Failed.'
+				});
+			} else {
+				data = convertData(data.Items);
+				console.log(data);
+
+				res.json({
+					success: true,
+					message: 'Successfully returned all Users',
+					data: data
+				});
+			}
+		});
 	});
 
 	apiRouter.route('/wars')
@@ -707,18 +751,17 @@ module.exports = function(app, express, $http) {
 	});
 
 	// SPECIFIC USERS PROFILE //
-	apiRouter.route('/users/profile/:user_id')
+	apiRouter.route('/users/profile/:username')
 	// (accessed at GET http://localhost:8080/api/users/:user_id) 
 	.get(function(req, res) {
 		dynamodb.query({
 			TableName : 'Users',
-			// ProjectionExpression: "#1, id, inClan, admin, dateJoined, title",
 			KeyConditionExpression: '#1 = :val',
 			ExpressionAttributeNames: {
-				'#1': 'name'
+				'#1': 'username'
 			},
 			ExpressionAttributeValues: {
-				':val': { 'S': req.params.user_id }
+				':val': { 'S': req.params.username }
 			}
 		}, function(err, data) {
 

@@ -73,42 +73,45 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 			}
 		]
 
-	// // set a processing variable to show loading things
-	// vm.processing = true;
-	// // grab all the users at page load
-	// User.all().then(function(data) {
-	// 	if (data.data.success) {
+	// set a processing variable to show loading things
+	vm.processing = true;
+	// grab all the users at page load
+	User.partial().then(function(data) {
+		if (data.data.success) {
 
-	// 		// bind the users that come back to vm.users
-	// 		vm.users = data.data.data;
-	// 		vm.users.sort(function(a, b) {
-	// 			return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
-	// 		});
+			// bind the users that come back to vm.users
+			vm.users = data.data.data;
 
-	// 		vm.inClan = [];
-	// 		vm.notInClan = [];
-	// 		vm.admins = [];
+			console.log(vm.users);
+			// vm.users.sort(function(a, b) {
+			// 	return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
+			// });
 
-	// 		for (var i = 0; i < vm.users.length; i++) {
-	// 			if (vm.users[i].inClan)
-	// 				vm.inClan.push(vm.users[i]);
-	// 			else
-	// 				vm.notInClan.push(vm.users[i]);
-	// 			if (vm.users[i].admin)
-	// 				vm.admins.push(vm.users[i]);
-	// 		};
-	// 		vm.displayUsers = vm.inClan;
+			// vm.inClan = [];
+			// vm.notInClan = [];
+			// vm.admins = [];
 
-	// 		vm.processing = false;
+			// for (var i = 0; i < vm.users.length; i++) {
+			// 	if (vm.users[i].inClan)
+			// 		vm.inClan.push(vm.users[i]);
+			// 	else
+			// 		vm.notInClan.push(vm.users[i]);
+			// 	if (vm.users[i].admin)
+			// 		vm.admins.push(vm.users[i]);
+			// };
+			// vm.displayUsers = vm.inClan;
 
-	// 		console.log(vm.users);
-	// 	} else {
-	// 		vm.message = 'Database Error. Try again another time.'
-	// 		vm.processing = false;
-	// 	}
+			// vm.processing = false;
+
+			// console.log(vm.users);
+		} else {
+			vm.message = 'Database Error. Try again another time.'
+			vm.processing = false;
+			console.log('HERE');
+		}
 
 		
-	// });
+	});
 
 	vm.filterList = function () {
 		if (vm.filter == '0')
