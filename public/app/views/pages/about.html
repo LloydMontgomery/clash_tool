@@ -6,14 +6,14 @@
 			</h2>
 		</div>
 		<div class="button-container col-xs-12">
-			<div id="profile-button" class="col-xs-12">
-				<button type="button" class="btn btn-primary col-xs-12 main-button">
+			<div class="col-xs-12">
+				<button type="button" class="btn btn-primary col-xs-offset-2 col-xs-8 main-button">
 					<a ng-href="/users/profile/{{ main.userInfo.username }}">
 						Profile
 					</a>
 				</button>
 			</div>
-			<div ng-if="main.userInfo.clan == 'null'">
+			<div ng-if="main.userInfo.clan == 'null'" id="clan-directions">
 				<div class="col-xs-6">
 					<button type="button" class="btn btn-primary col-xs-12 main-button">
 						<a ng-href="/clans/register">
