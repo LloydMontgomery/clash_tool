@@ -62,13 +62,6 @@ angular.module('clanCtrl', [])
 	// Style Data, used for red outlines
 	vm.styles = {};
 
-	vm.clans = [
-		// { 'name' : 'Lloyd',
-		//   'ref' : '@1338',
-		//   'warsWon' : 138
-		// }
-	];
-
 	vm.searchForClan = function() {
 		vm.processing = true;
 		vm.message = '';
@@ -89,18 +82,23 @@ angular.module('clanCtrl', [])
 		Clan.find(ref)
 			.then(function(data) {
 				if (data.data.success) {
-					data = data.data.data;
 
 					// Reset clans data, and push the new data on
 					vm.clans = [];
-					vm.clans.push(data)  // This only works because I am currently only returning a single clan
+					vm.clans.push(data.data.data)  // This only works because I am currently only returning a single clan
+					console.log(vm.clans);
 					
 				} else {
-					vm.message = 'Clan Reference: @' + ref + ' not found';
+					// vm.message = 'Clan Reference @' + ref + ' not found';
+					vm.message = data.data.message;
 				}
 
 				vm.processing = false
-		})
+			}, function(data) {
+				// Need to improve my code to include catching server errors
+				// console.log('here');
+				vm.processing = false
+			});
 	}
 
 	vm.joinClan = function(clanRef) {

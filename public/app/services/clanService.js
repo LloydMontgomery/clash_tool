@@ -26,7 +26,7 @@ angular.module('clanService', [])
 	};
 	// Find the clan with the given Reference
 	clanFactory.find = function(clanRef) {
-		return $http.get('/api/clans/' + clanRef);
+		return $http.get('/api/partialClan/' + clanRef);
 	};
 	// Join a clan
 	// clanFactory.join = function(username) {
