@@ -101,9 +101,15 @@ angular.module('clanCtrl', [])
 			});
 	}
 
-	vm.joinClan = function(clanRef) {
-		vm.joinProcessing = true;
-		console.log(clanRef);
+	vm.joinClan = function(ref) {
+		// vm.joinProcessing = true;
+		console.log(ref);
+
+		Clan.join(ref)
+			.then(function(data) {
+				console.log(data);
+				// vm.joinProcessing = false;
+			});
 
 		// Add code to actually join a clan here.
 		// Currently not possible, need to improve user model first

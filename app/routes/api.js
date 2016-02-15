@@ -51,17 +51,21 @@ var convertData = function(data) {
 };
 
 var createToken = function (data) {
-	if (!data.username || !data.gamename || !data.clan)
+	if (!data.username || !data.gamename || !data.clan || !data.hasOwnProperty('clanAdmin')) {
+		console.log('problem');
+		console.log(data);
 		return false;
+	}
 
 	// Create a token
 	var token = jwt.sign({
 		username: data.username,
 		gamename: data.gamename,
-		clan: data.clan
+		clan: data.clan,
+		clanAdmin: data.clanAdmin
 	}, TOKEN_SECRET,
 	{ expiresIn: 172800 // expires in 2 days 
-	// { expiresIn: 720 // expires in 2 hours 
+	// { expiresIn: 720 // expires in 2 hours (This is for mean sites)
 	// { expiresIn: 10 // expires in 10 seconds (This is for debugging)
 	});
 
@@ -71,7 +75,7 @@ var createToken = function (data) {
 /* ======================== AMAZON DYNAMODB QUERIES ======================== */
 
 // USER QUERIES
-var getUser = function(username) {
+var getUser = function (username) {
 	return new Promise(function(resolve, reject) {
 		dynamodb.query({
 			TableName : "Users",
@@ -93,7 +97,6 @@ var getUser = function(username) {
 						message: 'Query Failed. User not found.'
 					});
 				} else {
-					console.log('Found the User');
 					resolve (
 						convertData(data.Items[0])
 					);
@@ -103,7 +106,7 @@ var getUser = function(username) {
 	});
 };
 
-var updateUser = function(username, data) {
+var updateUser = function (username, data) {
 	console.log(username);
 	console.log(data);
 
@@ -190,8 +193,7 @@ var updateUser = function(username, data) {
 };
 
 // CLAN QUERIES
-
-var createClan = function(data) {
+var createClan = function (data) {
 
 	return new Promise(function(resolve, reject) {
 
@@ -231,7 +233,7 @@ var createClan = function(data) {
 	});
 };
 
-var findClan = function(ref) {
+var findClan = function (ref) {
 
 	return new Promise(function(resolve, reject) {
 
@@ -269,11 +271,53 @@ var findClan = function(ref) {
 	});
 };
 
-// RANDOMDATA QUERIES
+// var updateClan = function(ref, data) {
+// 	return new Promise(function(resolve, reject) {
 
+// 	});
+// }
+
+var joinClan = function(ref, data) {
+	return new Promise(function(resolve, reject) {
+		console.log(ref);
+		console.log(data);
+
+		dynamodbDoc.update({
+			TableName: 'Clans',
+			Key:{
+				'ref': ref
+			},
+			UpdateExpression: 'set notInClan.#1 = :1',
+			ExpressionAttributeNames: {
+				'#1': data.username 
+			},
+			ExpressionAttributeValues: {
+				':1': {
+					banned: false,
+					banReason: 'null',
+					joinReq: true,
+					joinMessage: 'Not Implemented Yet'
+				}
+			}
+		}, function(err, data) {
+			if (err) {
+				reject ({
+					success: false,
+					message: err.message
+				});
+			} else {
+				resolve ({
+					success: true,
+					message: 'Successfully Requested to Join'
+				});
+			}
+		});
+	});
+}
+
+// RANDOMDATA QUERIES
 var getRandomData = function (name) {
 	return new Promise(function(resolve, reject) {
-
 		// Query the database to get all the taken IDs
 		dynamodb.query({
 			TableName : 'RandomData',
@@ -335,6 +379,28 @@ var updateRandomDataRef = function (ref) {
 	});
 };
 
+// WAR QUERIES
+var createWar = function (ref, war) {
+	console.log(ref);
+	console.log(war);
+	return new Promise(function(resolve, reject) {
+
+		dynamodbDoc.put(war, function(err, data) {
+			if (err) {
+				console.error("Unable to add War. Error JSON:", JSON.stringify(err, null, 2));
+				reject ({ 
+					success: false, 
+					message: err.message
+				}); 
+			} else {
+				resolve ({
+					success: true,
+					message: 'War created!' 
+				});
+			}
+		});
+	});
+}
 
 /* ================================ ROUTING ================================ */
 
@@ -367,6 +433,16 @@ module.exports = function(app, express, $http) {
 						message: 'Incorrect Password'
 					});
 				} else {
+					
+					// This code will be removed once the site goes live, however, 
+					// the 'siteAdmin' field will be useful for future code
+					if (!user.siteAdmin) {
+						return res.json({
+							success: false,
+							message: 'Application is still under construction, try again in April 2016'
+						});
+					}
+
 					// create a token
 					token = createToken(user);
 
@@ -393,13 +469,15 @@ module.exports = function(app, express, $http) {
 		var user = {
 			TableName: 'Users',
 			Item: {
-				'thLvl' : 1,
-				'kingLvl' : 0,
-				'queenLvl' : 0,
-				'wardenLvl' : 0,
-				'kingFinishDate' : 0,
-				'queenFinishDate' : 0,
-				'wardenFinishDate' : 0
+				siteAdmin: false,
+				clanAdmin: false,
+				thLvl : 1,
+				kingLvl : 0,
+				queenLvl : 0,
+				wardenLvl : 0,
+				kingFinishDate : 0,
+				queenFinishDate : 0,
+				wardenFinishDate : 0
 			},
 			Expected: {
 				"username" : { "Exists" : false },
@@ -578,6 +656,7 @@ module.exports = function(app, express, $http) {
 				token = createToken({
 					username: userData.username,
 					gamename: userData.gamename,
+					clanAdmin: true,
 					clan: ref
 				});
 
@@ -592,6 +671,25 @@ module.exports = function(app, express, $http) {
 				return res.json({
 					success: false,
 					message: 'Database Error. Try again later.'
+				});
+			});
+	});
+
+	apiRouter.route('/clans/join/:clan_ref')
+	// join a clan (accessed at PUT http://clan.solutions/api/clans/join)
+	.put(function(req, res) {
+
+		joinClan(req.params.clan_ref, req.decoded)
+			.then(function(data) {
+				return res.json({
+					success: true,
+					message: data.message
+				});
+			})
+			.catch(function(data) {
+				return res.json({
+					success: false,
+					message: data.message
 				});
 			});
 	});
@@ -1016,7 +1114,7 @@ module.exports = function(app, express, $http) {
 	// route middleware to verify the token is owned by an admin
 	apiRouter.use(function(req, res, next) {
 
-		if (req.decoded.admin) {
+		if (req.decoded.siteAdmin) {
 			next();
 		} else {
 			return res.status(403).send({
@@ -1275,20 +1373,19 @@ module.exports = function(app, express, $http) {
 			war.Item.outcome = req.body.outcome;
 		}
 
-		dynamodbDoc.put(war, function(err, data) {
-			if (err) {
-				console.error("Unable to add War. Error JSON:", JSON.stringify(err, null, 2));
+		createWar(req.decoded.ref, war)
+			.then(function(data) {
+				return res.json({
+					success: true,
+					message: 'War created!' 
+				});
+			})
+			.catch(function(data) {
 				return res.json({ 
 					success: false, 
 					message: err.message
 				}); 
-			} else {
-				res.json({ 
-					success: true,
-					message: 'War created!' 
-				});
-			}
-		});
+			});
 	});
 
 	return apiRouter;

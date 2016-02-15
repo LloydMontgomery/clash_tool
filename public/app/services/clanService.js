@@ -29,9 +29,9 @@ angular.module('clanService', [])
 		return $http.get('/api/partialClan/' + clanRef);
 	};
 	// Join a clan
-	// clanFactory.join = function(username) {
-	// 	return $http.put('/api/clans/join', username);
-	// };
+	clanFactory.join = function(ref) {
+		return $http.put('/api/clans/join/' + ref);
+	};
 
 	// // update a war
 	// clanFactory.update = function(id, warData) { 

@@ -125,8 +125,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		// get user information on route change
 		if (vm.loggedIn) {
 			Auth.getUser().then(function(data) {
-				console.log('Getting User Data');
-				console.log(data.data);
 				vm.userInfo = data.data;
 				checkRoutePermission($location.path());
 			});
