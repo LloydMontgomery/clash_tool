@@ -7,6 +7,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// set a processing variable to show loading things
 	vm.processing = true;
+
+
+
 	// grab all the wars at page load
 	War.all().then(function(data) {
 		// bind the wars that come back to vm.wars
@@ -20,7 +23,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
 		};
 
-		console.log(vm.wars);
+		// console.log(vm.wars);
 
 		// when all the wars come back, remove the processing variable
 		vm.processing = false;
@@ -28,13 +31,40 @@ angular.module('warCtrl', ['warService', 'userService'])
 })
 
 // controller applied to War creation page
-.controller('warManipulationController', function($route, $routeParams, $location, $timeout, Auth, War, User) { 
+.controller('warManipulationController', function($route, $routeParams, $location, $timeout, Auth, War, User) {
+
+	// Bind this to a smaller variable
 	var vm = this;
 	vm.loadingPage = true;
 
+	// Date and Time picker for war start
+	var now = new Date();
+	vm.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
+
+	// Create War Object to manage the War data
+	vm.war = new War(vm.startDisplay.getTime(), 10);
+
+
+	// Variables that only exist to be displayed in HTML
+	vm.display = {
+		thLvls : ['11', '10', '9', '8', '7', '6', '5', '4', '3', '2', '1'],
+		warSizes : [
+			{display: '10 vs 10', value: 10},
+			{display: '15 vs 15', value: 15},
+			{display: '20 vs 20', value: 20},
+			{display: '25 vs 25', value: 25},
+			{display: '30 vs 30', value: 30},
+			// {display: '35 vs 35', value: 35},  // Recently removed
+			{display: '40 vs 40', value: 40},
+			// {display: '45 vs 45', value: 45},  // Recently removed
+			{display: '50 vs 50', value: 50}],
+
+	};
+
+
 	/* ========================= POPULATE HTML PAGE ========================= */
 
-	vm.warData = {};
+	vm.warData = {}; // This will be phased out soon
 
 	vm.attackClass = 'col-xs-6';
 	vm.nameClass = 'col-xs-6';
@@ -64,30 +94,14 @@ angular.module('warCtrl', ['warService', 'userService'])
 	];
 
 	vm.attackOptions = [];
-	vm.thLvls = ['11', '10', '9', '8', '7', '6', '5', '4', '3', '2', '1'];
-
-	vm.warData.size = 10;
-	vm.sizeOptions = [	{display: '10 vs 10', value: 10},
-						{display: '15 vs 15', value: 15},
-						{display: '20 vs 20', value: 20},
-						{display: '25 vs 25', value: 25},
-						{display: '30 vs 30', value: 30},
-						{display: '35 vs 35', value: 35},
-						{display: '40 vs 40', value: 40},
-						{display: '45 vs 45', value: 45},
-						{display: '50 vs 50', value: 50}];
-
-	// Date and Time picker for war start
-	var now = new Date();
-	vm.warData.startDisplay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
-	vm.warData.start = vm.warData.startDisplay.getTime();
 
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
-		vm.maxStars = Array.apply(null, Array((vm.warData.size*3)+1)).map(function (_, i) {return ((vm.warData.size*3) - i);});
-		if (vm.warData.ourScore > (vm.warData.size*3))
-			vm.warData.ourScore = Number(vm.warData.size*3);
+		console.log(vm.war);
+		vm.maxStars = Array.apply(null, Array((vm.war.size*3)+1)).map(function (_, i) {return ((vm.war.size*3) - i);});
+		if (vm.warData.ourScore > (vm.war.size*3))
+			vm.warData.ourScore = Number(vm.war.size*3);
 
 		// If warriors are displaying, we need to adjust
 		if (vm.warriorsReady)
@@ -133,12 +147,12 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.checkDate = function() {
-		if (!vm.warData.startDisplay)
+		if (!vm.startDisplay)
 			return;
-		vm.warData.start = vm.warData.startDisplay.getTime();
+		vm.war.start = vm.startDisplay.getTime();
 
-		vm.battleCountdown = vm.warData.start + 169200000;  		// Add 47 Hours
-		vm.preparationCountdown = vm.warData.start + 82800000;  	// Add 23 Hours
+		vm.battleCountdown = vm.war.start + 169200000;  		// Add 47 Hours
+		vm.preparationCountdown = vm.war.start + 82800000;  	// Add 23 Hours
 
 		now = new Date();
 		var timeSinceStart = (now.getTime() - vm.warData.start)
@@ -170,7 +184,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 			vm.attackOptions = [];
 			vm.attackOptions2 = [];
 			
-			for (var i = 0; i < vm.warData.size; i++) {
+			for (var i = 0; i < vm.war.size; i++) {
 				target = 'Attack ' + (i + 1).toString();
 				found = false;
 				for (var w = 0; w < vm.warData.warriors.length; w++) {
@@ -205,7 +219,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 	};
 
 	vm.adjustWarriorList = function() {
-		var change = vm.warData.size - vm.warData.warriors.length;
+		var change = vm.war.size - vm.warData.warriors.length;
 		if (change > 0) {  // Then we need to add spots
 			for (var i = 0; i < change; i++) {
 				vm.warData.warriors.push({
@@ -288,7 +302,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 						// Generate the warrior list templates
 						vm.warData.warriors = [];
-						for (var i = 0; i < vm.warData.size; i++) {
+						for (var i = 0; i < vm.war.size; i++) {
 							vm.warData.warriors.push({
 								name: 'Pick Warrior',
 								thLvl: '0',
@@ -319,7 +333,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	vm.genOpposingWarriorList = function() {
 		vm.warData.opposingWarriors = [];
-		for (var i = 0; i < vm.warData.size; i++) {
+		for (var i = 0; i < vm.war.size; i++) {
 			vm.warData.opposingWarriors.push({
 				thLvl: vm.warData.warriors[i].thLvl
 			});
@@ -340,7 +354,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		warDataCleansed.size = data.size;
 		warDataCleansed.inProgress = data.inProgress;
 
-		warDataCleansed.start = data.start;
+		warDataCleansed.start = war.start;
 
 		if (data.inProgress == false) {
 			if (data.exp == undefined) {
@@ -522,11 +536,11 @@ angular.module('warCtrl', ['warService', 'userService'])
 		.then(function(data) {
 			vm.warData = data.data.data;
 
-			vm.warData.startDisplay = new Date(Number(vm.warData.start));
+			vm.startDisplay = new Date(Number(vm.warData.start));
 
 			// Set Countdown timers
-			vm.battleCountdown = vm.warData.start + 169200000;  	// Add 47 Hours
-			vm.preparationCountdown = vm.warData.start + 82800000;  // Add 23 Hours
+			vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
+			vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
 
 			vm.checkDate();
 			vm.loadingPage = false;

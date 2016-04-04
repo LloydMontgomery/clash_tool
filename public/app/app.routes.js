@@ -76,7 +76,7 @@ angular.module('app.routes', ['ngRoute'])
 		templateUrl	: 'app/views/pages/wars/single.html',
 		css			: 'assets/css/war.css',
 		controller	: 'warManipulationController',
-		controllerAs: 'war'
+		controllerAs: 'vm'
 	})
 	//page to edit a war
 	.when('/wars/edit/:war_id', {

@@ -2,6 +2,39 @@ angular.module('warService', [])
 .factory('War', function($http) {
 	// create a new object
 	var warFactory = {};
+
+	function War(start, size) {
+
+    // Public properties, assigned to the instance ('this')
+    this.start = start;
+		this.opponent = "";
+		this.size = size;
+		this.inProgress = true;
+		this.warriors = [
+			// {
+			// 	name : String,
+			// 	thLvl : Number,
+			// 	viewed : Boolean,
+			// 	attack1 : String, - "Pick"
+			// 	attack2 : String, - "Pick"
+			// 	lock1 : Boolean,
+			// 	lock2 : Boolean,
+			// 	stars1 : Number, - 0, 1, 2, 3
+			// 	stars1 : Number - 0, 1, 2, 3
+			// }
+		]; 
+		// this.results : {
+		// 	outcome : String - "war-win", "war-loss",
+		// 	exp : Number,
+		// 	ourScore : Number,
+		// 	theirScore : Number,
+		// 	ourDest : Number,
+		// 	theirDest : Number
+		// }
+  }
+
+	
+
 	// get a single war
 	warFactory.get = function(id) { 
 		return $http.get('/api/wars/' + id);
@@ -15,7 +48,7 @@ angular.module('warService', [])
 		return $http.get('/api/lastWar/');
 	};
 	// get all wars
-	warFactory.all = function() { 
+	War.all = function(){ 
 		return $http.get('/api/wars/');
 	};
 	// create a war
@@ -35,5 +68,5 @@ angular.module('warService', [])
 		return $http.get('/api/sign_s3?file_name=' + data.lastModifiedDate + '&file_type=' + data.type);
 	};
 	// return our entire warFactory object
-	return warFactory;
+	return War;
 });
