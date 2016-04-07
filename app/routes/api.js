@@ -5,10 +5,9 @@ var express	= require('express'),			// Express simplifies Node
 	http 	= require('http'),
 	Promise = require('bluebird');
 
-// Used 
+// Used "db" as a namespace mimic for this library I wrote
 require('./aws-crud.js')();
 
-// var db = require('./aws-crud.js');
 
 // Need to try/catch the config setup
 var config = {}; // This is to prevent errors later
@@ -22,8 +21,7 @@ try {
 var AWS_ACCESS_KEY 	= config.AWS_ACCESS_KEY_ID 		|| process.env.AWS_ACCESS_KEY_ID,
 	AWS_SECRET_KEY 	= config.AWS_SECRET_ACCESS_KEY 	|| process.env.AWS_SECRET_ACCESS_KEY,
 	S3_BUCKET_NAME 	= config.S3_BUCKET_NAME			|| process.env.S3_BUCKET_NAME,
-	TOKEN_SECRET 	= config.TOKEN_SECRET 			|| process.env.TOKEN_SECRET,
-	PORT			= config.PORT					|| process.env.PORT;
+	TOKEN_SECRET 	= config.TOKEN_SECRET 			|| process.env.TOKEN_SECRET;
 
 var AWS = require("aws-sdk");
 
@@ -457,7 +455,7 @@ module.exports = function(app, express, $http) {
 					if (!user.siteAdmin) {
 						return res.json({
 							success: false,
-							message: 'Application is still under construction, try again in April 2016'
+							message: 'Application is still under construction, try again in September 2016'
 						});
 					}
 
@@ -481,52 +479,14 @@ module.exports = function(app, express, $http) {
 	});
 
 	apiRouter.route('/users')
-	// create a user (accessed at POST http://localhost:8080/api/users)
+	// create a user (accessed at POST /api/users)
 	.post(function(req, res) {
 
-		var user = {
-			TableName: 'Users',
-			Item: {
-				siteAdmin: false,
-				clanAdmin: false,
-				thLvl : 1,
-				kingLvl : 0,
-				queenLvl : 0,
-				wardenLvl : 0,
-				kingFinishDate : 0,
-				queenFinishDate : 0,
-				wardenFinishDate : 0
-			},
-			Expected: {
-				"username" : { "Exists" : false },
-			}
-		};
-
-		// set the users information (comes from the request)
-		user.Item.username = req.body.username;
-		user.Item.gamename = req.body.name;
-		user.Item.password = bcrypt.hashSync(req.body.password);
-
-		// Generate Unique ID
-		now = new Date();
-		user.Item.dateJoinedSite = now.getTime();
-
-		// Set their current clan
-		user.Item.clan = 'null';
-
-		dynamodbDoc.put(user, function(err, data) {
-			if (err) {
-				console.error("Unable to add user. Error JSON:", JSON.stringify(err, null, 2));
-				return res.json({ 
-					success: false, 
-					message: err.message
-				}); 
-			} else {
-				res.json({ 
-					success: true,
-					message: 'User created!' 
-				});
-			}
+		db.createUser(req.body).then(function() {
+			return res.json({
+				success: true,
+				message: "UHHH CHANGE THIS"
+			});
 		});
 	});
 	
@@ -535,7 +495,7 @@ module.exports = function(app, express, $http) {
 	.get(function(req, res) {
 		ref = '@' + req.params.clan_ref;
 
-		findClan(ref)
+		db.findClan(ref)
 			.then(function(data) {
 				// Found the clan, but only return limited information
 				clan = {

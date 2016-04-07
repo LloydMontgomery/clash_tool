@@ -147,6 +147,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 // controller applied to user creation page
 .controller('userCreateController', function($location, User) { 
 	var vm = this;
+
 	// variable to hide/show elements of the view // differentiates between create or edit pages 
 	vm.type = 'create';
 

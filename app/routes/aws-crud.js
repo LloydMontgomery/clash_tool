@@ -1,4 +1,8 @@
 
+var bcrypt 	= require('bcrypt-nodejs');
+
+
+
 // Need to try/catch the config setup
 var config = {}; // This is to prevent errors later
 try {
@@ -19,6 +23,7 @@ AWS.config.update({
 });
 
 var dynamodb = new AWS.DynamoDB();
+var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
 var Promise = require('bluebird');
 
@@ -80,5 +85,45 @@ module.exports = function() {
 		});
 	}
 
+	this.db.createUser = function(data) {
+		return new Promise(function(resolve, reject) {
+
+			dynamodbDoc.put({
+				TableName: 'Users',
+				Item: {
+					username : data.username,
+					gamename : data.name,
+					password : bcrypt.hashSync(data.password),
+					dateJoinedSite : (new Date().getTime()),
+					clan : 'null',
+					siteAdmin : false,
+					clanAdmin : false,
+					thLvl : 1,
+					kingLvl : 0,
+					queenLvl : 0,
+					wardenLvl : 0,
+					kingFinishDate : 0,
+					queenFinishDate : 0,
+					wardenFinishDate : 0
+				},
+				Expected: {
+					"username" : { "Exists" : false },
+				}
+			}, function(err, data) {
+				if (err) {
+					console.error("Unable to add user. Error JSON:", JSON.stringify(err, null, 2));
+					reject({ 
+						success: false, 
+						message: err.message
+					}); 
+				} else {
+					resolve({ 
+						success: true,
+						message: 'User created!' 
+					});
+				}
+			});
+		});
+	}
 
 };
