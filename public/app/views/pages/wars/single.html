@@ -68,7 +68,7 @@
 									VS
 								</div>
 								<div ng-show="!vm.warData.inProgress">
-									<select ng-disabled="vm.warData.inProgress" ng-init="vm.setMaxStars()" ng-model="vm.warData.ourScore" ng-class="vm.inProgressClass">
+									<select ng-disabled="vm.warData.inProgress" ng-init="vm.setMaxStars()" ng-model="vm.war.results.ourScore" ng-class="vm.inProgressClass">
 										<option value="" disabled selected>Stars</option>
 										<option ng-repeat="option in vm.maxStars" value="{{option}}">{{ option }}</option>
 									</select>
@@ -77,7 +77,7 @@
 							<hr class="accentBlue">
 							<div>
 								<div ng-if="vm.warData.inProgress" class="excludeAnimation">
-									<input ng-model="vm.warData.opponent" id="opponentInput" type="text" placeholder="Opponent Name">
+									<input ng-model="vm.war.opponent" id="opponentInput" type="text" placeholder="Opponent Name">
 								</div>
 								<div ng-if="!vm.warData.inProgress" class="excludeAnimation">
 									<input ng-disabled="vm.warData.inProgress" ng-model="vm.warData.ourDest" type="number" class="form-control" placeholder="Destruction" class="unstyled" step="0.01">
@@ -95,13 +95,13 @@
 									VS
 								</div>
 								<div ng-show="!vm.warData.inProgress">
-									{{ vm.warData.ourScore }}
+									{{ vm.war.results.ourScore }}
 								</div>
 							</div>
 							<hr class="accentBlue">
 							<div>
 								<div ng-show="vm.warData.inProgress">
-									{{ vm.warData.opponent }}
+									{{ vm.war.opponent }}
 								</div>
 								<div ng-show="!vm.warData.inProgress">
 									{{ vm.warData.ourDest }}
@@ -115,7 +115,7 @@
 						<!-- Content for Create and Edit Page -->
 						<div ng-if="vm.type != 'view'">
 							<div>
-								<input ng-model="vm.warData.opponent" type="text" class="form-control" placeholder="Opponent Name">
+								<input ng-model="vm.war.opponent" type="text" class="form-control" placeholder="Opponent Name">
 							</div>
 							<hr class="accentBlue">
 							<div>
@@ -134,7 +134,7 @@
 						<!-- Content for View Page -->
 						<div ng-if="vm.type == 'view'">
 							<div >
-								{{ vm.warData.opponent }}
+								{{ vm.war.opponent }}
 							</div>
 							<hr class="accentBlue">
 							<div>
@@ -177,7 +177,7 @@
 				</div>
 				<div ng-show="vm.warriorsReady" class="col-xs-12">
 					<!-- Warrior Template -->
-					<div ng-repeat="warrior in vm.warData.warriors" id="warriorTemplate" class="row excludeAnimation">
+					<div ng-repeat="warrior in vm.war.warriors" id="warriorTemplate" class="row excludeAnimation">
 						<div class="col-sm-6 col-xs-12 warriorNames">
 							<!-- Warrior Name and View Icon -->
 							<!-- <div ng-class="vm.nameClass"> -->

@@ -1,5 +1,5 @@
 // start our angular module and inject userService
-angular.module('warCtrl', ['warService', 'userService'])
+angular.module('warCtrl', ['warFactory', 'userService'])
 // user controller for the main page
 // inject the War factory 
 .controller('warListController', function(War, $location) {
@@ -22,8 +22,6 @@ angular.module('warCtrl', ['warService', 'userService'])
 		for (var i = 0; i < vm.wars.length; i++) {
 			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
 		};
-
-		// console.log(vm.wars);
 
 		// when all the wars come back, remove the processing variable
 		vm.processing = false;
@@ -98,10 +96,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
-		console.log(vm.war);
 		vm.maxStars = Array.apply(null, Array((vm.war.size*3)+1)).map(function (_, i) {return ((vm.war.size*3) - i);});
-		if (vm.warData.ourScore > (vm.war.size*3))
-			vm.warData.ourScore = Number(vm.war.size*3);
+		if (vm.war.results.ourScore > (vm.war.size*3))
+			vm.war.results.ourScore = Number(vm.war.size*3);
 
 		// If warriors are displaying, we need to adjust
 		if (vm.warriorsReady)
@@ -187,8 +184,8 @@ angular.module('warCtrl', ['warService', 'userService'])
 			for (var i = 0; i < vm.war.size; i++) {
 				target = 'Attack ' + (i + 1).toString();
 				found = false;
-				for (var w = 0; w < vm.warData.warriors.length; w++) {
-					if ((target) == vm.warData.warriors[w].attack1) {
+				for (var w = 0; w < vm.war.warriors.length; w++) {
+					if ((target) == vm.war.warriors[w].attack1) {
 						found = true;
 						break;
 					}
@@ -200,29 +197,29 @@ angular.module('warCtrl', ['warService', 'userService'])
 		}
 	};
 
-	vm.adjustUsers = function() {
-		vm.warData.actUsers = [];  // Empty the array
-		var found;
+	// vm.adjustUsers = function() {
+	// 	vm.warData.actUsers = [];  // Empty the array
+	// 	var found;
 
-		for (var u = 0; u < vm.warData.users.length; u++) {
-			found = false;
-			for (var w = 0; w < vm.warData.warriors.length; w++) {
-				if (vm.warData.warriors[w].name === vm.warData.users[u].name) {
-					found = true;
-					vm.warData.warriors[w].thLvl = vm.warData.users[u].thLvl;  // While we are here...
-					break;
-				}
-			};
-			if (!found)
-				vm.warData.actUsers.push(vm.warData.users[u].name);
-		};
-	};
+	// 	for (var u = 0; u < vm.warData.users.length; u++) {
+	// 		found = false;
+	// 		for (var w = 0; w < vm.war.warriors.length; w++) {
+	// 			if (vm.war.warriors[w].name === vm.warData.users[u].name) {
+	// 				found = true;
+	// 				vm.war.warriors[w].thLvl = vm.warData.users[u].thLvl;  // While we are here...
+	// 				break;
+	// 			}
+	// 		};
+	// 		if (!found)
+	// 			vm.warData.actUsers.push(vm.warData.users[u].name);
+	// 	};
+	// };
 
 	vm.adjustWarriorList = function() {
-		var change = vm.war.size - vm.warData.warriors.length;
+		var change = vm.war.size - vm.war.warriors.length;
 		if (change > 0) {  // Then we need to add spots
 			for (var i = 0; i < change; i++) {
-				vm.warData.warriors.push({
+				vm.war.warriors.push({
 					name: 'Pick Warrior',
 					thLvl: '0',
 					attack1: 'Pick',
@@ -237,109 +234,79 @@ angular.module('warCtrl', ['warService', 'userService'])
 			};
 		} else if (change < 0) { // Then we need to remove spots
 			for (var i = 0; i < (-change); i++) {
-				vm.warData.warriors.pop();
+				vm.war.warriors.pop();
 			};
 		}  // Else it is the same as before..? Not sure this is possible, and either way it doesn't have to be handled
 		vm.adjustUsers();
 		vm.adjustTargets();
 	};
 
-	vm.moveWarrior = function(warrior, command) {
-		var index = -1;
+	// vm.moveWarrior = function(warrior, command) {
+	// 	var index = -1;
 
-		// Find the index of the warrior
-		for (var i = 0; i < vm.warData.warriors.length; i++) {
-			if (vm.warData.warriors[i].name === warrior) {
-				index = i;
-				break;
-			}
-		};
+	// 	// Find the index of the warrior
+	// 	for (var i = 0; i < vm.war.warriors.length; i++) {
+	// 		if (vm.war.warriors[i].name === warrior) {
+	// 			index = i;
+	// 			break;
+	// 		}
+	// 	};
 
-		// Save and remove the warrior from the list
-		var save = vm.warData.warriors[i];
-		vm.warData.warriors.splice(i, 1);
+	// 	// Save and remove the warrior from the list
+	// 	var save = vm.war.warriors[i];
+	// 	vm.war.warriors.splice(i, 1);
 
-		if (command == '^ 3')  // attempt to move up 3, otherwise catch overflow and set to 0
-			index = ((index - 3) < 0 ? 0 : index - 3);  
-		else if (command == '^ 2')  // attempt to move up 2, otherwise catch overflow and set to 0
-			index = ((index - 2) < 0 ? 0 : index - 2);  
-		else if (command == '^ 1')  // attempt to move up 1, otherwise catch overflow and set to 0
-			index = ((index - 1) < 0 ? 0 : index - 1);  
-		else if (command == ' X ') // Delete this entry
-			index = -1;  
-		else if (command == 'v 1')  // attempt to move down 1, otherwise catch overflow and set to max
-			index = ((index + 1) >= vm.warData.warriors.length ? vm.warData.warriors.length - 1 : index + 1);
-		else if (command == 'v 2')  // attempt to move down 2, otherwise catch overflow and set to max
-			index = ((index + 2) >= vm.warData.warriors.length ? vm.warData.warriors.length - 1 : index + 2);
-		else if (command == 'v 3')  // attempt to move down 3, otherwise catch overflow and set to max
-			index = ((index + 3) >= vm.warData.warriors.length ? vm.warData.warriors.length - 1 : index + 3);  
+	// 	if (command == '^ 3')  // attempt to move up 3, otherwise catch overflow and set to 0
+	// 		index = ((index - 3) < 0 ? 0 : index - 3);  
+	// 	else if (command == '^ 2')  // attempt to move up 2, otherwise catch overflow and set to 0
+	// 		index = ((index - 2) < 0 ? 0 : index - 2);  
+	// 	else if (command == '^ 1')  // attempt to move up 1, otherwise catch overflow and set to 0
+	// 		index = ((index - 1) < 0 ? 0 : index - 1);  
+	// 	else if (command == ' X ') // Delete this entry
+	// 		index = -1;  
+	// 	else if (command == 'v 1')  // attempt to move down 1, otherwise catch overflow and set to max
+	// 		index = ((index + 1) >= vm.war.warriors.length ? vm.war.warriors.length - 1 : index + 1);
+	// 	else if (command == 'v 2')  // attempt to move down 2, otherwise catch overflow and set to max
+	// 		index = ((index + 2) >= vm.war.warriors.length ? vm.war.warriors.length - 1 : index + 2);
+	// 	else if (command == 'v 3')  // attempt to move down 3, otherwise catch overflow and set to max
+	// 		index = ((index + 3) >= vm.war.warriors.length ? vm.war.warriors.length - 1 : index + 3);  
 
 
-		if (index != -1)  // We have to insert the element back into the array
-			vm.warData.warriors.splice(index, 0, save);
-		else  // Delete an entry, and correct warrior list
-			vm.adjustWarriorList()
+	// 	if (index != -1)  // We have to insert the element back into the array
+	// 		vm.war.warriors.splice(index, 0, save);
+	// 	else  // Delete an entry, and correct warrior list
+	// 		vm.adjustWarriorList()
 
-		vm.command = 'Move';  // Reset value to 'Move'
-	};
+	// 	vm.command = 'Move';  // Reset value to 'Move'
+	// };
 
 	vm.genWarriorList = function() {
 		vm.message = '';
 
-		if (!vm.warData.opponent) {
+		if (!vm.war.opponent) {
 			vm.message = 'Please set Opponent name';
 			return;
 		}
 		vm.showWarriors = true;  // When the UI should show the warriors
 
-		User.partial()
-			.then(function(data) {
+		vm.war.populateWarriors().then(function(data) {
 
-				if (data.data.success) {
-					vm.warData.users = data.data.data;
+			
 
-					if (vm.type == 'create') {
-
-						// Generate the warrior list templates
-						vm.warData.warriors = [];
-						for (var i = 0; i < vm.war.size; i++) {
-							vm.warData.warriors.push({
-								name: 'Pick Warrior',
-								thLvl: '0',
-								attack1: 'Pick',
-								attack2: 'Ask',
-								lock1: false,
-								lock2: false,
-								stars1: '0',
-								stars2: '0',
-								viewed: false
-							});
-						};
-
-						vm.adjustUsers();
-						vm.adjustTargets();
-						vm.warriorsReady = true;
-
-					} else {  // vm.type == 'Edit' || vm.type == 'View'
-						vm.adjustUsers();
-						vm.adjustTargets();
-						vm.warriorsReady = true;
-					}
-				} else {
-					// Database Error, decide what to do here
-			}
+			vm.adjustTargets();
+			vm.warriorsReady = true;
 		});
 	};
 
-	vm.genOpposingWarriorList = function() {
-		vm.warData.opposingWarriors = [];
-		for (var i = 0; i < vm.war.size; i++) {
-			vm.warData.opposingWarriors.push({
-				thLvl: vm.warData.warriors[i].thLvl
-			});
-		};
-		vm.opposingWarriorsReady = true;
-	};
+	// vm.genOpposingWarriorList = function() {
+	// 	vm.warData.opposingWarriors = [];
+	// 	for (var i = 0; i < vm.war.size; i++) {
+	// 		vm.warData.opposingWarriors.push({
+	// 			thLvl: vm.war.warriors[i].thLvl
+	// 		});
+	// 	};
+	// 	vm.opposingWarriorsReady = true;
+	// };
 
 	vm.validateFields = function(data) {
 		if (data.opponent == '') {
@@ -354,7 +321,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		warDataCleansed.size = data.size;
 		warDataCleansed.inProgress = data.inProgress;
 
-		warDataCleansed.start = war.start;
+		warDataCleansed.start = vm.war.start;
 
 		if (data.inProgress == false) {
 			if (data.exp == undefined) {
@@ -404,7 +371,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 		warDataCleansed.warriors = [];
 		for (var i = 0; i < data.warriors.length; i++) {
 			warDataCleansed.warriors.push(data.warriors[i]);
-			if (vm.warData.warriors[i].name == 'Pick Warrior') {
+			if (vm.war.warriors[i].name == 'Pick Warrior') {
 				vm.message = 'Please Fill all Warrior Slots';
 				return false;
 			}
@@ -419,7 +386,7 @@ angular.module('warCtrl', ['warService', 'userService'])
 			createdAt = vm.warData.createdAt;
 			temp = {};
 			temp[createdAt] = {
-				'opponent' : vm.warData.opponent,
+				'opponent' : vm.war.opponent,
 				'start' : vm.warData.start,
 				'warPos' : (Number(i)+1).toString(),
 				'attack1' : {
@@ -439,17 +406,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 	vm.saveWar = function() { 
 		vm.processing = true;
 		vm.message = '';
-		
-		// Cleanse the data before passing to the database
-		var warDataCleansed = vm.validateFields(vm.warData);
-		if (!warDataCleansed)
-			return;
 
-		if (warDataCleansed.inProgress)
-			vm.updateUsers(warDataCleansed.warriors);
-
-		// call the userService function to update
-		War.create(warDataCleansed)
+		// Push this new war to the database
+		vm.war.create()
 			.then(function(data) {
 				vm.processing = false; // clear the form
 				// bind the message from our API to vm.message
@@ -532,8 +491,9 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 	// Finish loading the page
 	if (vm.type != 'create') {
-		War.get($routeParams.war_id)
+		vm.war.get($routeParams.war_id)
 		.then(function(data) {
+			console.log(data.data.data);
 			vm.warData = data.data.data;
 
 			vm.startDisplay = new Date(Number(vm.warData.start));
@@ -549,14 +509,15 @@ angular.module('warCtrl', ['warService', 'userService'])
 
 				Auth.getUser().then(function(data) {
 					vm.userInfo = data.data;
-					for (var i = 0; i < vm.warData.warriors.length; i++) {
-						if (vm.warData.warriors[i].name == vm.userInfo.name) {
-							if (vm.warData.warriors[i].viewed == false) {
+					for (var i = 0; i < vm.war.warriors.length; i++) {
+						if (vm.war.warriors[i].name == vm.userInfo.name) {
+							if (vm.war.warriors[i].viewed == false) {
 								pos = i.toString();
-								tempData = { 'createdAt':vm.warData.createdAt,
-											 'warriors':{}
-											};
-								tempData.warriors[i] = vm.warData.warriors[i];
+								tempData = {
+									'createdAt':vm.warData.createdAt,
+									'warriors':{}
+								};
+								tempData.warriors[i] = vm.war.warriors[i];
 								tempData.warriors[i].viewed = true;
 								vm.updateWar(true, tempData);
 							}

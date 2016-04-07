@@ -5,10 +5,15 @@ var express	= require('express'),			// Express simplifies Node
 	http 	= require('http'),
 	Promise = require('bluebird');
 
+// Used 
+require('./aws-crud.js')();
+
+// var db = require('./aws-crud.js');
+
 // Need to try/catch the config setup
 var config = {}; // This is to prevent errors later
 try {
-	config = require('../../config');
+	config = require('../../config.js');
 } catch (e) {
 	console.log("Running on Heroku, use Config Vars");
 }
@@ -233,43 +238,45 @@ var createClan = function (data) {
 	});
 };
 
-var findClan = function (ref) {
+// var findClan = function (ref) {
 
-	return new Promise(function(resolve, reject) {
+// 	console.log("ALMOST");
 
-		dynamodb.query({
-			TableName : 'Clans',
-			KeyConditionExpression: '#1 = :1',
-			ExpressionAttributeNames: {
-				'#1': 'ref'
-			},
-			ExpressionAttributeValues: {
-				':1': { 'S': ref }
-			}
-		}, function(err, data) {
-			if (err) {
-				reject ({
-					success: false,
-					message: 'Database Error. Try again later.',
-					err: err
-				});
-			}
+// 	return new Promise(function(resolve, reject) {
 
-			if (data.Count == 0) {  // Then the reference must have been incorrect
-				reject ({
-					success: false,
-					message: 'Clan Reference ' + ref + ' not found'
-				});
-			} else {
-				resolve ({
-					success: true,
-					message: 'Successfully found Clan',
-					data: convertData(data.Items[0])
-				});
-			}
-		});
-	});
-};
+// 		dynamodb.query({
+// 			TableName : 'Clans',
+// 			KeyConditionExpression: '#1 = :1',
+// 			ExpressionAttributeNames: {
+// 				'#1': 'ref'
+// 			},
+// 			ExpressionAttributeValues: {
+// 				':1': { 'S': ref }
+// 			}
+// 		}, function(err, data) {
+// 			if (err) {
+// 				reject ({
+// 					success: false,
+// 					message: 'Database Error. Try again later.',
+// 					err: err
+// 				});
+// 			}
+
+// 			if (data.Count == 0) {  // Then the reference must have been incorrect
+// 				reject ({
+// 					success: false,
+// 					message: 'Clan Reference ' + ref + ' not found'
+// 				});
+// 			} else {
+// 				resolve ({
+// 					success: true,
+// 					message: 'Successfully found Clan',
+// 					data: convertData(data.Items[0])
+// 				});
+// 			}
+// 		});
+// 	});
+// };
 
 // var updateClan = function(ref, data) {
 // 	return new Promise(function(resolve, reject) {
@@ -381,11 +388,22 @@ var updateRandomDataRef = function (ref) {
 
 // WAR QUERIES
 var createWar = function (ref, war) {
-	console.log(ref);
-	console.log(war);
+
 	return new Promise(function(resolve, reject) {
 
-		dynamodbDoc.put(war, function(err, data) {
+		dynamodbDoc.update({
+			TableName: 'Clans',
+			Key:{
+				'ref': ref
+			},
+			UpdateExpression: 'set wars.#1 = :1',
+			ExpressionAttributeNames: {
+				'#1': String(war.start)
+			},
+			ExpressionAttributeValues: {
+				':1': war
+			}
+		}, function(err, data) {
 			if (err) {
 				console.error("Unable to add War. Error JSON:", JSON.stringify(err, null, 2));
 				reject ({ 
@@ -769,6 +787,7 @@ module.exports = function(app, express, $http) {
 	apiRouter.route('/wars')
 	// get all the wars (accessed at GET http://localhost:8080/api/wars)
 	.get(function(req, res) {
+
 		dynamodb.scan({
 			TableName : "Wars",
 			Limit : 1000
@@ -1093,20 +1112,20 @@ module.exports = function(app, express, $http) {
 		ref = '@' + req.params.clan_ref;
 
 		findClan(ref)
-			.then(function(data) {
-				return res.json({
-					success: true,
-					message: data.message,
-					data: data.data
-				});
-			})
-			.catch(function(data) {
-				// return res.status(500).send({ error: 'Something failed!' });
-				return res.json({
-					success: false,
-					message: data.message
-				});
+		.then(function(data) {
+			return res.json({
+				success: true,
+				message: data.message,
+				data: data.data
 			});
+		})
+		.catch(function(data) {
+			// return res.status(500).send({ error: 'Something failed!' });
+			return res.json({
+				success: false,
+				message: data.message
+			});
+		});
 	});
 
 	// ======================== ADMIN AUTHENTICATION ======================== //
@@ -1114,7 +1133,7 @@ module.exports = function(app, express, $http) {
 	// route middleware to verify the token is owned by an admin
 	apiRouter.use(function(req, res, next) {
 
-		if (req.decoded.siteAdmin) {
+		if (req.decoded.clanAdmin) {
 			next();
 		} else {
 			return res.status(403).send({
@@ -1126,6 +1145,46 @@ module.exports = function(app, express, $http) {
 	});
 
 	// ============================= ADMIN APIS ============================= //
+
+	apiRouter.route('/lastWar/:size')
+	.get(function(req, res) {
+
+		console.log("JUST ABOUT");
+
+		db.findClan(req.decoded.clan)
+		.then(function(data) {
+
+			console.log("MADE IT");
+
+			console.log(data);
+
+			var wars = data.data.wars;
+
+			for (i in wars.length) {
+				// Implement when there are wars to iterate over
+			}
+
+			// console.log(data.message);
+
+			return res.json({
+				success: false,
+				message: "Successfully found a similar war",
+				data: null
+			});
+		})
+		.catch(function(data) {
+
+			console.log("FAILURE");
+
+			// return res.status(500).send({ error: 'Something failed!' });
+			return res.json({
+				success: false,
+				message: data.message
+			});
+		});
+
+		// req.params.size
+	});
 
 	apiRouter.route('/users')
 	// get all the users (accessed at GET http://localhost:8080/api/users)
@@ -1332,23 +1391,17 @@ module.exports = function(app, express, $http) {
 			});
 		}
 
-		var war = {
-			TableName: 'Wars',
-			Item: {},
-			Expected: {
-				"start" : { "Exists" : false },
-			}
-		};
-
 		// set the war information (comes from the request)
 		// Required information //
 		now = new Date();
-		war.Item.createdAt = now.getTime().toString();
-		war.Item.opponent = req.body.opponent;
-		war.Item.start = req.body.start;
-		war.Item.size = req.body.size;
+		var war = {}
+		war.createdAt = now.getTime().toString();
+		war.opponent = req.body.opponent;
+		war.start = req.body.start;
+		war.size = req.body.size;
+		war.warriors = {};
 		if (req.body.img)  // If the image has been included, write it to DB
-			war.Item.img = req.body.img;
+			war.img = req.body.img;
 
 		// Warriors are added separately, each as their own entry //
 		for (var i = 0; i < req.body.warriors.length; i++) {
@@ -1360,20 +1413,20 @@ module.exports = function(app, express, $http) {
 			delete req.body.warriors[i]['s2Opt2'];
 			delete req.body.warriors[i]['s2Opt3'];
 
-			war.Item[i] = req.body.warriors[i];
+			war.warriors[req.body.warriors[i].name] = req.body.warriors[i];
 		};
 
 		// Optional Information if War is Over//
 		if (!req.body.inProgress) {
-			war.Item.exp = req.body.exp;
-			war.Item.ourScore = req.body.ourScore;
-			war.Item.theirScore = req.body.theirScore;
-			war.Item.ourDest = req.body.ourDest;
-			war.Item.theirDest = req.body.theirDest;
-			war.Item.outcome = req.body.outcome;
+			war.exp = req.body.exp;
+			war.ourScore = req.body.ourScore;
+			war.theirScore = req.body.theirScore;
+			war.ourDest = req.body.ourDest;
+			war.theirDest = req.body.theirDest;
+			war.outcome = req.body.outcome;
 		}
 
-		createWar(req.decoded.ref, war)
+		return createWar(req.decoded.clan, war)
 			.then(function(data) {
 				return res.json({
 					success: true,
@@ -1383,7 +1436,7 @@ module.exports = function(app, express, $http) {
 			.catch(function(data) {
 				return res.json({ 
 					success: false, 
-					message: err.message
+					message: data.message
 				}); 
 			});
 	});
