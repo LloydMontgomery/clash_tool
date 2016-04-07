@@ -1,8 +1,6 @@
 
 var bcrypt 	= require('bcrypt-nodejs');
 
-
-
 // Need to try/catch the config setup
 var config = {}; // This is to prevent errors later
 try {
