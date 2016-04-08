@@ -60,14 +60,15 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	vm.attackClass = 'col-xs-6';
 	vm.nameClass = 'col-xs-6';
 	if ($location.path() == '/wars/current') {
-		vm.type = 'view';
+		vm.pageType = 'view';
 	}
 	else if ($location.path() == '/wars/create')
-		vm.type = 'create';
-	else if ($location.path().substr(0, 11) == '/wars/edit/') // Edit page
-		vm.type = 'edit';
+		vm.pageType = 'create';
+	else if ($location.path().substr(0, 11) == '/wars/edit/') { // Edit page
+		vm.pageType = 'edit';
+	}
 	else if ($location.path().substr(0, 11) == '/wars/view/') { // view page
-		vm.type = 'view';
+		vm.pageType = 'view';
 		vm.attackClass = 'col-xs-6';
 		vm.nameClass = 'col-xs-12';
 	}
@@ -99,7 +100,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	};
 
 	vm.setStars = function(auto, warrior, stars, option) {
-		if (auto || vm.type != 'view') {
+		if (auto || vm.pageType != 'view') {
 			if (stars == 1) {  // Then this is stars1
 				if (option == '0') {  // User has selected the first star
 					warrior.stars1 = '0'
@@ -169,7 +170,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	};
 
 	vm.adjustTargets = function() {
-		if (vm.type == 'create') {
+		if (vm.pageType == 'create') {
 			var target;
 			vm.attackOptions = [];
 			vm.attackOptions2 = [];
@@ -273,7 +274,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	// 	vm.command = 'Move';  // Reset value to 'Move'
 	// };
 
-	vm.genWarriorList = function() {
+	vm.populateWarriors = function() {
 		vm.message = '';
 
 		if (!vm.war.opponent) {
@@ -483,20 +484,29 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	};
 
 	// Finish loading the page
-	if (vm.type != 'create') {
-
-		console.log(vm.war);
-		console.log($routeParams.war_id);
+	if (vm.pageType != 'create') {
 
 		vm.war.get($routeParams.war_id)
 		.then(function(data) {
+
+			vm.startDisplay = new Date(Number(vm.war.start));
+
+			// Set Countdown timers
+
+			vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
+			vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
+
+			vm.checkDate();
+			vm.loadingPage = false;
+
+			vm.populateWarriors();
 
 		})
 		.catch(function(err) {
 
 		});
 
-		// if (vm.type == 'view') {
+		// if (vm.pageType == 'view') {
 
 		// 	// Auth.getUser().then(function(data) {
 		// 	// 	vm.userInfo = data.data;
@@ -505,7 +515,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 		// 	// 			if (vm.war.warriors[i].viewed == false) {
 		// 	// 				pos = i.toString();
 		// 	// 				tempData = {
-		// 	// 					'createdAt':vm.warData.createdAt,
+		// 	// 					'createdAt':vm.war.createdAt,
 		// 	// 					'warriors':{}
 		// 	// 				};
 		// 	// 				tempData.warriors[i] = vm.war.warriors[i];

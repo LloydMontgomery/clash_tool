@@ -47,6 +47,8 @@ module.exports = function() {
 	this.db = {}
 
 	/* ========================== CLAN OPERATIONS ========================== */
+
+
 	this.db.getClan = function(ref) {
 		return new Promise(function(resolve, reject) {
 
@@ -121,58 +123,23 @@ module.exports = function() {
 		});
 	}
 
-	this.db.getWar = function(clanRef, warId) {
+	this.db.getWars = function(clanRef) {
 		return new Promise(function(resolve, reject) {
 
-			dynamodb.query({
-				TableName : 'Clans',
-				KeyConditionExpression: '#1 = :createdAt',
-				ExpressionAttributeNames: {
-					'#1': 'createdAt'
-				},
-				ExpressionAttributeValues: {
-					':createdAt': { 'S': warId }
-				}
-			}, function(err, data) {
-				if (err) { 
-					console.log(err.message);
-					reject({
-						success: false,
-						message: 'Database Error. Try again later.',
-						data: err
-					});
-				}
-
-				if (data.Count == 0) {  // Then the war ID must have been incorrect
-					reject({
-						success: false,
-						message: 'Query Failed. War not found.'
-					});
-				} else {
-					// Convert all the values to non-object values
-					data = convertData(data.Items[0]);
-
-					data.size = Number(data.size);
-					data.exp = Number(data.exp);
-					data.ourDest = Number(data.ourDest);
-					data.theirDest = Number(data.theirDest);
-
-					// Collect all the warriors into a single array
-					data.warriors = [];
-					for (var i = 0; data[i] != null; i++) {
-						data.warriors.push(data[i]);
-						delete data[i];
-					};
-
-					resolve({
-						success: true,
-						message: 'Successfully returned all Wars',
-						data: data
-					});
-				}
+			this.db.getClan(clanRef)
+			.then(function(data) {
+				resolve({
+					success: true,
+					message: 'Successfully found clans',
+					data: data.data.wars
+				})
+			})
+			.catch(function(err) {
+				reject ({
+					success: false,
+					message: 'Unable to retrieve wars'
+				});
 			});
-
-
 		});
 	}
 
@@ -353,29 +320,6 @@ module.exports = function() {
 		});
 	}
 
-	// this.db.getWars = function() {
-	// 	return new Promise(function(resolve, reject) {
-	// 		dynamodb.query({
-	// 			TableName : "Clans",
-	// 			Limit : 200
-	// 		}, function(err, data) {
-	// 			if (err) { 
-	// 				reject({
-	// 					success: false,
-	// 					message: 'Database Error. Try again later.'
-	// 				});
-	// 			} else {
-	// 				data = convertData(data.Items);
-
-	// 				resolve({
-	// 					success: true,
-	// 					message: 'Successfully returned all Wars',
-	// 					data: data
-	// 				});
-	// 			}
-	// 		});
-	// 	});
-	// }
 
 };
 

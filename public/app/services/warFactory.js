@@ -38,37 +38,22 @@ angular.module('warFactory', [])
 		.then(function(data) {
 
 			// Strip layers of abstractions
-			// data = data.data.data;
-
-			console.log(data);
+			data = data.data.data;
 
 			// Populate public attributes
-			// this.start = data.size;
-			// this.opponent
-			// this.size
-			// this.inProgress  // This needs to be implemented...
+			warObj.start = Number(data.start);
+			warObj.opponent = data.opponent;
+			warObj.size = Number(data.size);
+			warObj.inProgress = data.inProgress;
 			
-			// this.results = {
-			// 	outcome : null,
-			// 	exp : null,
-			// 	ourScore : null,
-			// 	theirScore : null,
-			// 	ourDest : null,
-			// 	theirDest : null
-			// }
-
-			// vm.startDisplay = new Date(Number(vm.warData.start));
-
-			// // Set Countdown timers
-			// vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
-			// vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
-
-			// vm.checkDate();
-			// vm.loadingPage = false;
-
-			
-			// vm.genWarriorList();
-
+			warObj.results = {
+				outcome : data.results.outcome,
+				exp : Number(data.results.exp),
+				ourScore : Number(data.results.ourScore),
+				theirScore : Number(data.results.theirScore),
+				ourDest : Number(data.results.ourDest),
+				theirDest : Number(data.results.theirDest)
+			}
 
 			defer.resolve();
 		}, function(err) {

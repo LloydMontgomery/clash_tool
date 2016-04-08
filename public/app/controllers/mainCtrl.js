@@ -77,6 +77,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			return;
 		}
 
+		
+
 		if (route == '/wars') {
 			setActive('navWars');
 			return;

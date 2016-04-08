@@ -646,12 +646,12 @@ module.exports = function(app, express, $http) {
 	// Get all Wars
 	.get(function(req, res) {
 
-		db.getClan(req.decoded.clan)
+		db.getWars(req.decoded.clan)
 		.then(function(data) {
 			res.json({
 				success : true,
 				message : 'TBA',
-				data : data.data.wars
+				data : data.data
 			});
 		})
 		.catch(function(err) {
@@ -671,20 +671,14 @@ module.exports = function(app, express, $http) {
 		db.getClan(req.decoded.clan)
 		.then(function(data) {
 
-
 			var wars = data.data.wars;
 
-			// console.log(wars);
-			console.log(wars[req.params.war_id])
-
-
-			// console.log(wars[]);
-
+			var war = wars[req.params.war_id];
 
 			res.json({
 				success : true,
 				message : 'Successfully found war',
-				data : data
+				data : war
 			});
 		})
 		.catch(function(err) {
@@ -901,7 +895,7 @@ module.exports = function(app, express, $http) {
 	apiRouter.route('/lastWar/:size')
 	.get(function(req, res) {
 
-		db.getClan(req.decoded.clan)
+		db.getWars(req.decoded.clan)
 		.then(function(data) {
 
 			var wars = data.data.wars;

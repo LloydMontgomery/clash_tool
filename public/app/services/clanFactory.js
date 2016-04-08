@@ -6,12 +6,14 @@ angular.module('clanFactory', [])
 	
 
 	/* STATIC FUNCTIONS */
+
+	// GET Wars
 	Clan.allWars = function(){ 
 		var defer = $q.defer();
 
 		$http.get('/api/wars/')
 		.then(function(data) {
-			wars = data.data.data;
+			var wars = data.data.data;
 
 			var wars = Object.keys(wars).map(function(i) { return wars[i] });
 
@@ -32,6 +34,11 @@ angular.module('clanFactory', [])
 
 
 		return defer.promise;
+	};
+
+	// GET Wars - Partially
+	Clan.partial = function(clanRef) { 
+		return $http.get('/api/partialClan/' + clanRef);
 	};
 
 	// get all wars, partially
@@ -59,10 +66,7 @@ angular.module('clanFactory', [])
 	// };
 	// // get all wars
 
-	// get all wars
-	clanFactory.partial = function(clanRef) { 
-		return $http.get('/api/partialClan/' + clanRef);
-	};
+
 	// Create a Clan
 	clanFactory.create = function(clanData) {
 		return $http.post('/api/clans/', clanData);

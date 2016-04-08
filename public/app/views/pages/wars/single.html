@@ -1,9 +1,9 @@
 <div class="page-container">
 	<div class="col-xs-12">
 		<div id="warPageTitle">
-			<h1 ng-if="vm.type == 'create'">New War Log</h1>
-			<h1 ng-if="vm.type == 'edit'">Update War Log</h1>
-			<h1 ng-if="vm.type == 'view'">View War</h1>
+			<h1 ng-if="vm.pageType == 'create'">New War Log</h1>
+			<h1 ng-if="vm.pageType == 'edit'">Update War Log</h1>
+			<h1 ng-if="vm.pageType == 'view'">View War</h1>
 		</div>
 		<hr>
 		<form ng-show="!vm.loadingPage">
@@ -12,8 +12,10 @@
 				<div ng-class="vm.warStatsSubContainer" class="col-sm-4 col-xs-12">
 					<div class="col-xs-12">
 						<!-- Content for Create and Edit Page -->
-						<div ng-if="vm.type != 'view'">
+						<div ng-if="vm.pageType != 'view'">
 							<div>
+							<!-- {{war.loadingPage}} -->
+
 								<select ng-change="vm.setMaxStars()" ng-init="vm.war.size = vm.display.warSizes[0].value" ng-model="vm.war.size"
 										ng-options="option.value as option.display for option in vm.display.warSizes">
 								</select>
@@ -33,7 +35,7 @@
 							</div>
 						</div>
 						<!-- Content for View Page -->
-						<div ng-if="vm.type == 'view'">
+						<div ng-if="vm.pageType == 'view'">
 							<div>
 								{{ vm.war.size }} vs {{ vm.war.size }}
 							</div>
@@ -58,7 +60,7 @@
 				<div class="col-sm-4 col-xs-12">
 					<div class="col-xs-12">
 						<!-- Content for Create and Edit Page -->
-						<div ng-if="vm.type != 'view'">
+						<div ng-if="vm.pageType != 'view'">
 							<div id="clanName">
 								Space Monkeys
 							</div>
@@ -85,7 +87,7 @@
 							</div>
 						</div>
 						<!-- Content for View Page -->
-						<div ng-if="vm.type == 'view'">
+						<div ng-if="vm.pageType == 'view'">
 							<div >
 								Space Monkeys
 							</div>
@@ -113,7 +115,7 @@
 				<div class="col-sm-4 col-xs-12" ng-show="!vm.warData.inProgress" class="excludeAnimation">
 					<div class ="col-xs-12">
 						<!-- Content for Create and Edit Page -->
-						<div ng-if="vm.type != 'view'">
+						<div ng-if="vm.pageType != 'view'">
 							<div>
 								<input ng-model="vm.war.opponent" type="text" class="form-control" placeholder="Opponent Name">
 							</div>
@@ -132,7 +134,7 @@
 							</div>
 						</div>
 						<!-- Content for View Page -->
-						<div ng-if="vm.type == 'view'">
+						<div ng-if="vm.pageType == 'view'">
 							<div >
 								{{ vm.war.opponent }}
 							</div>
@@ -149,10 +151,10 @@
 				</div>
 			</div>
 			<!-- Image Upload Div -->
-			<div ng-show="(vm.type == 'view' && vm.warData.img) || (vm.type != 'view' && !vm.warData.inProgress)" 
+			<div ng-show="(vm.pageType == 'view' && vm.warData.img) || (vm.pageType != 'view' && !vm.warData.inProgress)" 
 				ng-show="vm.showWarriors" id="imgUpload" class="col-sm-offset-3 col-sm-6 col-xs-12">
 				<div class="col-xs-12">
-					<div ng-if="vm.type != 'view'" id="imgContainer">
+					<div ng-if="vm.pageType != 'view'" id="imgContainer">
 						<div ng-show="vm.warData.img">
 							<img ng-src="{{vm.warData.img}}">
 						</div>
@@ -164,7 +166,7 @@
 							</span>
 						</button>
 					</div>
-					<div ng-if="vm.type == 'view' && vm.warData.img" id="imgContainer">
+					<div ng-if="vm.pageType == 'view' && vm.warData.img" id="imgContainer">
 						<img ng-src="{{vm.warData.img}}">
 					</div>
 				</div>
@@ -182,18 +184,18 @@
 							<!-- Warrior Name and View Icon -->
 							<!-- <div ng-class="vm.nameClass"> -->
 							<div class="col-xs-12">
-								<span ng-if="vm.type == 'view'" ng-show="warrior.viewed" class="pull-left glyphicons glyphicons-eye-open accentBlue"></span>
-								<span ng-if="vm.type == 'view'" ng-hide="warrior.viewed" class="pull-left glyphicons glyphicons-eye-open"></span>
-								<select ng-if="vm.type != 'view'" ng-model="warrior.name" ng-change="vm.adjustUsers()">
+								<span ng-if="vm.pageType == 'view'" ng-show="warrior.viewed" class="pull-left glyphicons glyphicons-eye-open accentBlue"></span>
+								<span ng-if="vm.pageType == 'view'" ng-hide="warrior.viewed" class="pull-left glyphicons glyphicons-eye-open"></span>
+								<select ng-if="vm.pageType != 'view'" ng-model="warrior.name" ng-change="vm.adjustUsers()">
 									<option value="{{warrior.name}}" selected>{{warrior.name}}</option>
 									<option ng-repeat="option in vm.warData.actUsers" value="{{ option }}">{{ option }}</option>
 								</select>
-								<div ng-if="vm.type == 'view'" ng-class="((main.userInfo.name == warrior.name) ? 'accentBlue' : '')">
+								<div ng-if="vm.pageType == 'view'" ng-class="((main.userInfo.name == warrior.name) ? 'accentBlue' : '')">
 									{{ warrior.name }}
 								</div>
 							</div>
 							<!-- Move Warrior option -->
-							<!-- <div ng-if="vm.type != 'view'" class="col-xs-6">
+							<!-- <div ng-if="vm.pageType != 'view'" class="col-xs-6">
 								<select ng-model="vm.command" ng-change="vm.moveWarrior(warrior.name, vm.command)"
 									ng-disabled="warrior.name == 'Pick Warrior'" ng-options="option for option in vm.commandOptions">
 								</select>
@@ -203,7 +205,7 @@
 							<!-- Attack 1 -->
 							<div class="attacks" ng-class="vm.attackClass">
 								<div ng-show="vm.warData.inProgress">
-									<select ng-if="vm.type != 'view'" ng-model="warrior.attack1" ng-disabled="warrior.name == 'Pick Warrior'"
+									<select ng-if="vm.pageType != 'view'" ng-model="warrior.attack1" ng-disabled="warrior.name == 'Pick Warrior'"
 										ng-change="vm.adjustTargets(); warrior.lock1 = true; warrior.viewed = false">
 										<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
 										<option value="Pick" ng-if="warrior.attack1 != 'Pick'" class="excludeAnimation">Pick</option>
@@ -213,11 +215,11 @@
 										<option ng-repeat="option in vm.attackOptions" value="{{ option }}" >{{ option }}</option>
 									</select>
 									<select ng-model="warrior.attack1" ng-change="vm.adjustTargets()"
-										ng-if="vm.type == 'view' && main.userInfo.name == warrior.name && !warrior.lock1">
+										ng-if="vm.pageType == 'view' && main.userInfo.name == warrior.name && !warrior.lock1">
 										<option value="{{warrior.attack1}}" selected>{{ warrior.attack1 }}</option>
 										<option ng-repeat="option in vm.attackOptions" value="{{ option }}">{{ option }}</option>
 									</select>
-									<div ng-if="vm.type == 'view' && (main.userInfo.name != warrior.name || warrior.lock1)">
+									<div ng-if="vm.pageType == 'view' && (main.userInfo.name != warrior.name || warrior.lock1)">
 										{{ warrior.attack1 }}
 									</div>
 								</div>
@@ -231,7 +233,7 @@
 							<!-- Attack 2 -->
 							<div class="attacks" ng-class="vm.attackClass">
 								<div ng-show="vm.warData.inProgress">
-									<select ng-if="vm.type != 'view'" ng-model="warrior.attack2" ng-disabled="warrior.name == 'Pick Warrior'"
+									<select ng-if="vm.pageType != 'view'" ng-model="warrior.attack2" ng-disabled="warrior.name == 'Pick Warrior'"
 										ng-change="warrior.lock2 = true; warrior.viewed = false">
 										<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
 										<option value="Pick" ng-if="warrior.attack2 != 'Pick'" class="excludeAnimation">Pick</option>
@@ -241,11 +243,11 @@
 										<option ng-repeat="option in vm.attackOptions2" ng-if="warrior.attack1 != option" value="{{ option }}" class="excludeAnimation">{{ option }}</option>
 									</select>
 									<select ng-model="warrior.attack2" ng-change="vm.adjustTargets()"
-										ng-if="vm.type == 'view' && main.userInfo.name == warrior.name && !warrior.lock2">
+										ng-if="vm.pageType == 'view' && main.userInfo.name == warrior.name && !warrior.lock2">
 										<option value="{{warrior.attack2}}" selected>{{ warrior.attack2 }}</option>
 										<option ng-repeat="option in vm.attackOptions2" ng-if="warrior.attack1 != option" value="{{ option }}" class="excludeAnimation">{{ option }}</option>
 									</select>
-									<div ng-if="vm.type == 'view' && (main.userInfo.name != warrior.name || warrior.lock2)">
+									<div ng-if="vm.pageType == 'view' && (main.userInfo.name != warrior.name || warrior.lock2)">
 										{{ warrior.attack2 }}
 									</div>
 								</div>
@@ -257,12 +259,12 @@
 								</div>
 							</div>
 							<!-- Lock 1 -->
-							<div ng-show="vm.type != 'view' && vm.warData.inProgress" class="col-xs-6 warriorLocks">
-								<span ng-disabled="vm.type == 'view'" ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-lock"></span>
-								<span ng-disabled="vm.type == 'view'" ng-hide="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-unlock"></span>
+							<div ng-show="vm.pageType != 'view' && vm.warData.inProgress" class="col-xs-6 warriorLocks">
+								<span ng-disabled="vm.pageType == 'view'" ng-show="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-lock"></span>
+								<span ng-disabled="vm.pageType == 'view'" ng-hide="warrior.lock1" ng-click="warrior.lock1 = !warrior.lock1" class="glyphicons glyphicons-unlock"></span>
 							</div>
 							<!-- Lock 2 -->
-							<div ng-show="vm.type != 'view' && vm.warData.inProgress" class="col-xs-6 warriorLocks">
+							<div ng-show="vm.pageType != 'view' && vm.warData.inProgress" class="col-xs-6 warriorLocks">
 								<span ng-show="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-lock"></span>
 								<span ng-hide="warrior.lock2" ng-click="warrior.lock2 = !warrior.lock2" class="glyphicons glyphicons-unlock"></span>
 							</div>
@@ -300,17 +302,17 @@
 			<!-- Form Buttons -->
 			<div class="col-sm-offset-3 col-sm-6 col-xs-12">
 				<!-- Button to Show Warriors -->
-				<div ng-if="vm.type == 'create'" ng-hide="vm.showWarriors" id="confirmation-buttons">
+				<div ng-if="vm.pageType == 'create'" ng-hide="vm.showWarriors" id="confirmation-buttons">
 					<button ng-click="vm.genWarriorList()" class="btn btn-lg btn-block main-button">Warrior List</button>
 				</div>
 				<!-- Button to Show Opposing Warriors -->
-<!-- 				<div ng-click="vm.genOpposingWarriorList()" ng-if="vm.type == 'create'" ng-hide="!vm.showWarriors || vm.opposingWarriorsReady">
+<!-- 				<div ng-click="vm.genOpposingWarriorList()" ng-if="vm.pageType == 'create'" ng-hide="!vm.showWarriors || vm.opposingWarriorsReady">
 					<button class="btn btn-lg btn-block warButton">Opposing Warriors</button>
 				</div> -->
 				<!-- Button to Submit War or Update War -->
 				<div ng-show="vm.showWarriors && vm.warriorsReady" id="confirmation-buttons">
-					<button ng-click="vm.saveWar()" class="btn btn-lg btn-block main-button" ng-if="vm.type == 'create'">Create War</button>
-					<button ng-click="vm.updateWar(false, vm.warData)" class="btn btn-lg btn-block main-button" ng-if="vm.type != 'create'">Update War</button>
+					<button ng-click="vm.saveWar()" class="btn btn-lg btn-block main-button" ng-if="vm.pageType == 'create'">Create War</button>
+					<button ng-click="vm.updateWar(false, vm.warData)" class="btn btn-lg btn-block main-button" ng-if="vm.pageType != 'create'">Update War</button>
 				</div>
 			</div>
 		</form>

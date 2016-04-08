@@ -62,14 +62,14 @@ angular.module('app.routes', ['ngRoute'])
 		templateUrl	: 'app/views/pages/wars/all.html',
 		css			: 'assets/css/wars/all-wars.css',
 		controller	: 'warListController',
-		controllerAs: 'war'
+		controllerAs: 'vm'
 	})
 	// The current war
 	.when('/wars/current', {
 		templateUrl	: 'app/views/pages/wars/single.html',
 		css			: 'assets/css/war.css',
 		controller	: 'warManipulationController',
-		controllerAs: 'war'
+		controllerAs: 'vm'
 	})
 	// form to create a new war // same view as edit page 
 	.when('/wars/create', {
@@ -83,14 +83,14 @@ angular.module('app.routes', ['ngRoute'])
 		templateUrl	: 'app/views/pages/wars/single.html',
 		css			: 'assets/css/war.css',
 		controller	: 'warManipulationController',
-		controllerAs: 'war'
+		controllerAs: 'vm'
 	})
 	//page to view a war
 	.when('/wars/view/:war_id', {
 		templateUrl	: 'app/views/pages/wars/single.html',
 		css			: 'assets/css/war.css',
 		controller	: 'warManipulationController',
-		controllerAs: 'war'
+		controllerAs: 'vm'
 	})
 
 	// CLAN //
