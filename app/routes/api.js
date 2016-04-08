@@ -747,8 +747,8 @@ module.exports = function(app, express, $http) {
 
 			var wars = data.data.wars;
 
-			console.log(wars);
-			console.log(req.params.war_id)
+			// console.log(wars);
+			console.log(wars[req.params.war_id])
 
 
 			// console.log(wars[]);
@@ -1216,15 +1216,12 @@ module.exports = function(app, express, $http) {
 
 		// set the war information (comes from the request)
 		// Required information //
+
 		now = new Date();
-		var war = {}
+		var war = req.body;
 		war.createdAt = now.getTime().toString();
-		war.opponent = req.body.opponent;
-		war.start = req.body.start;
-		war.size = req.body.size;
+
 		war.warriors = {};
-		if (req.body.img)  // If the image has been included, write it to DB
-			war.img = req.body.img;
 
 		// Warriors are added separately, each as their own entry //
 		for (var i = 0; i < req.body.warriors.length; i++) {
@@ -1236,32 +1233,22 @@ module.exports = function(app, express, $http) {
 			delete req.body.warriors[i]['s2Opt2'];
 			delete req.body.warriors[i]['s2Opt3'];
 
-			war.warriors[req.body.warriors[i].name] = req.body.warriors[i];
+			war.warriors[i] = req.body.warriors[i];
 		};
 
-		// Optional Information if War is Over//
-		if (!req.body.inProgress) {
-			war.exp = req.body.exp;
-			war.ourScore = req.body.ourScore;
-			war.theirScore = req.body.theirScore;
-			war.ourDest = req.body.ourDest;
-			war.theirDest = req.body.theirDest;
-			war.outcome = req.body.outcome;
-		}
-
 		db.createWar(req.decoded.clan, war)
-			.then(function(data) {
-				res.json({
-					success: true,
-					message: 'War created!'
-				});
-			})
-			.catch(function(err) {
-				res.json({
-					success: false,
-					message: err.message
-				}); 
+		.then(function(data) {
+			res.json({
+				success: true,
+				message: 'War created!'
 			});
+		})
+		.catch(function(err) {
+			res.json({
+				success: false,
+				message: err.message
+			}); 
+		});
 	});
 
 	return apiRouter;

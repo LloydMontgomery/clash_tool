@@ -32,11 +32,10 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			
 		// Re-route people from / to their clan home page, or the join clan page if they don't have one
 		if (route == '/') {
-			console.log(vm.userInfo);
 			if (vm.userInfo && vm.userInfo.clan != 'null') {
 				$location.path('/@/' + vm.userInfo.clan.slice(-4));
 			} else {
-				$location.path('/about');
+				$location.path('/splash');
 			}
 			return;
 		}

@@ -90,33 +90,35 @@ module.exports = function() {
 	this.db.createWar = function(clanRef, data) {
 		return new Promise(function(resolve, reject) {
 
-		dynamodbDoc.update({
-			TableName: 'Clans',
-			Key:{
-				'ref': clanRef
-			},
-			UpdateExpression: 'set wars.#1 = :1',
-			ExpressionAttributeNames: {
-				'#1': String(data.createdAt)
-			},
-			ExpressionAttributeValues: {
-				':1': data
-			}
-		}, function(err, data) {
-			if (err) {
-				console.error("Unable to add War. Error JSON:", JSON.stringify(err, null, 2));
-				reject ({ 
-					success: false, 
-					message: err.message
-				}); 
-			} else {
-				resolve ({
-					success: true,
-					message: 'War created!' 
-				});
-			}
+			console.log(data);
+
+			dynamodbDoc.update({
+				TableName: 'Clans',
+				Key:{
+					'ref': clanRef
+				},
+				UpdateExpression: 'set wars.#1 = :1',
+				ExpressionAttributeNames: {
+					'#1': String(data.createdAt)
+				},
+				ExpressionAttributeValues: {
+					':1': data
+				}
+			}, function(err, data) {
+				if (err) {
+					console.error("Unable to add War. Error JSON:", JSON.stringify(err, null, 2));
+					reject ({ 
+						success: false, 
+						message: err.message
+					}); 
+				} else {
+					resolve ({
+						success: true,
+						message: 'War created!' 
+					});
+				}
+			});
 		});
-	});
 	}
 
 	this.db.getWar = function(clanRef, warId) {

@@ -19,12 +19,12 @@ angular.module('warFactory', [])
 		this.inProgress = true;
 		this.warriors = [];
 		this.results = {
-			outcome : null, // "war-win", "war-loss",
-			exp : null,
-			ourScore : null,
-			theirScore : null,
-			ourDest : null,
-			theirDest : null
+			outcome : 'null', // "war-win", "war-loss",
+			exp : 'null',
+			ourScore : 'null',
+			theirScore : 'null',
+			ourDest : 'null',
+			theirDest : 'null'
 		}
 	}
 
@@ -40,35 +40,34 @@ angular.module('warFactory', [])
 			// Strip layers of abstractions
 			// data = data.data.data;
 
-			// console.log(data);
+			console.log(data);
 
 			// Populate public attributes
-			this.start = data.size;
-			this.opponent
-			this.size
-			this.inProgress  // This needs to be implemented...
-			if (!this.inProgress) {
-				this.results = {
-					outcome : null,
-					exp : null,
-					ourScore : null,
-					theirScore : null,
-					ourDest : null,
-					theirDest : null
-				}
-			}
+			// this.start = data.size;
+			// this.opponent
+			// this.size
+			// this.inProgress  // This needs to be implemented...
+			
+			// this.results = {
+			// 	outcome : null,
+			// 	exp : null,
+			// 	ourScore : null,
+			// 	theirScore : null,
+			// 	ourDest : null,
+			// 	theirDest : null
+			// }
 
-			vm.startDisplay = new Date(Number(vm.warData.start));
+			// vm.startDisplay = new Date(Number(vm.warData.start));
 
-			// Set Countdown timers
-			vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
-			vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
+			// // Set Countdown timers
+			// vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
+			// vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
 
-			vm.checkDate();
-			vm.loadingPage = false;
+			// vm.checkDate();
+			// vm.loadingPage = false;
 
 			
-			vm.genWarriorList();
+			// vm.genWarriorList();
 
 
 			defer.resolve();
