@@ -1,27 +1,20 @@
 // start our angular module and inject userService
-angular.module('warCtrl', ['warFactory', 'userService'])
+angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 // user controller for the main page
 // inject the War factory 
-.controller('warListController', function(War, $location) {
+.controller('warListController', function(Clan, War, $location) {
 	var vm = this;
 
 	// set a processing variable to show loading things
 	vm.processing = true;
 
 
-
 	// grab all the wars at page load
-	War.all().then(function(data) {
-		// bind the wars that come back to vm.wars
-		vm.wars = data.data.data;
-		vm.wars.sort(function(a, b) {
-			return (a.start < b.start) ? 1 : (a.start > b.start) ? -1 : 0;
-		});
+	Clan.allWars()
+	.then(function(data) {
 
-		now = new Date();
-		for (var i = 0; i < vm.wars.length; i++) {
-			vm.wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
-		};
+		// bind the wars that come back to vm.wars
+		vm.wars = data;
 
 		// when all the wars come back, remove the processing variable
 		vm.processing = false;
@@ -29,7 +22,7 @@ angular.module('warCtrl', ['warFactory', 'userService'])
 })
 
 // controller applied to War creation page
-.controller('warManipulationController', function($route, $routeParams, $location, $timeout, Auth, War, User) {
+.controller('warManipulationController', function($route, $routeParams, $location, $timeout, Auth, Clan, War, User) {
 
 	// Bind this to a smaller variable
 	var vm = this;
@@ -491,42 +484,39 @@ angular.module('warCtrl', ['warFactory', 'userService'])
 
 	// Finish loading the page
 	if (vm.type != 'create') {
+
+		console.log(vm.war);
+		console.log($routeParams.war_id);
+
 		vm.war.get($routeParams.war_id)
 		.then(function(data) {
-			console.log(data.data.data);
-			vm.warData = data.data.data;
 
-			vm.startDisplay = new Date(Number(vm.warData.start));
+		})
+		.catch(function(err) {
 
-			// Set Countdown timers
-			vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
-			vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
-
-			vm.checkDate();
-			vm.loadingPage = false;
-
-			if (vm.type == 'view') {
-
-				Auth.getUser().then(function(data) {
-					vm.userInfo = data.data;
-					for (var i = 0; i < vm.war.warriors.length; i++) {
-						if (vm.war.warriors[i].name == vm.userInfo.name) {
-							if (vm.war.warriors[i].viewed == false) {
-								pos = i.toString();
-								tempData = {
-									'createdAt':vm.warData.createdAt,
-									'warriors':{}
-								};
-								tempData.warriors[i] = vm.war.warriors[i];
-								tempData.warriors[i].viewed = true;
-								vm.updateWar(true, tempData);
-							}
-						}
-					};
-				});
-			}
-			vm.genWarriorList();
 		});
+
+		// if (vm.type == 'view') {
+
+		// 	// Auth.getUser().then(function(data) {
+		// 	// 	vm.userInfo = data.data;
+		// 	// 	for (var i = 0; i < vm.war.warriors.length; i++) {
+		// 	// 		if (vm.war.warriors[i].name == vm.userInfo.name) {
+		// 	// 			if (vm.war.warriors[i].viewed == false) {
+		// 	// 				pos = i.toString();
+		// 	// 				tempData = {
+		// 	// 					'createdAt':vm.warData.createdAt,
+		// 	// 					'warriors':{}
+		// 	// 				};
+		// 	// 				tempData.warriors[i] = vm.war.warriors[i];
+		// 	// 				tempData.warriors[i].viewed = true;
+		// 	// 				vm.updateWar(true, tempData);
+		// 	// 			}
+		// 	// 		}
+		// 	// 	};
+		// 	// });
+		// }
+
 	} else {
 		vm.checkDate();
 		vm.loadingPage = false;

@@ -87,7 +87,6 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			return;
 		}
 		if (route.indexOf('/users/profile') > -1) {
-			console.log('here');
 			setActive('navProfile');
 			return;
 		}

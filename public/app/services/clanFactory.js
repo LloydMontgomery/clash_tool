@@ -1,7 +1,50 @@
-angular.module('clanService', []) 
-.factory('Clan', function($http) {
+angular.module('clanFactory', []) 
+.factory('Clan', function($http, $q) {
 	// create a new object
 	var clanFactory = {};
+
+	
+
+	/* STATIC FUNCTIONS */
+	Clan.allWars = function(){ 
+		var defer = $q.defer();
+
+		$http.get('/api/wars/')
+		.then(function(data) {
+			wars = data.data.data;
+
+			var wars = Object.keys(wars).map(function(i) { return wars[i] });
+
+			wars.sort(function(a, b) {
+				return (a.start < b.start) ? 1 : (a.start > b.start) ? -1 : 0;
+			});
+
+			// for (var i = 0; i < wars.length; i++) {
+			// 	wars[i].start = new Date(Number(vm.wars[i].start)); // Convert milliseconds to date object
+			// };
+
+			defer.resolve(wars);
+		}, function(data) {
+
+
+			defer.reject(data);
+		});
+
+
+		return defer.promise;
+	};
+
+	// get all wars, partially
+	// warFactory.partial = function() { 
+	// 	return $http.get('/api/partialWars/');
+	// };
+
+	/* PUBLIC FUNCTIONS	 */
+
+	function Clan(start, size) {
+
+	};
+
 	// // get a single war
 	// clanFactory.get = function(id) { 
 	// 	return $http.get('/api/wars/' + id);
@@ -46,5 +89,5 @@ angular.module('clanService', [])
 	// 	return $http.get('/api/sign_s3?file_name=' + data.lastModifiedDate + '&file_type=' + data.type);
 	// };
 	// return our entire clanFactory object
-	return clanFactory;
+	return Clan;
 });

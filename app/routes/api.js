@@ -14,7 +14,7 @@ var config = {}; // This is to prevent errors later
 try {
 	config = require('../../config.js');
 } catch (e) {
-	console.log("Running on Heroku, use Config Vars");
+	// console.log("Running on Heroku, use Config Vars");
 }
 
 // Grab some config variables stored locally in the config or in the env if running on Heroku
@@ -110,6 +110,7 @@ var getUser = function (username) {
 };
 
 var updateUser = function (username, data) {
+	console.log("Updating User");
 	console.log(username);
 	console.log(data);
 
@@ -171,10 +172,14 @@ var updateUser = function (username, data) {
 	// Cut off the last ',' in the list
 	updateExp = updateExp.slice(0, -1);
 
+	console.log(username);
+	console.log(expAttNames);
+	console.log(expAttVals);
+
 	dynamodbDoc.update({
 		TableName: 'Users',
 		Key: {
-			'username': username
+			username : username
 		},
 		UpdateExpression: updateExp,
 		ExpressionAttributeNames: expAttNames,
@@ -384,40 +389,6 @@ var updateRandomDataRef = function (ref) {
 	});
 };
 
-// WAR QUERIES
-var createWar = function (ref, war) {
-
-	return new Promise(function(resolve, reject) {
-
-		dynamodbDoc.update({
-			TableName: 'Clans',
-			Key:{
-				'ref': ref
-			},
-			UpdateExpression: 'set wars.#1 = :1',
-			ExpressionAttributeNames: {
-				'#1': String(war.start)
-			},
-			ExpressionAttributeValues: {
-				':1': war
-			}
-		}, function(err, data) {
-			if (err) {
-				console.error("Unable to add War. Error JSON:", JSON.stringify(err, null, 2));
-				reject ({ 
-					success: false, 
-					message: err.message
-				}); 
-			} else {
-				resolve ({
-					success: true,
-					message: 'War created!' 
-				});
-			}
-		});
-	});
-}
-
 /* ================================ ROUTING ================================ */
 
 module.exports = function(app, express, $http) {
@@ -495,7 +466,7 @@ module.exports = function(app, express, $http) {
 	.get(function(req, res) {
 		ref = '@' + req.params.clan_ref;
 
-		db.findClan(ref)
+		db.getClan(ref)
 			.then(function(data) {
 				// Found the clan, but only return limited information
 				clan = {
@@ -744,183 +715,80 @@ module.exports = function(app, express, $http) {
 		});
 	});
 
+
 	apiRouter.route('/wars')
-	// get all the wars (accessed at GET http://localhost:8080/api/wars)
+	// Get all Wars
 	.get(function(req, res) {
 
-		dynamodb.scan({
-			TableName : "Wars",
-			Limit : 1000
-		}, function(err, data) {
-			if (err) { 
-				return res.json({
-					success: false,
-					message: 'Database Error. Try again later.'
-				});
-			} else {
-				data = convertData(data.Items);
-
-				res.json({
-					success: true,
-					message: 'Successfully returned all Wars',
-					data: data
-				});
-			}
+		db.getClan(req.decoded.clan)
+		.then(function(data) {
+			res.json({
+				success : true,
+				message : 'TBA',
+				data : data.data.wars
+			});
+		})
+		.catch(function(err) {
+			res.json({
+				success : false,
+				message : 'TBA'
+			});
 		});
 	});
+
 
 	apiRouter.route('/wars/:war_id')
 	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
 	.get(function(req, res) {
-		dynamodb.query({
-			TableName : 'Wars',
-			KeyConditionExpression: '#1 = :createdAt',
-			ExpressionAttributeNames: {
-				'#1': 'createdAt'
-			},
-			ExpressionAttributeValues: {
-				':createdAt': { 'S': req.params.war_id }
-			},
-			Limit : 1000
-		}, function(err, data) {
-			if (err) { 
-				console.log(err.message);
-				return res.json({
-					success: false,
-					message: 'Database Error. Try again later.',
-					data: err
-				});
-			}
 
-			if (data.Count == 0) {  // Then the username must have been incorrect
-				return res.json({
-					success: false,
-					message: 'Query Failed. War not found.'
-				});
-			} else {
-				// Convert all the values to non-object values
-				data = convertData(data.Items[0]);
+		db.getClan(req.decoded.clan)
+		.then(function(data) {
 
-				data.size = Number(data.size);
-				data.exp = Number(data.exp);
-				data.ourDest = Number(data.ourDest);
-				data.theirDest = Number(data.theirDest);
 
-				// Collect all the warriors into a single array
-				data.warriors = [];
-				for (var i = 0; data[i] != null; i++) {
-					data.warriors.push(data[i]);
-					delete data[i];
-				};
+			var wars = data.data.wars;
 
-				res.json({
-					success: true,
-					message: 'Successfully returned all Wars',
-					data: data
-				});
-			}
+			console.log(wars);
+			console.log(req.params.war_id)
+
+
+			// console.log(wars[]);
+
+
+			res.json({
+				success : true,
+				message : 'Successfully found war',
+				data : data
+			});
+		})
+		.catch(function(err) {
+			res.json({
+				success : false,
+				message : err.message
+			});
 		});
 	})
 
-	// update the war with this id
-	// (accessed at PUT http://localhost:8080/api/wars/:war_id) 
+	// Update War
 	.put(function(req, res) {
-
-		// Initialize and assign attributes to be written to DynamoDB
-		updateExp = 'set';
-		expAttNames = {};
-		expAttVals = {};
-
-		// Only update the values the server is passed, 
-		// and don't try to update things that do not exist
-		if (req.body.opponent) {
-			updateExp += ' #name1 = :val1,';
-			expAttNames['#name1'] = 'opponent';
-			expAttVals[':val1'] = req.body.opponent;
-		} if (req.body.size) {
-			updateExp += ' #name2 = :val2,';
-			expAttNames['#name2'] = 'size';
-			expAttVals[':val2'] = req.body.size;
-		} if (req.body.start) {
-			updateExp += ' #name3 = :val3,';
-			expAttNames['#name3'] = 'start';
-			expAttVals[':val3'] = req.body.start;
-		} if (req.body.exp) {
-			updateExp += ' #name4 = :val4,';
-			expAttNames['#name4'] = 'exp';
-			expAttVals[':val4'] = req.body.exp;
-		} if (req.body.ourDest) {
-			updateExp += ' #name5 = :val5,';
-			expAttNames['#name5'] = 'ourDest';
-			expAttVals[':val5'] = req.body.ourDest;
-		} if (req.body.theirDest) {
-			updateExp += ' #name6 = :val6,';
-			expAttNames['#name6'] = 'theirDest';
-			expAttVals[':val6'] = req.body.theirDest;
-		} if (req.body.ourScore) {
-			updateExp += ' #name7 = :val7,';
-			expAttNames['#name7'] = 'ourScore';
-			expAttVals[':val7'] = req.body.ourScore;
-		} if (req.body.theirScore) {
-			updateExp += ' #name8 = :val8,';
-			expAttNames['#name8'] = 'theirScore';
-			expAttVals[':val8'] = req.body.theirScore;
-		} if (req.body.outcome) {
-			updateExp += ' #name9 = :val9,';
-			expAttNames['#name9'] = 'outcome';
-			expAttVals[':val9'] = req.body.outcome;
-		} if (req.body.img) {
-			updateExp += ' #name10 = :val10,';
-			expAttNames['#name10'] = 'img';
-			expAttVals[':val10'] = req.body.img;
-		}
-
-		// Warriors are added separately, each as their own entry //
-		for (warrior in req.body.warriors) {
-			// Need to delete these pesky fields
-			delete req.body.warriors[warrior]['s1Opt1'];
-			delete req.body.warriors[warrior]['s1Opt2'];
-			delete req.body.warriors[warrior]['s1Opt3'];
-			delete req.body.warriors[warrior]['s2Opt1'];
-			delete req.body.warriors[warrior]['s2Opt2'];
-			delete req.body.warriors[warrior]['s2Opt3'];
-
-			updateExp = updateExp + ' #warrior' + warrior.toString() + ' = :warrior' + warrior.toString() + ',';
-			expAttNames['#warrior' + warrior.toString()] = warrior.toString();
-			expAttVals[':warrior' + warrior.toString()] = req.body.warriors[warrior];
-		};
-
-		if (updateExp != 'set')  // Then something was added to it
-			updateExp = updateExp.slice(0, -1);
-
-		dynamodbDoc.update({
-			TableName: 'Wars',
-			Key:{
-				'createdAt': req.body.createdAt.toString()
-			},
-			UpdateExpression: updateExp,
-			ExpressionAttributeNames: expAttNames,
-			ExpressionAttributeValues: expAttVals
-		}, function(err, data) {
-			if (err) {
-				console.log(err);
-				return res.json({
-					success: false,
-					message: err.message
-				});
-			} else {
-
-				res.json({
-					success: true,
-					message: 'Successfully Updated War'
-				});
-			}
+		// HOLY SHIT COME BACK AND FIX THIS SOON
+		db.updateWar(req.decoded.clan, req.params.war_id, req.body)
+		.then(function(data) {
+			res.json({
+				success : true,
+				message : 'War Updated'
+			});
+		})
+		.catch(function(err) {
+			res.json({
+				success : false,
+				message : err.message
+			});
 		});
 	});
 
 	// SPECIFIC USERS PROFILE //
 	apiRouter.route('/users/profile/:username')
-	// (accessed at GET http://localhost:8080/api/users/:user_id) 
+	// Read User
 	.get(function(req, res) {
 		dynamodb.query({
 			TableName : 'Users',
@@ -1022,56 +890,53 @@ module.exports = function(app, express, $http) {
 		});
 	})
 
-	// update the user with this id
-	// (accessed at PUT http://localhost:8080/api/users/profile/:user_id) 
+	// Update User
 	.put(function(req, res) {
 
-		dynamodbDoc.update({
-			TableName: 'Users',
-			Key:{
-				'name': req.body.name
-			},
-			UpdateExpression: 'set #name1 = :val1, #name2 = :val2, #name3 = :val3, #name4 = :val4, #name5 = :val5',
-			ExpressionAttributeNames: {
-				'#name1' : 'thLvl',
-				'#name2' : 'kingLvl',
-				'#name3' : 'queenLvl',
-				'#name4' : 'kingFinishDate',
-				'#name5' : 'queenFinishDate'
-			},
-			ExpressionAttributeValues: {
-				':val1' : req.body.thLvl,
-				':val2' : req.body.kingLvl,
-				':val3' : req.body.queenLvl,
-				':val4' : req.body.kingFinishDate,
-				':val5' : req.body.queenFinishDate
-			}
-		}, function(err, data) {
-			if (err) {
-				console.log(err);
-				return res.json({
-					success: false,
-					message: err.message
-				});
-			} else {
-				res.json({
-					success: true,
-					message: 'Successfully Updated User'
-				});
-			}
+		// IS THIS NECESSARY? RECONSIDER. CODE DOES NOT BREAK IF USERNAME IS UNDEFINED
+		// Check that the username has been provided
+		if (typeof(req.params.username) != 'string') {
+			return res.json({
+				success : false,
+				message : 'Invalid username provided: ' + req.params.username
+			});
+		}
+
+		// Check permissions on this call
+		if (req.decoded.username != req.params.username &&
+			req.decoded.clanAdmin != true) {
+			return res.json({
+				success : false,
+				message : 'You do not have permission to alter the user: ' + req.params.username
+			});
+		}
+
+		// Update the user
+		db.updateUser(req.params.username, req.body)
+		.then(function(data) {
+			res.json({
+				success : true,
+				message : 'User Updated'
+			});
+		})
+		.catch(function(err) {
+			res.json({
+				success : false,
+				message : 'Database error. Sorry for the inconvenience. Please try again.'
+			});
 		});
 	});
 
 	// ============================= CLAN APIS ============================= //
 
 	apiRouter.route('/clan/:clan_ref')
-	// Find clan with particular ref (accessed at GET http://clan.solutions/api/clans)
+	// Get a Particular Clan
 	.get(function(req, res) {
 		// Add a check for clan authentication, need that
 
 		ref = '@' + req.params.clan_ref;
 
-		findClan(ref)
+		db.getClan(ref)
 		.then(function(data) {
 			return res.json({
 				success: true,
@@ -1111,7 +976,7 @@ module.exports = function(app, express, $http) {
 
 		console.log("JUST ABOUT");
 
-		db.findClan(req.decoded.clan)
+		db.getClan(req.decoded.clan)
 		.then(function(data) {
 
 			console.log("MADE IT");
@@ -1247,8 +1112,7 @@ module.exports = function(app, express, $http) {
 		});
 	})
 
-	// update the user with this id
-	// (accessed at PUT http://localhost:8080/api/users/:user_id) 
+	// Update User
 	.put(function(req, res) {
 
 		updateExpression = 'set id = :val1, title = :val2, inClan = :val3, admin = :val4';
@@ -1287,8 +1151,7 @@ module.exports = function(app, express, $http) {
 		});
 	})
 
-	// Delete the user with this id
-	// (accessed at DELETE http://localhost:8080/api/users/:user_id)
+	// Delete User
 	.delete(function(req, res) {
 		console.log(req.decoded.name);
 		if (req.decoded.name != 'Zephyro') {  // Little Fail-Safe for now.. Must be ME
@@ -1386,17 +1249,17 @@ module.exports = function(app, express, $http) {
 			war.outcome = req.body.outcome;
 		}
 
-		return createWar(req.decoded.clan, war)
+		db.createWar(req.decoded.clan, war)
 			.then(function(data) {
-				return res.json({
+				res.json({
 					success: true,
-					message: 'War created!' 
+					message: 'War created!'
 				});
 			})
-			.catch(function(data) {
-				return res.json({ 
-					success: false, 
-					message: data.message
+			.catch(function(err) {
+				res.json({
+					success: false,
+					message: err.message
 				}); 
 			});
 	});

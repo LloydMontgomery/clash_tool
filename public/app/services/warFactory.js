@@ -1,10 +1,15 @@
 angular.module('warFactory', []) 
 .factory('War', function($http, $q) {
-	
 
 	// create a new object
 	var warFactory = {};
 
+	/* STATIC FUNCTIONS */
+
+
+	/* PUBLIC FUNCTIONS */
+
+	// New War object
 	function War(start, size) {
 
     	// Public properties, assigned to the instance ('this')
@@ -12,19 +17,7 @@ angular.module('warFactory', [])
 		this.opponent = "";
 		this.size = size;
 		this.inProgress = true;
-		this.warriors = [
-			// {
-			// 	name : String,
-			// 	thLvl : Number,
-			// 	viewed : Boolean,
-			// 	attack1 : String, - "Pick"
-			// 	attack2 : String, - "Pick"
-			// 	lock1 : Boolean,
-			// 	lock2 : Boolean,
-			// 	stars1 : Number, - 0, 1, 2, 3
-			// 	stars1 : Number - 0, 1, 2, 3
-			// }
-		];
+		this.warriors = [];
 		this.results = {
 			outcome : null, // "war-win", "war-loss",
 			exp : null,
@@ -33,49 +26,67 @@ angular.module('warFactory', [])
 			ourDest : null,
 			theirDest : null
 		}
-  }
+	}
 
 	// get a single war
 	War.prototype.get = function(id) { 
-		$http.get('/api/wars/' + id).then(function(data) {
+		
+		var defer = $q.defer();
+		var warObj = this;  // 'this' is overwritten in the promise
 
-			// console.log(data);
+		$http.get('/api/wars/' + id)
+		.then(function(data) {
 
 			// Strip layers of abstractions
-			data = data.data.data;
+			// data = data.data.data;
+
+			// console.log(data);
 
 			// Populate public attributes
 			this.start = data.size;
 			this.opponent
 			this.size
 			this.inProgress  // This needs to be implemented...
-			// if (!this.inProgress) {
-			// 	this.results = {
-			// 		outcome : data.
-			// 		exp : null,
-			// 		ourScore : null,
-			// 		theirScore : null,
-			// 		ourDest : null,
-			// 		theirDest : null
-			// 	}
-			// }
+			if (!this.inProgress) {
+				this.results = {
+					outcome : null,
+					exp : null,
+					ourScore : null,
+					theirScore : null,
+					ourDest : null,
+					theirDest : null
+				}
+			}
 
-			console.log(data);
+			vm.startDisplay = new Date(Number(vm.warData.start));
 
-			// console.log(data.data.data);
+			// Set Countdown timers
+			vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
+			vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
+
+			vm.checkDate();
+			vm.loadingPage = false;
+
+			
+			vm.genWarriorList();
+
+
+			defer.resolve();
+		}, function(err) {
+
+			defer.reject(err);
 		});
 
-		// console.log(response.then());
-
-		// return response;
+		return defer.promise;
 	};
 
 	// Generate Warrior List
 	War.prototype.populateWarriors = function() {
 		var defer = $q.defer();
-		var warObj = this;  // Have to save this, as it is overwritten in the promise
+		var warObj = this;  // 'this' is overwritten in the promise
 
-		$http.get('/api/lastWar/' + this.size).then(function(res) {
+		$http.get('/api/lastWar/' + this.size)
+		.then(function(res) {
 
 			if (res.data.success) {
 				// Use this information in some way useful
@@ -88,14 +99,21 @@ angular.module('warFactory', [])
 			}
 
 			defer.resolve(res.data);
-		}, function(res) {
+		}, function(err) {
 			// Reserved for server-sided failures, not a normal occurrence
 			
-			defer.reject(res);
+			defer.reject(err);
 		});
 
 		return defer.promise;
 	}
+
+	// create a war
+	War.prototype.create = function() { 
+		return $http.post('/api/wars/', this);
+	};
+
+	/* PRIVATE FUNCTIONS */
 
 	function newWarrior(name='Pick Warrior', thLvl='0') {
 		return {
@@ -111,20 +129,8 @@ angular.module('warFactory', [])
 		}
 	}
 
-	// get all wars
-	warFactory.partial = function() { 
-		return $http.get('/api/partialWars/');
-	};
+	/* STILL CONVERTING */
 
-	// get all wars
-	War.all = function(){ 
-		return $http.get('/api/wars/');
-	};
-
-	// create a war
-	War.prototype.create = function() { 
-		return $http.post('/api/wars/', this);
-	};
 	// update a war
 	warFactory.update = function(id, warData) { 
 		return $http.put('/api/wars/' + id, warData);
@@ -134,9 +140,9 @@ angular.module('warFactory', [])
 		return $http.delete('/api/wars/' + id);
 	};
 	// upload a war photo to S3
-	warFactory.upload = function(data) {
-		return $http.get('/api/sign_s3?file_name=' + data.lastModifiedDate + '&file_type=' + data.type);
-	};
+	// warFactory.upload = function(data) {
+	// 	return $http.get('/api/sign_s3?file_name=' + data.lastModifiedDate + '&file_type=' + data.type);
+	// };
 	// return our entire warFactory object
 	return War;
 });

@@ -291,7 +291,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		vm.setHeroesCountdowns();
 
 		updateData = {
-			'name': vm.profile.name,
+			'username': vm.profile.username,
 			'thLvl': vm.profile.thLvl,
 			'kingLvl': vm.profile.kingLvl,
 			'queenLvl': vm.profile.queenLvl,
@@ -299,15 +299,26 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 			'queenFinishDate': vm.profile.queenFinishDate
 		};
 
-		User.setProfile(vm.profile.name, updateData)
+		User.setProfile(vm.profile.username, updateData)
 		.then(function(data) {
-			if (data.data.success) {
+			if (data.data.success)
 				vm.message = 'Successfully Updated Profile'
-			} else {
+			else
 				vm.error = data.data.message;
-			}
 			vm.updating = false;
 		});
+
+		// User.setProfile(vm.profile.username, updateData)
+		// .then(function(data) {
+		// 	vm.message = 'Successfully Updated Profile'
+		// 	vm.updating = false;
+		// })
+		// .catch(function(err) {
+		// 	vm.error = err.message;
+		// 	vm.updating = false;
+		// });
+
+
 	}
 
 	/* ============================ MODAL LOGIC ============================ */

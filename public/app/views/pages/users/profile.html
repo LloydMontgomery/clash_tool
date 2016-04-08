@@ -37,6 +37,16 @@
 					</div>
 				</div>
 			</div>
+			<div ng-show="user.error || user.message" id="message-container" class="col-xs-12" align="middle">
+				<!-- ERROR MESSAGE -->
+				<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
+					{{ user.error }}
+				</div>
+				<!-- SUCCESS MESSAGE -->
+				<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
+					{{ user.message }}
+				</div>
+			</div>
 			<!-- Edit Profile -->
 			<div ng-if="main.userInfo.name == user.profile.name || main.userInfo.admin" 
 				id="edit-profile" class="col-sm-offset-4 col-sm-4 col-xs-12">
@@ -73,16 +83,6 @@
 					<div>
 						All War Stars
 						<canvas id="starChart" class="chart chart-bar" chart-data="stars" chart-labels="labels"></canvas>
-					</div>
-				</div>
-				<div ng-show="user.error || user.message" id="message-container" class="col-xs-12">
-					<!-- ERROR MESSAGE -->
-					<div class="alert alert-danger col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.error">
-						{{ user.error }}
-					</div>
-					<!-- SUCCESS MESSAGE -->
-					<div class="alert alert-success col-sm-offset-4 col-sm-4 col-xs-12" ng-show="user.message">
-						{{ user.message }}
 					</div>
 				</div>
 				<!-- All Attacks -->
