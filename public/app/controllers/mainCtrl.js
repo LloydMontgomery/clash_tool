@@ -138,15 +138,15 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			// console.log(vm.clanRef);
 
 			Clan.partial(vm.clanRef)
-				.then(function(data) {
-					if (data.data.success) {
-						// console.log('SUCCESS');
-						// console.log(data.data.data);
+			.then(function(data) {
+				if (data.data.success) {
+					// console.log('SUCCESS');
+					// console.log(data.data.data);
 
-						vm.clan = data.data.data;
-					} else {
-						console.log('ERROR');
-					}
+					vm.clan = data.data.data;
+				} else {
+					console.log('ERROR');
+				}
 			});
 
 			// User.partial().then(function(data) {

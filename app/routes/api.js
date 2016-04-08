@@ -241,51 +241,6 @@ var createClan = function (data) {
 	});
 };
 
-// var findClan = function (ref) {
-
-// 	console.log("ALMOST");
-
-// 	return new Promise(function(resolve, reject) {
-
-// 		dynamodb.query({
-// 			TableName : 'Clans',
-// 			KeyConditionExpression: '#1 = :1',
-// 			ExpressionAttributeNames: {
-// 				'#1': 'ref'
-// 			},
-// 			ExpressionAttributeValues: {
-// 				':1': { 'S': ref }
-// 			}
-// 		}, function(err, data) {
-// 			if (err) {
-// 				reject ({
-// 					success: false,
-// 					message: 'Database Error. Try again later.',
-// 					err: err
-// 				});
-// 			}
-
-// 			if (data.Count == 0) {  // Then the reference must have been incorrect
-// 				reject ({
-// 					success: false,
-// 					message: 'Clan Reference ' + ref + ' not found'
-// 				});
-// 			} else {
-// 				resolve ({
-// 					success: true,
-// 					message: 'Successfully found Clan',
-// 					data: convertData(data.Items[0])
-// 				});
-// 			}
-// 		});
-// 	});
-// };
-
-// var updateClan = function(ref, data) {
-// 	return new Promise(function(resolve, reject) {
-
-// 	});
-// }
 
 var joinClan = function(ref, data) {
 	return new Promise(function(resolve, reject) {
@@ -643,35 +598,6 @@ module.exports = function(app, express, $http) {
 			});
 	});
 
-	// apiRouter.route('/partialWars')
-	// // get all the wars for a clan (accessed at GET http://localhost:8080/api/users)
-	// .get(function(req, res) {
-
-	// 	dynamodb.scan({
-	// 		TableName : "Wars",
-	// 		ProjectionExpression: "createdAt, #1, outcome, ourScore, theirScore, exp, img",
-	// 		ExpressionAttributeNames: {
-	// 			"#1": "start"
-	// 		},
-	// 		Limit : 1000
-	// 	}, function(err, data) {
-	// 		if (err) { 
-	// 			return res.json({
-	// 				success: false,
-	// 				message: 'Database Error. Try again later',
-	// 			});
-	// 		} else {
-	// 			data = convertData(data.Items);
-
-	// 			res.json({
-	// 				success: true,
-	// 				message: 'Successfully returned all Wars',
-	// 				data: data
-	// 			});
-	// 		}
-	// 	});
-	// });
-
 	apiRouter.route('/partialUsers')
 	// get all the users (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
@@ -738,7 +664,8 @@ module.exports = function(app, express, $http) {
 
 
 	apiRouter.route('/wars/:war_id')
-	// (accessed at GET http://localhost:8080/api/wars/:war_id) 
+	
+	// GET War
 	.get(function(req, res) {
 
 		db.getClan(req.decoded.clan)
@@ -974,22 +901,14 @@ module.exports = function(app, express, $http) {
 	apiRouter.route('/lastWar/:size')
 	.get(function(req, res) {
 
-		console.log("JUST ABOUT");
-
 		db.getClan(req.decoded.clan)
 		.then(function(data) {
-
-			console.log("MADE IT");
-
-			console.log(data);
 
 			var wars = data.data.wars;
 
 			for (i in wars.length) {
 				// Implement when there are wars to iterate over
 			}
-
-			// console.log(data.message);
 
 			return res.json({
 				success: false,
@@ -998,8 +917,6 @@ module.exports = function(app, express, $http) {
 			});
 		})
 		.catch(function(data) {
-
-			console.log("FAILURE");
 
 			// return res.status(500).send({ error: 'Something failed!' });
 			return res.json({
@@ -1217,23 +1134,27 @@ module.exports = function(app, express, $http) {
 		// set the war information (comes from the request)
 		// Required information //
 
-		now = new Date();
 		var war = req.body;
-		war.createdAt = now.getTime().toString();
 
+		// GROSS CODE, CHANGE THIS SOON
+		var oldWarriors = req.body.warriors;
+		delete war.warriors;
 		war.warriors = {};
 
-		// Warriors are added separately, each as their own entry //
-		for (var i = 0; i < req.body.warriors.length; i++) {
-			// Need to delete these pesky fields
-			delete req.body.warriors[i]['s1Opt1'];
-			delete req.body.warriors[i]['s1Opt2'];
-			delete req.body.warriors[i]['s1Opt3'];
-			delete req.body.warriors[i]['s2Opt1'];
-			delete req.body.warriors[i]['s2Opt2'];
-			delete req.body.warriors[i]['s2Opt3'];
+		now = new Date();
+		war.createdAt = now.getTime().toString();
 
-			war.warriors[i] = req.body.warriors[i];
+		// Warriors are added separately, each as their own entry //
+		for (var i = 0; i < oldWarriors.length; i++) {
+			// Need to delete these pesky fields
+			delete oldWarriors[i]['s1Opt1'];
+			delete oldWarriors[i]['s1Opt2'];
+			delete oldWarriors[i]['s1Opt3'];
+			delete oldWarriors[i]['s2Opt1'];
+			delete oldWarriors[i]['s2Opt2'];
+			delete oldWarriors[i]['s2Opt3'];
+
+			war.warriors[i] = oldWarriors[i];
 		};
 
 		db.createWar(req.decoded.clan, war)

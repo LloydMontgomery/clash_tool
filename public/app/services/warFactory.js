@@ -79,7 +79,7 @@ angular.module('warFactory', [])
 		return defer.promise;
 	};
 
-	// Generate Warrior List
+	// Populate Warrior List
 	War.prototype.populateWarriors = function() {
 		var defer = $q.defer();
 		var warObj = this;  // 'this' is overwritten in the promise
