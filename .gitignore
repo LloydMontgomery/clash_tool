@@ -40,3 +40,4 @@ Thumbs.db
 /config.js
 .bowerrc
 clanModel.js
+userModel.js

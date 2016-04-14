@@ -3,13 +3,16 @@ angular.module('userService', [])
 	// create a new object
 	var userFactory = {};
 
+	
+
 	// get a single user profile
 	userFactory.getProfile = function(username) { 
 		return $http.get('api/users/profile/' + username);
 		// return $http.get('http://clash.solutions/api/users/profile/' + username);
 	};
-	// get a single user profile
+	// set a single user profile
 	userFactory.setProfile = function(username, userData) {
+		console.log("Here!!!!!!");
 		return $http.put('/api/users/profile/' + username, userData);
 	};
 	// get a single user

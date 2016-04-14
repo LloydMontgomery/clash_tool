@@ -35,7 +35,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			if (vm.userInfo && vm.userInfo.clan != 'null') {
 				$location.path('/@/' + vm.userInfo.clan.slice(-4));
 			} else {
-				$location.path('/splash');
+				$location.path('/about');
 			}
 			return;
 		}
@@ -63,7 +63,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		if (route == '/login') {
 			if (vm.loggedIn) {  // If they are logged in, they can't be here
 				setActive('navHome');
-				$location.path('/');
+				$location.path('/about');
 			} else {
 				setActive('navProfile');
 			}

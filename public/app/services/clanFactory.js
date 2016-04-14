@@ -68,7 +68,7 @@ angular.module('clanFactory', [])
 
 
 	// Create a Clan
-	clanFactory.create = function(clanData) {
+	Clan.create = function(clanData) {
 		return $http.post('/api/clans/', clanData);
 	};
 	// Find the clan with the given Reference

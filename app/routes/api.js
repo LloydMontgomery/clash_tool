@@ -77,171 +77,6 @@ var createToken = function (data) {
 
 /* ======================== AMAZON DYNAMODB QUERIES ======================== */
 
-// USER QUERIES
-var getUser = function (username) {
-	return new Promise(function(resolve, reject) {
-		dynamodb.query({
-			TableName : "Users",
-			KeyConditionExpression: "username = :1",
-			ExpressionAttributeValues: {
-				":1": { 'S': username }
-			}
-		}, function(err, data) {
-			if (err) {
-				reject ({
-					success: false,
-					message: 'Database Error. Try again later.',
-					err: err
-				});
-			} else {
-				if (data.Count == 0) {
-					reject ({
-						success: false,
-						message: 'Query Failed. User not found.'
-					});
-				} else {
-					resolve (
-						convertData(data.Items[0])
-					);
-				}
-			}
-		});
-	});
-};
-
-var updateUser = function (username, data) {
-	console.log("Updating User");
-	console.log(username);
-	console.log(data);
-
-	// Initialize and assign attributes to be written to DynamoDB
-	updateExp = 'set';
-	expAttNames = {};
-	expAttVals = {};
-
-	// Only update the values the server is passed, 
-	// and don't try to update things that do not exist
-	if (data.clan) {
-		updateExp += ' #name1 = :val1,';
-		expAttNames['#name1'] = 'clan';
-		expAttVals[':val1'] = data.clan;
-	} 
-	// if (data.size) {
-	// 	updateExp += ' #name2 = :val2,';
-	// 	expAttNames['#name2'] = 'size';
-	// 	expAttVals[':val2'] = data.size;
-	// } if (data.start) {
-	// 	updateExp += ' #name3 = :val3,';
-	// 	expAttNames['#name3'] = 'start';
-	// 	expAttVals[':val3'] = data.start;
-	// } if (data.exp) {
-	// 	updateExp += ' #name4 = :val4,';
-	// 	expAttNames['#name4'] = 'exp';
-	// 	expAttVals[':val4'] = data.exp;
-	// } if (data.ourDest) {
-	// 	updateExp += ' #name5 = :val5,';
-	// 	expAttNames['#name5'] = 'ourDest';
-	// 	expAttVals[':val5'] = data.ourDest;
-	// } if (data.theirDest) {
-	// 	updateExp += ' #name6 = :val6,';
-	// 	expAttNames['#name6'] = 'theirDest';
-	// 	expAttVals[':val6'] = data.theirDest;
-	// } if (data.ourScore) {
-	// 	updateExp += ' #name7 = :val7,';
-	// 	expAttNames['#name7'] = 'ourScore';
-	// 	expAttVals[':val7'] = data.ourScore;
-	// } if (data.theirScore) {
-	// 	updateExp += ' #name8 = :val8,';
-	// 	expAttNames['#name8'] = 'theirScore';
-	// 	expAttVals[':val8'] = data.theirScore;
-	// } if (data.outcome) {
-	// 	updateExp += ' #name9 = :val9,';
-	// 	expAttNames['#name9'] = 'outcome';
-	// 	expAttVals[':val9'] = data.outcome;
-	// } if (data.img) {
-	// 	updateExp += ' #name10 = :val10,';
-	// 	expAttNames['#name10'] = 'img';
-	// 	expAttVals[':val10'] = data.img;
-	// }
-
-	// if (data.password) {  // Then we need to change the password
-	// 	updateExpression = updateExpression + ', password = :val5';
-	// 	expressionAttributeValues[':val5'] = bcrypt.hashSync(data.password);
-	// }
-
-	// Cut off the last ',' in the list
-	updateExp = updateExp.slice(0, -1);
-
-	console.log(username);
-	console.log(expAttNames);
-	console.log(expAttVals);
-
-	dynamodbDoc.update({
-		TableName: 'Users',
-		Key: {
-			username : username
-		},
-		UpdateExpression: updateExp,
-		ExpressionAttributeNames: expAttNames,
-		ExpressionAttributeValues: expAttVals
-	}, function(err, data) {
-		if (err) {
-			console.log(err);
-			return {
-				success: false,
-				message: err.message
-			};
-		} else {
-			return {
-				success: true,
-				message: 'Successfully Updated User'
-			};
-		}
-	});
-};
-
-// CLAN QUERIES
-var createClan = function (data) {
-
-	return new Promise(function(resolve, reject) {
-
-		// Create the user in their own clan
-		members = {}
-		members[data.userData.username] = data.userData;
-		members[data.userData.username].position = 'Leader';
-
-		dynamodbDoc.put({
-			TableName: 'Clans',
-			Item: {
-				ref : data.ref,
-				name : data.name,
-				totalWars : data.totalWars,
-				warsWon : data.warsWon,
-				wars : {},
-				members : members,
-				notInClan : {},
-				totalMembers : 1
-			},
-			Expected: {
-				'ref' : { 'Exists' : false },
-			}
-		}, function(err, data) {
-			if (err) {
-				reject ({ 
-					success: false, 
-					message: err
-				}); 
-			} else {
-				resolve ({ 
-					success: true,
-					message: 'Clan created!'
-				});
-			}
-		});
-	});
-};
-
-
 var joinClan = function(ref, data) {
 	return new Promise(function(resolve, reject) {
 		console.log(ref);
@@ -310,40 +145,6 @@ var getRandomData = function (name) {
 	});
 };
 
-var updateRandomDataRef = function (ref) {
-	console.log('Updating Ref: ' + String(ref));
-	return new Promise(function(resolve, reject) {
-
-		dynamodbDoc.update({
-			TableName: 'RandomData',
-			Key:{
-				'name': 'takenRefs'
-			},
-			UpdateExpression: 'set refs.#1 = :1',
-			ExpressionAttributeNames: {
-				'#1' : ref
-			},
-			ExpressionAttributeValues: {
-				':1' : true
-			}
-		}, function(err, data) {
-			if (err) {
-				console.error("Unable to change ID status. Error JSON:", JSON.stringify(err, null, 2));
-				reject ({
-					success: false, 
-					message: err.message
-				});
-			} else {
-				console.log('Ref successfully added');
-				resolve ({
-					success: true, 
-					message: "Added the new Clan Reference to the database"
-				});
-			}
-		});
-	});
-};
-
 /* ================================ ROUTING ================================ */
 
 module.exports = function(app, express, $http) {
@@ -363,7 +164,7 @@ module.exports = function(app, express, $http) {
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	.post(function(req, res) {
 		// find the user
-		getUser(req.body.username)
+		db.getUser(req.body.username)
 			.then(function(user) {
 
 				// check if password matches
@@ -521,16 +322,15 @@ module.exports = function(app, express, $http) {
 						newRefNum = 0;
 					ref = '@' + ('0000' + newRefNum.toString(16).toUpperCase()).slice(-4);
 				}
-				console.log('New Ref Found: ' + String(ref));
 				return ref;
 			})
 			// Now that a unique reference has been generated, push it back to the database
 			.then(function(ref) {
-				return updateRandomDataRef(ref)
+				db.updateRandomDataRef(ref)
 			})
 			// Grab the current user from the database so we can write their information to the new clan
 			.then(function() {
-				return getUser(req.body.username);
+				return db.getUser(req.body.username);
 			})
 			// Create the new clan with the reference from earlier and the userData we just got
 			.then(function(data) {
@@ -539,8 +339,8 @@ module.exports = function(app, express, $http) {
 				// Modify userData slightly before passing it to createClan
 				delete userData.password;
 				delete userData.dateJoinedSite;
-				now = new Date();
-				userData.dateJoinedClan = now.getTime();
+
+				userData.dateJoinedClan = new Date().getTime();
 
 				data = {
 					userData : userData,
@@ -549,10 +349,13 @@ module.exports = function(app, express, $http) {
 					totalWars : req.body.totalWars,
 					warsWon : req.body.warsWon
 				};
-				return createClan(data);
+				return db.createClan(data);
 			})
 			.then(function() {
 				// Clan was successfully created, update the user who created the clan
+
+				// THIS NEEDS WORK NOW
+
 				updateUser(userData.username, {
 					clan: ref
 				});
