@@ -42,7 +42,7 @@ angular.module('clanCtrl', [])
 
 		vm.clanData.username = vm.userInfo.username;
 
-		// call the userService function to update
+		// call the userFactory function to update
 		Clan.create(vm.clanData)
 			.then(function(data) {
 				AuthToken.setToken(data.data.token);

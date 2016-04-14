@@ -1,9 +1,20 @@
-angular.module('userService', []) 
+angular.module('userFactory', []) 
 .factory('User', function($http) {
 	// create a new object
 	var userFactory = {};
 
-	
+	// Constructor
+	function User(){
+		// Create properties
+	}
+
+	User.prototype.create = function() {
+		console.log("Creating a User");
+		return $http.post('/api/users/', userData);
+	};
+
+
+	// v v v v v NOT DONE YET v v v v v
 
 	// get a single user profile
 	userFactory.getProfile = function(username) { 
@@ -12,7 +23,6 @@ angular.module('userService', [])
 	};
 	// set a single user profile
 	userFactory.setProfile = function(username, userData) {
-		console.log("Here!!!!!!");
 		return $http.put('/api/users/profile/' + username, userData);
 	};
 	// get a single user
@@ -27,10 +37,6 @@ angular.module('userService', [])
 	userFactory.all = function() { 
 		return $http.get('/api/users/');
 	};
-	// create a user
-	userFactory.create = function(userData) { 
-		return $http.post('/api/users/', userData);
-	};
 	// update a user
 	userFactory.update = function(id, userData) { 
 		return $http.put('/api/users/' + id, userData);
@@ -40,5 +46,5 @@ angular.module('userService', [])
 		return $http.delete('/api/users/' + name);
 	};
 	// return our entire userFactory object
-	return userFactory;
+	return User;
 });

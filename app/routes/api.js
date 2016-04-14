@@ -209,10 +209,17 @@ module.exports = function(app, express, $http) {
 	// create a user (accessed at POST /api/users)
 	.post(function(req, res) {
 
-		db.createUser(req.body).then(function() {
-			return res.json({
+		db.createUser(req.body)
+		.then(function() {
+			res.json({
 				success: true,
-				message: "UHHH CHANGE THIS"
+				message: 'Successfully registered a new user'
+			});
+		})
+		.catch(function(err) {
+			res.json({
+				success: false,
+				message: 'Database Error. Try again later.'
 			});
 		});
 	});

@@ -1,5 +1,5 @@
-// start our angular module and inject userService
-angular.module('userCtrl', ['userService', 'chart.js'])
+// start our angular module and inject userFactory
+angular.module('userCtrl', ['userFactory', 'chart.js'])
 // user controller for the main page
 // inject the User factory 
 .controller('userController', function($location, User) {
@@ -168,7 +168,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		}
 		// clear the message
 		vm.message = '';
-		// use the create function in the userService
+		// use the create function in the userFactory
 		User.create(vm.userData) 
 			.then(function(data) {
 				vm.processing = false;
@@ -202,7 +202,7 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 	vm.saveUser = function() { 
 		vm.processing = true; 
 		vm.message = '';
-		// call the userService function to update
+		// call the userFactory function to update
 		User.update($routeParams.user_id, vm.userData) 
 			.then(function(data) {
 				vm.processing = false;
@@ -453,8 +453,6 @@ angular.module('userCtrl', ['userService', 'chart.js'])
 		}
 		vm.loadingPage = false;
 	});
-
-
 
 })
 

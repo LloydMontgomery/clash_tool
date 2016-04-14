@@ -279,7 +279,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				vm.error = 'Passwords do not match';
 				vm.processing = false;
 			} else {
-				// use the create function in the userService
+				// use the create function in the userFactory
 				User.create(vm.loginData)
 					.then(function(data) {
 						if (data.data.success) {

@@ -1,5 +1,5 @@
-// start our angular module and inject userService
-angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
+// start our angular module and inject userFactory
+angular.module('warCtrl', ['clanFactory', 'warFactory', 'userFactory'])
 // user controller for the main page
 // inject the War factory 
 .controller('warListController', function(Clan, War, $location) {
@@ -429,7 +429,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 			warDataCleansed = data;
 		}
 
-		// call the userService function to update
+		// call the userFactory function to update
 		War.update($routeParams.war_id, warDataCleansed) 
 			.then(function(data) {
 				vm.processing = false; // clear the form
@@ -449,7 +449,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 			xhr.onload = function() {
 				if (xhr.status === 200) {
 					vm.warData.img = url
-					// call the userService function to update
+					// call the userFactory function to update
 					vm.warData.file = null;
 					vm.processingImg = false;
 					vm.updateWar(true, vm.warData);

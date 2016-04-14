@@ -285,7 +285,7 @@ module.exports = function() {
 
 	this.db.createUser = function(data) {
 		return new Promise(function(resolve, reject) {
-
+			console.log("Server Code, Creating a User");
 			dynamodbDoc.put({
 				TableName: 'Users',
 				Item: {
