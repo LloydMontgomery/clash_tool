@@ -5,4 +5,4 @@ So to conclude: this application is a mess of bad programming and half-built fea
 
 Also, here are some photos of the application while it was still up. It was even live for a short time and had some users, but I overcommitted and now the application is no longer.
 
-![pic1](./img/pic1)
+<img src='./img/pic1.png' width='200px'>
