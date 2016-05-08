@@ -6,3 +6,17 @@ So to conclude: this application is a mess of bad programming and half-built fea
 Also, here are some photos of the application while it was still up. It was even live for a short time and had some users, but I overcommitted and now the application is no longer.
 
 <img src='./img/pic1.png' width='200px'>
+<img src='./img/pic2.png' width='200px'>
+<img src='./img/pic3.png' width='200px'>
+<img src='./img/pic4.png' width='200px'>
+<img src='./img/pic5.png' width='200px'>
+<img src='./img/pic6.png' width='200px'>
+<img src='./img/pic7.png' width='200px'>
+<img src='./img/pic8.png' width='200px'>
+<img src='./img/pic9.png' width='200px'>
+<img src='./img/pic10.png' width='200px'>
+<img src='./img/pic11.png' width='200px'>
+<img src='./img/pic12.png' width='200px'>
+<img src='./img/pic13.png' width='200px'>
+<img src='./img/pic14.png' width='200px'>
+<img src='./img/pic15.png' width='200px'>
