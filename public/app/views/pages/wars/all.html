@@ -13,20 +13,20 @@
 			</h1>
 		</div>
 		<!-- LOADING MESSAGE -->
-		<div class="jumbotron text-center" ng-show="war.processing"> 
+		<div class="jumbotron text-center" ng-show="vm.processing"> 
 			<span class="glyphicon glyphicon-repeat spinner"></span>
 			<p>Loading Wars...</p>
 		</div>
 		<!-- Wars Container -->
 		<div>
-			<div ng-repeat="war in war.wars" class="war-container col-lg-3 col-md-6 col-xs-12">
+			<div ng-repeat="war in vm.wars" class="war-container col-lg-3 col-md-6 col-xs-12">
 				<div class="war-content col-xs-12">
 					<div class="war-info">
 						<div>{{war.opponent}}</div>
-						<span class="in-progress" ng-if="!war.outcome">
+						<span class="in-progress" ng-if="war.inProgress">
 							In Progress...
 						</span>
-						<div ng-if="war.outcome">
+						<div ng-if="!war.inProgress">
 							<span class="glyphicons glyphicons-cup" ng-class="war.outcome"></span>
 
 							<span class="glyphicons glyphicons-star accent-text-colour"></span>

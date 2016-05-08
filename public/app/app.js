@@ -3,7 +3,7 @@ angular.module('ClashTool', [
 	'ngAnimate',
 	'app.routes',
 	'authService',
-	'userService',
+	'userFactory',
 	'clanFactory',
 	'mainCtrl',
 	'userCtrl',

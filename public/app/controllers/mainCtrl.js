@@ -2,6 +2,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 .controller('mainController', function($rootScope, $location, $routeParams, $window, Auth, User, War, Clan) {
 	var vm = this;
 
+	vm.user = new User();
+
 	// These are assigned here mainly to save clutter in the HTML page
 	vm.authSizing = 'col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4';
 	vm.mainPageSizing = 'col-xs-12 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3';
@@ -35,7 +37,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			if (vm.userInfo && vm.userInfo.clan != 'null') {
 				$location.path('/@/' + vm.userInfo.clan.slice(-4));
 			} else {
-				$location.path('/splash');
+				$location.path('/about');
 			}
 			return;
 		}
@@ -63,7 +65,7 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 		if (route == '/login') {
 			if (vm.loggedIn) {  // If they are logged in, they can't be here
 				setActive('navHome');
-				$location.path('/');
+				$location.path('/about');
 			} else {
 				setActive('navProfile');
 			}
@@ -76,6 +78,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			$location.path('/splash');
 			return;
 		}
+
+		
 
 		if (route == '/wars') {
 			setActive('navWars');
@@ -138,15 +142,15 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 			// console.log(vm.clanRef);
 
 			Clan.partial(vm.clanRef)
-				.then(function(data) {
-					if (data.data.success) {
-						// console.log('SUCCESS');
-						// console.log(data.data.data);
+			.then(function(data) {
+				if (data.data.success) {
+					// console.log('SUCCESS');
+					// console.log(data.data.data);
 
-						vm.clan = data.data.data;
-					} else {
-						console.log('ERROR');
-					}
+					vm.clan = data.data.data;
+				} else {
+					console.log('ERROR');
+				}
 			});
 
 			// User.partial().then(function(data) {
@@ -255,18 +259,18 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 
 		var login = function() {
 			Auth.login(vm.loginData.username, vm.loginData.password)
-				.then(function(data) {
-					vm.processing = false;
-					// if a user successfully logs in, redirect to users page
-					if (data.data.success) {
-						console.log(data);
-						$location.path('/');
-					}
-					else {
-						vm.loginData.password = '';  // Clear password
-						vm.loginData.passwordConfirm = '';  // Clear password
-						vm.error = data.data.message;
-					}
+			.then(function(data) {
+				vm.processing = false;
+				// if a user successfully logs in, redirect to users page
+				if (data.data.success) {
+					console.log(data);
+					$location.path('/');
+				}
+				else {
+					vm.loginData.password = '';  // Clear password
+					vm.loginData.passwordConfirm = '';  // Clear password
+					vm.error = data.data.message;
+				}
 			});
 		}
 
@@ -277,7 +281,8 @@ angular.module('mainCtrl', ['ui.bootstrap'])
 				vm.error = 'Passwords do not match';
 				vm.processing = false;
 			} else {
-				// use the create function in the userService
+
+				// use the create function in the userFactory
 				User.create(vm.loginData)
 					.then(function(data) {
 						if (data.data.success) {

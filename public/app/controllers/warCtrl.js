@@ -1,5 +1,5 @@
-// start our angular module and inject userService
-angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
+// start our angular module and inject userFactory
+angular.module('warCtrl', ['clanFactory', 'warFactory', 'userFactory'])
 // user controller for the main page
 // inject the War factory 
 .controller('warListController', function(Clan, War, $location) {
@@ -35,6 +35,8 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	// Create War Object to manage the War data
 	vm.war = new War(vm.startDisplay.getTime(), 10);
 
+	console.log(War);
+
 
 	// Variables that only exist to be displayed in HTML
 	vm.display = {
@@ -60,14 +62,15 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	vm.attackClass = 'col-xs-6';
 	vm.nameClass = 'col-xs-6';
 	if ($location.path() == '/wars/current') {
-		vm.type = 'view';
+		vm.pageType = 'view';
 	}
 	else if ($location.path() == '/wars/create')
-		vm.type = 'create';
-	else if ($location.path().substr(0, 11) == '/wars/edit/') // Edit page
-		vm.type = 'edit';
+		vm.pageType = 'create';
+	else if ($location.path().substr(0, 11) == '/wars/edit/') { // Edit page
+		vm.pageType = 'edit';
+	}
 	else if ($location.path().substr(0, 11) == '/wars/view/') { // view page
-		vm.type = 'view';
+		vm.pageType = 'view';
 		vm.attackClass = 'col-xs-6';
 		vm.nameClass = 'col-xs-12';
 	}
@@ -89,6 +92,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
+		
 		vm.maxStars = Array.apply(null, Array((vm.war.size*3)+1)).map(function (_, i) {return ((vm.war.size*3) - i);});
 		if (vm.war.results.ourScore > (vm.war.size*3))
 			vm.war.results.ourScore = Number(vm.war.size*3);
@@ -99,7 +103,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	};
 
 	vm.setStars = function(auto, warrior, stars, option) {
-		if (auto || vm.type != 'view') {
+		if (auto || vm.pageType != 'view') {
 			if (stars == 1) {  // Then this is stars1
 				if (option == '0') {  // User has selected the first star
 					warrior.stars1 = '0'
@@ -169,7 +173,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	};
 
 	vm.adjustTargets = function() {
-		if (vm.type == 'create') {
+		if (vm.pageType == 'create') {
 			var target;
 			vm.attackOptions = [];
 			vm.attackOptions2 = [];
@@ -273,7 +277,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	// 	vm.command = 'Move';  // Reset value to 'Move'
 	// };
 
-	vm.genWarriorList = function() {
+	vm.populateWarriors = function() {
 		vm.message = '';
 
 		if (!vm.war.opponent) {
@@ -282,9 +286,8 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 		}
 		vm.showWarriors = true;  // When the UI should show the warriors
 
-		vm.war.populateWarriors().then(function(data) {
-
-			
+		vm.war.populateWarriors()
+		.then(function(data) {
 
 			vm.adjustTargets();
 			vm.warriorsReady = true;
@@ -428,7 +431,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 			warDataCleansed = data;
 		}
 
-		// call the userService function to update
+		// call the userFactory function to update
 		War.update($routeParams.war_id, warDataCleansed) 
 			.then(function(data) {
 				vm.processing = false; // clear the form
@@ -448,7 +451,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 			xhr.onload = function() {
 				if (xhr.status === 200) {
 					vm.warData.img = url
-					// call the userService function to update
+					// call the userFactory function to update
 					vm.warData.file = null;
 					vm.processingImg = false;
 					vm.updateWar(true, vm.warData);
@@ -483,20 +486,29 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 	};
 
 	// Finish loading the page
-	if (vm.type != 'create') {
-
-		console.log(vm.war);
-		console.log($routeParams.war_id);
+	if (vm.pageType != 'create') {
 
 		vm.war.get($routeParams.war_id)
 		.then(function(data) {
+
+			vm.startDisplay = new Date(Number(vm.war.start));
+
+			// Set Countdown timers
+
+			vm.battleCountdown = vm.war.start + 169200000;  	// Add 47 Hours
+			vm.preparationCountdown = vm.war.start + 82800000;  // Add 23 Hours
+
+			vm.checkDate();
+			vm.loadingPage = false;
+
+			vm.populateWarriors();
 
 		})
 		.catch(function(err) {
 
 		});
 
-		// if (vm.type == 'view') {
+		// if (vm.pageType == 'view') {
 
 		// 	// Auth.getUser().then(function(data) {
 		// 	// 	vm.userInfo = data.data;
@@ -505,7 +517,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userService'])
 		// 	// 			if (vm.war.warriors[i].viewed == false) {
 		// 	// 				pos = i.toString();
 		// 	// 				tempData = {
-		// 	// 					'createdAt':vm.warData.createdAt,
+		// 	// 					'createdAt':vm.war.createdAt,
 		// 	// 					'warriors':{}
 		// 	// 				};
 		// 	// 				tempData.warriors[i] = vm.war.warriors[i];
