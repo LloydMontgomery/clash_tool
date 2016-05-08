@@ -35,6 +35,8 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userFactory'])
 	// Create War Object to manage the War data
 	vm.war = new War(vm.startDisplay.getTime(), 10);
 
+	console.log(War);
+
 
 	// Variables that only exist to be displayed in HTML
 	vm.display = {
@@ -90,6 +92,7 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userFactory'])
 	/* ======================== DYNAMIC PAGE CONTROL ======================== */
 
 	vm.setMaxStars = function() {
+		
 		vm.maxStars = Array.apply(null, Array((vm.war.size*3)+1)).map(function (_, i) {return ((vm.war.size*3) - i);});
 		if (vm.war.results.ourScore > (vm.war.size*3))
 			vm.war.results.ourScore = Number(vm.war.size*3);
@@ -283,9 +286,8 @@ angular.module('warCtrl', ['clanFactory', 'warFactory', 'userFactory'])
 		}
 		vm.showWarriors = true;  // When the UI should show the warriors
 
-		vm.war.populateWarriors().then(function(data) {
-
-			
+		vm.war.populateWarriors()
+		.then(function(data) {
 
 			vm.adjustTargets();
 			vm.warriorsReady = true;

@@ -8,109 +8,79 @@ angular.module('userCtrl', ['userFactory', 'chart.js'])
 	vm.filter = '0';
 
 	vm.users = [
-			{
-				name: 'DevilDog9597',
-				th: '11',
-				bk: '40',
-				aq: '40',
-				gw: '11'
-			},
-			{
-				name: 'Ned Kelly',
-				th: '11',
-				bk: '22',
-				aq: '21',
-				gw: '2'
-			},
-			{
-				name: 'Imperial',
-				th: '10',
-				bk: '21',
-				aq: '20',
-				gw: '0'
-			},
-			{
-				name: 'ཬད༼ Zephyro ༽ཌར',
-				th: '9',
-				bk: '20',
-				aq: '20',
-				gw: '0'
-			},
-			{
-				name: 'Tensa Zangetsu',
-				th: '9',
-				bk: '15',
-				aq: '14',
-				gw: '0'
-			},
-			{
-				name: 'Zephyro',
-				th: '8',
-				bk: '8',
-				aq: '0',
-				gw: '0'
-			},
-			{
-				name: 'NOBLE 3',
-				th: '9',
-				bk: '10',
-				aq: '9',
-				gw: '0'
-			},
-			{
-				name: '~Big Dog~',
-				th: '8',
-				bk: '8',
-				aq: '0',
-				gw: '0'
-			},
-			{
-				name: 'Sir Lancelot',
-				th: '8',
-				bk: '5',
-				aq: '0',
-				gw: '0'
-			}
-		]
+		{
+			name: 'DevilDog9597',
+			th: '11',
+			bk: '40',
+			aq: '40',
+			gw: '11'
+		},
+		{
+			name: 'Ned Kelly',
+			th: '11',
+			bk: '22',
+			aq: '21',
+			gw: '2'
+		},
+		{
+			name: 'Imperial',
+			th: '10',
+			bk: '21',
+			aq: '20',
+			gw: '0'
+		},
+		{
+			name: 'ཬད༼ Zephyro ༽ཌར',
+			th: '9',
+			bk: '20',
+			aq: '20',
+			gw: '0'
+		},
+		{
+			name: 'Tensa Zangetsu',
+			th: '9',
+			bk: '15',
+			aq: '14',
+			gw: '0'
+		},
+		{
+			name: 'Zephyro',
+			th: '8',
+			bk: '8',
+			aq: '0',
+			gw: '0'
+		},
+		{
+			name: 'NOBLE 3',
+			th: '9',
+			bk: '10',
+			aq: '9',
+			gw: '0'
+		},
+		{
+			name: '~Big Dog~',
+			th: '8',
+			bk: '8',
+			aq: '0',
+			gw: '0'
+		},
+		{
+			name: 'Sir Lancelot',
+			th: '8',
+			bk: '5',
+			aq: '0',
+			gw: '0'
+		}
+	]
 
 	// set a processing variable to show loading things
 	vm.processing = true;
 	// grab all the users at page load
-	User.partial().then(function(data) {
-		if (data.data.success) {
 
-			// bind the users that come back to vm.users
-			vm.users = data.data.data;
-
-			console.log(vm.users);
-			// vm.users.sort(function(a, b) {
-			// 	return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
-			// });
-
-			// vm.inClan = [];
-			// vm.notInClan = [];
-			// vm.admins = [];
-
-			// for (var i = 0; i < vm.users.length; i++) {
-			// 	if (vm.users[i].inClan)
-			// 		vm.inClan.push(vm.users[i]);
-			// 	else
-			// 		vm.notInClan.push(vm.users[i]);
-			// 	if (vm.users[i].admin)
-			// 		vm.admins.push(vm.users[i]);
-			// };
-			// vm.displayUsers = vm.inClan;
-
-			// vm.processing = false;
-
-			// console.log(vm.users);
-		} else {
-			vm.message = 'Database Error. Try again another time.'
-			vm.processing = false;
-			console.log('HERE');
-		}
-
-		
+	User.all()
+	.then(function(data) {
+		console.log(data.data.data);
+		vm.processing = false;
 	});
 
 	vm.filterList = function () {
@@ -129,13 +99,13 @@ angular.module('userCtrl', ['userFactory', 'chart.js'])
 
 		User.delete(name).success(function(data) {
 			User.all()
-				.then(function(data) {
-					vm.users = data.data.data;
-					vm.users.sort(function(a, b) {
-						return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
-					});
-					vm.processing = false;
+			.then(function(data) {
+				vm.users = data.data.data;
+				vm.users.sort(function(a, b) {
+					return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
 				});
+				vm.processing = false;
+			});
 		}); 
 	};
 
@@ -308,17 +278,6 @@ angular.module('userCtrl', ['userFactory', 'chart.js'])
 			vm.updating = false;
 		});
 
-		// User.setProfile(vm.profile.username, updateData)
-		// .then(function(data) {
-		// 	vm.message = 'Successfully Updated Profile'
-		// 	vm.updating = false;
-		// })
-		// .catch(function(err) {
-		// 	vm.error = err.message;
-		// 	vm.updating = false;
-		// });
-
-
 	}
 
 	/* ============================ MODAL LOGIC ============================ */
@@ -435,8 +394,6 @@ angular.module('userCtrl', ['userFactory', 'chart.js'])
 			vm.initial = {};
 			vm.initial.kingFinishDate = vm.profile.kingFinishDate;
 			vm.initial.queenFinishDate = vm.profile.queenFinishDate;
-
-			console.log(vm.profile);
 
 			vm.calculateStats();
 			vm.setMaxLvls();

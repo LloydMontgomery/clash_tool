@@ -41,10 +41,6 @@ var convertData = function(data) {
 	return data;
 };
 
-// var createAwsVars = function() {
-
-// }
-
 module.exports = function() { 
 
 	// Create a namespace-mimic to avoid confusion in the API file
@@ -326,7 +322,6 @@ module.exports = function() {
 
 	this.db.getUser = function (username) {
 		return new Promise(function(resolve, reject) {
-
 			dynamodb.query({
 				TableName : "Users",
 				KeyConditionExpression: "username = :1",
@@ -359,66 +354,56 @@ module.exports = function() {
 	this.db.updateUser = function(username, data) {
 		return new Promise(function(resolve, reject) {
 
+			console.log(data);
+
+			// Only write data that is verified
+			var verified = [
+				'thLvl',
+				'password',
+				'gamename',
+				'clan',
+				'thLvl',
+				'kingLvl',
+				'kingFinishDate',
+				'queenLvl',
+				'queenFinishDate',
+				'wardenLvl',
+				'dateJoinedSite',
+				'siteAdmin',
+			];
+
 			// Initialize and assign attributes to be written to DynamoDB
 			updateExp = 'set';
 			expAttNames = {};
 			expAttVals = {};
 
-			// Only update the values the server is passed, 
-			// and don't try to update things that do not exist
-			if (data.clan) {
-				updateExp += ' #name1 = :val1,';
-				expAttNames['#name1'] = 'clan';
-				expAttVals[':val1'] = data.clan;
-			} 
-			if (data.size) {
-				updateExp += ' #name2 = :val2,';
-				expAttNames['#name2'] = 'size';
-				expAttVals[':val2'] = data.size;
-			} if (data.start) {
-				updateExp += ' #name3 = :val3,';
-				expAttNames['#name3'] = 'start';
-				expAttVals[':val3'] = data.start;
-			} if (data.exp) {
-				updateExp += ' #name4 = :val4,';
-				expAttNames['#name4'] = 'exp';
-				expAttVals[':val4'] = data.exp;
-			} if (data.ourDest) {
-				updateExp += ' #name5 = :val5,';
-				expAttNames['#name5'] = 'ourDest';
-				expAttVals[':val5'] = data.ourDest;
-			} if (data.theirDest) {
-				updateExp += ' #name6 = :val6,';
-				expAttNames['#name6'] = 'theirDest';
-				expAttVals[':val6'] = data.theirDest;
-			} if (data.ourScore) {
-				updateExp += ' #name7 = :val7,';
-				expAttNames['#name7'] = 'ourScore';
-				expAttVals[':val7'] = data.ourScore;
-			} if (data.theirScore) {
-				updateExp += ' #name8 = :val8,';
-				expAttNames['#name8'] = 'theirScore';
-				expAttVals[':val8'] = data.theirScore;
-			} if (data.outcome) {
-				updateExp += ' #name9 = :val9,';
-				expAttNames['#name9'] = 'outcome';
-				expAttVals[':val9'] = data.outcome;
-			} if (data.img) {
-				updateExp += ' #name10 = :val10,';
-				expAttNames['#name10'] = 'img';
-				expAttVals[':val10'] = data.img;
-			}
+			var i = 0;
+			for (var key in data) {
+				console.log(key);
+				console.log(verified);
+				if (verified.indexOf(key) >= 0) {
+					name = '#name' + i.toString();
+					val = ':val' + i.toString();
 
-			if (data.password) {  // Then we need to change the password
-				updateExpression = updateExpression + ', password = :val5';
-				expressionAttributeValues[':val5'] = bcrypt.hashSync(data.password);
+					updateExp += (name + ' = ' + val + ',');
+					expAttNames[name] = key;
+					expAttVals[val] = data[key];
+
+					i += 1;
+				}
 			}
 
 			// Cut off the last ',' in the list
 			updateExp = updateExp.slice(0, -1);
 
+			updateExp = 'set';
+			expAttNames = {};
+			expAttVals = {};
 
-
+			if (data.password) {  // Then we need to change the password
+				updateExpression = updateExpression + ', password = :val5';
+				expressionAttributeValues[':val5'] = bcrypt.hashSync(data.password);
+			}
 
 			dynamodbDoc.update({
 				TableName : 'Users',
@@ -535,6 +520,65 @@ module.exports = function() {
 		// 		};
 		// 	}
 		// });
+	}
+
+	this.db.getUsers = function(ref) {
+		return new Promise(function(resolve, reject) {
+
+			dynamodb.query({
+				TableName : "Clans",
+				KeyConditionExpression: "ref = :1",
+				ExpressionAttributeValues: {
+					":1": { 'S': ref }
+				}
+			}, function(err, data) {
+				if (err) {
+					reject ({
+						success: false,
+						message: 'Database Error. Try again later.',
+						err: err
+					});
+				} else {
+					if (data.Count == 0) {
+						reject ({
+							success: false,
+							message: 'Query Failed. Clan not found.'
+						});
+					} else {
+						console.log(data.Items[0])
+						resolve (
+							convertData(data.Items[0])
+						);
+					}
+				}
+			});
+
+
+
+			dynamodb.scan({
+				TableName : "Clans",
+				ProjectionExpression: "ref, admin, dateJoined, id, inClan, title",
+				ExpressionAttributeNames: {
+					"ref": "name"
+				},
+				Limit : 1000
+			}, function(err, data) {
+				if (err) { 
+					reject({   
+						success: false,
+					    message: 'Database Error. Try again later'
+					});
+				} else {
+					data = convertData(data.Items);
+
+					resolve({
+						success: true,
+					    message: 'Successfully returned all Users',
+						data: data
+					});
+				}
+			});
+		});
 	}
 
 

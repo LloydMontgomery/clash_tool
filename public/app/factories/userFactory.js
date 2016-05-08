@@ -1,12 +1,46 @@
 angular.module('userFactory', []) 
 .factory('User', function($http) {
+
+	/* STATIC FUNCTIONS */
+
+	// get a single user profile
+	User.getProfile = function(username) { 
+		return $http.get('api/users/profile/' + username);
+	};
+
+	// get all users
+	User.all = function() { 
+		return $http.get('/api/users/');
+	};
+
+	// set a single user profile
+	User.setProfile = function(username, userData) {
+		return $http.put('/api/users/profile/' + username, userData);
+	};
+
+
+
 	// create a new object
 	var userFactory = {};
 
 	// Constructor
 	function User(){
 		// Create properties
-	}
+		// this.username
+
+		// this.gamename
+		// this.clan
+
+		// thLvl
+		// kingLvl
+		// kingFinishDate
+		// queenLvl
+		// queenFinishDate
+		// wardenLvl
+
+		// dateJoinedSite
+		// siteAdmin
+	};
 
 	User.prototype.create = function() {
 		console.log("Creating a User");
@@ -14,17 +48,10 @@ angular.module('userFactory', [])
 	};
 
 
+
+
 	// v v v v v NOT DONE YET v v v v v
 
-	// get a single user profile
-	userFactory.getProfile = function(username) { 
-		return $http.get('api/users/profile/' + username);
-		// return $http.get('http://clash.solutions/api/users/profile/' + username);
-	};
-	// set a single user profile
-	userFactory.setProfile = function(username, userData) {
-		return $http.put('/api/users/profile/' + username, userData);
-	};
 	// get a single user
 	userFactory.get = function(id) { 
 		return $http.get('/api/users/' + id);
@@ -33,10 +60,7 @@ angular.module('userFactory', [])
 	userFactory.partial = function() { 
 		return $http.get('/api/partialUsers/');
 	};
-	// get all users
-	userFactory.all = function() { 
-		return $http.get('/api/users/');
-	};
+	
 	// update a user
 	userFactory.update = function(id, userData) { 
 		return $http.put('/api/users/' + id, userData);

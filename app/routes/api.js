@@ -35,6 +35,7 @@ var dynamodb = new AWS.DynamoDB();
 
 var dynamodbDoc = new AWS.DynamoDB.DocumentClient();
 
+
 /* ============================ HELPER FUNCTIONS ============================ */
 
 var convertData = function(data) {
@@ -163,46 +164,47 @@ module.exports = function(app, express, $http) {
 	apiRouter.route('/authenticate')
 	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	.post(function(req, res) {
+
 		// find the user
 		db.getUser(req.body.username)
-			.then(function(user) {
+		.then(function(user) {
 
-				// check if password matches
-				var validPassword = bcrypt.compareSync(req.body.password, user.password);
+			// check if password matches
+			var validPassword = bcrypt.compareSync(req.body.password, user.password);
 
-				if (!validPassword) {
-					return res.json({
-						success: false,
-						message: 'Incorrect Password'
-					});
-				} else {
-					
-					// This code will be removed once the site goes live, however, 
-					// the 'siteAdmin' field will be useful for future code
-					if (!user.siteAdmin) {
-						return res.json({
-							success: false,
-							message: 'Application is still under construction, try again in September 2016'
-						});
-					}
-
-					// create a token
-					token = createToken(user);
-
-					// return the information including token as JSON
-					return res.json({
-						success: true,
-						message: 'Successfully logged in', 
-						token: token
-					});
-				}
-			})
-			.catch(function(err) {
+			if (!validPassword) {
 				return res.json({
 					success: false,
-					message: 'Could not find that username'
+					message: 'Incorrect Password'
 				});
+			} else {
+				
+				// This code will be removed once the site goes live, however, 
+				// the 'siteAdmin' field will be useful for future code
+				if (!user.siteAdmin) {
+					return res.json({
+						success: false,
+						message: 'Application is still under construction, try again in September 2016'
+					});
+				}
+
+				// create a token
+				token = createToken(user);
+
+				// return the information including token as JSON
+				return res.json({
+					success: true,
+					message: 'Successfully logged in', 
+					token: token
+				});
+			}
+		})
+		.catch(function(err) {
+			return res.json({
+				success: false,
+				message: 'Could not find that username'
 			});
+		});
 	});
 
 	apiRouter.route('/users')
@@ -230,28 +232,28 @@ module.exports = function(app, express, $http) {
 		ref = '@' + req.params.clan_ref;
 
 		db.getClan(ref)
-			.then(function(data) {
-				// Found the clan, but only return limited information
-				clan = {
-					name: data.data.name,
-					ref: data.data.ref,
-					totalMembers: data.data.totalMembers,
-					warsWon: data.data.warsWon
-				}
+		.then(function(data) {
+			// Found the clan, but only return limited information
+			clan = {
+				name: data.data.name,
+				ref: data.data.ref,
+				totalMembers: data.data.totalMembers,
+				warsWon: data.data.warsWon
+			}
 
-				return res.json({
-					success: true,
-					message: data.message,
-					data: clan
-				});
-			})
-			.catch(function(data) {
-				// return res.status(500).send({ error: 'Something failed!' });
-				return res.json({
-					success: false,
-					message: data.message
-				});
+			return res.json({
+				success: true,
+				message: data.message,
+				data: clan
 			});
+		})
+		.catch(function(data) {
+			// return res.status(500).send({ error: 'Something failed!' });
+			return res.json({
+				success: false,
+				message: data.message
+			});
+		});
 	});
 
 	// ======================== BASIC AUTHENTICATION ======================== //
@@ -297,7 +299,7 @@ module.exports = function(app, express, $http) {
 	});
 
 	apiRouter.route('/clans')
-	// create a clan (accessed at POST http://clan.solutions/api/clans)
+	// CREATE a clan (accessed at POST http://clan.solutions/api/clans)
 	.post(function(req, res) {
 
 		// Check to see if the client has provided all necessary information
@@ -394,25 +396,25 @@ module.exports = function(app, express, $http) {
 	.put(function(req, res) {
 
 		joinClan(req.params.clan_ref, req.decoded)
-			.then(function(data) {
-				return res.json({
-					success: true,
-					message: data.message
-				});
-			})
-			.catch(function(data) {
-				return res.json({
-					success: false,
-					message: data.message
-				});
+		.then(function(data) {
+			return res.json({
+				success: true,
+				message: data.message
 			});
+		})
+		.catch(function(data) {
+			return res.json({
+				success: false,
+				message: data.message
+			});
+		});
 	});
 
 	apiRouter.route('/partialUsers')
 	// get all the users (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
 		ref = req.decoded.clan.slice(-4);
-		console.log(ref);
+		// console.log(ref);
 		dynamodb.query({
 			TableName : 'Clans',
 			ProjectionExpression: '#1, #2',
@@ -519,7 +521,7 @@ module.exports = function(app, express, $http) {
 
 	// SPECIFIC USERS PROFILE //
 	apiRouter.route('/users/profile/:username')
-	// Read User
+	// GET User
 	.get(function(req, res) {
 		dynamodb.query({
 			TableName : 'Users',
@@ -735,29 +737,47 @@ module.exports = function(app, express, $http) {
 	apiRouter.route('/users')
 	// get all the users (accessed at GET http://localhost:8080/api/users)
 	.get(function(req, res) {
-
-		dynamodb.scan({
-			TableName : "Users",
-			ProjectionExpression: "#n, admin, dateJoined, id, inClan, title",
-			ExpressionAttributeNames: {
-				"#n": "name"
-			},
-			Limit : 1000
-		}, function(err, data) {
-			if (err) { 
-				return res.json({   
-					success: false,
-				    message: 'Database Error. Try again later'
-				});
-			}
-			data = convertData(data.Items);
-
+		db.getUsers(req.decoded.clan)
+		.then(function(data) {
+			console.log('Get Users Succeeded');
+			console.log(data.message);
 			res.json({
 				success: true,
 			    message: 'Successfully returned all Users',
-				data: data
+				data: data.data
+			});
+		})
+		.catch(function(err) {
+			console.log("Get Users Failed");
+			console.log(err.message);
+			res.json({
+				success: false,
+			    message: 'Failure in Query'
 			});
 		});
+
+		// dynamodb.scan({
+		// 	TableName : "Users",
+		// 	ProjectionExpression: "#n, admin, dateJoined, id, inClan, title",
+		// 	ExpressionAttributeNames: {
+		// 		"#n": "name"
+		// 	},
+		// 	Limit : 1000
+		// }, function(err, data) {
+		// 	if (err) { 
+		// 		return res.json({   
+		// 			success: false,
+		// 		    message: 'Database Error. Try again later'
+		// 		});
+		// 	}
+		// 	data = convertData(data.Items);
+
+		// 	res.json({
+		// 		success: true,
+		// 	    message: 'Successfully returned all Users',
+		// 		data: data
+		// 	});
+		// });
 	});
 
 	// AMAZON S3 ROUTE // 
@@ -947,6 +967,10 @@ module.exports = function(app, express, $http) {
 
 		now = new Date();
 		war.createdAt = now.getTime().toString();
+
+
+		// THIS WHOLE SECTION OF CLEANING DATA NEEDS TO BE FIXED BY GOING
+		// BACK TO THE FRONT END CODE AND CHANGING THE IMPLEMENTATION
 
 		// Warriors are added separately, each as their own entry //
 		for (var i = 0; i < oldWarriors.length; i++) {

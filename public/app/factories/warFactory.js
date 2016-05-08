@@ -32,6 +32,7 @@ angular.module('warFactory', [])
 	War.prototype.get = function(id) { 
 		
 		var defer = $q.defer();
+		
 		var warObj = this;  // 'this' is overwritten in the promise
 
 		$http.get('/api/wars/' + id)
