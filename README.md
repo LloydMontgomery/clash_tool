@@ -20,3 +20,4 @@ Also, here are some photos of the application while it was still up. It was even
 <img src='./img/pic13.png' width='200px'>
 <img src='./img/pic14.png' width='200px'>
 <img src='./img/pic15.png' width='200px'>
+<img src='./img/pic16.png' width='200px'>
